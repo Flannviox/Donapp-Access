@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Paleta principal Donapp Access -->
+    <color name="donapp_primary">#FFCA28</color>
+    <color name="donapp_primary_dark">#F5B800</color>
+    <color name="donapp_secondary">#FF7700</color>
+    <color name="donapp_accent">#FF5533</color>
+
+    <!-- Fondos -->
+    <color name="donapp_bg">#131317</color>
+    <color name="donapp_surface">#2A2A30</color>
+    <color name="donapp_surface_variant">#1E1E24</color>
+
+    <!-- Texto -->
+    <color name="donapp_text_primary">#FFFFFF</color>
+    <color name="donapp_text_secondary">#9E9E9E</color>
+    <color name="donapp_text_hint">#616161</color>
+
+    <!-- Estados -->
+    <color name="donapp_success">#4CAF50</color>
+    <color name="donapp_error">#F44336</color>
+    <color name="donapp_warning">#FF9800</color>
+
+    <!-- Inputs -->
+    <color name="donapp_input_bg">#1E1E24</color>
+    <color name="donapp_input_stroke">#3A3A42</color>
+    <color name="donapp_input_stroke_focused">#FFCA28</color>
+
+    <!-- Roles -->
+    <color name="role_usuario_bg">#1A2A1A</color>
+    <color name="role_usuario_stroke">#2E7D32</color>
+    <color name="role_comerciante_bg">#1A1F2E</color>
+    <color name="role_comerciante_stroke">#1565C0</color>
+
 </resources>
