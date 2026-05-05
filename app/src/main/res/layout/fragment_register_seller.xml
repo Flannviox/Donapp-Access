@@ -1,14 +1,371 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterSellerFragment">
+    android:fillViewport="true"
+    android:background="@color/donapp_bg"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-</FrameLayout>
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@color/donapp_surface"
+            android:contentDescription="Volver atrás"
+            android:padding="10dp"
+            android:src="@android:drawable/ic_media_previous"
+            tools:ignore="TouchTargetSizeCheck" />
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar cuenta"
+            android:textColor="@color/donapp_text_primary"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_menu_seller"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono Negocio"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del negocio"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilNombreNegocio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombreNegocio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mi negocio"
+                android:textColor="@color/donapp_text_primary"
+                android:textColorHint="@color/donapp_text_hint"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_dialog_map"
+                android:contentDescription="Ícono Ubicacion"
+                app:tint="@color/donapp_text_secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ubicación"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilUbicacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUbicacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mi Ubicación"
+                android:drawableEnd="@android:drawable/ic_dialog_map"
+                android:textColor="@color/donapp_text_primary"
+                android:textColorHint="@color/donapp_text_hint"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_dialog_email"
+                android:contentDescription="Ícono correo"
+                app:tint="@color/donapp_text_secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correo electrónico"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCorreo"
+            style="@style/Widget.DonappAccess.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="gmail.com"
+                android:textColor="@color/donapp_text_primary"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+
+        <!--telefono-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_menu_call"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono teléfono"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Teléfono"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilTelefono"
+            style="@style/Widget.DonappAccess.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="+51 123456789"
+                android:textColor="@color/donapp_text_primary"
+                android:textColorHint="@color/donapp_text_hint"
+                android:inputType="phone"
+                android:imeOptions="actionNext"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+        <!--Contraseña-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_lock_lock"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono contraseña"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contraseña"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/donapp_primary">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="*****************"
+                android:textColor="@color/donapp_primary"
+                android:textColorHint="@color/donapp_text_secondary"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_lock_lock"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono contraseña"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirmar contraseña"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:endIconMode="password_toggle"
+            app:endIconTint="@color/donapp_primary">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="*****************"
+                android:textColor="@color/donapp_primary"
+                android:textColorHint="@color/donapp_text_secondary"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
+        <!-- Botón Crear Cuenta -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCrearCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Crear Cuenta"
+            android:textColor="@color/donapp_bg"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/donapp_primary"
+            app:cornerRadius="12dp"/>
+
+        <!-- Términos -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cbTerminos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/donapp_primary"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aceptas nuestros"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="11sp"/>
+
+
+            <TextView
+                android:id="@+id/tvTerminosLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="48dp"
+                android:text="Términos de servicio / Política de privacidad"
+                android:textColor="@color/donapp_primary"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <Space android:layout_height="24dp" android:layout_width="match_parent"/>
+
+    </LinearLayout>
+
+</ScrollView>

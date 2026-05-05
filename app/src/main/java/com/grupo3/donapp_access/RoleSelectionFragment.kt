@@ -5,55 +5,78 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RoleSelectionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RoleSelectionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_role_selection, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RoleSelectionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RoleSelectionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val cardUsuario = view.findViewById<MaterialCardView>(R.id.cardUsuario)
+        val cardComerciante = view.findViewById<MaterialCardView>(R.id.cardComerciante)
+        val btnContinuar = view.findViewById<MaterialButton>(R.id.btnContinuar)
+
+
+        var selectRole: String? = null
+
+        fun seleccionUsuario(){
+            selectRole = "user"
+
+            cardUsuario.strokeWidth = 4
+            cardUsuario.setStrokeColor(resources.getColor(R.color.donapp_primary))
+            cardComerciante.strokeWidth= 0
+
+        }
+
+        fun seleccionComerciante(){
+            selectRole = "seller"
+
+            cardComerciante.strokeWidth = 4
+            cardComerciante.setStrokeColor(resources.getColor(R.color.role_usuario_stroke))
+            cardUsuario.strokeWidth= 0
+        }
+
+
+        cardUsuario.setOnClickListener {
+            seleccionUsuario()
+        }
+
+        cardComerciante.setOnClickListener {
+            seleccionComerciante()
+        }
+
+        btnContinuar.setOnClickListener {
+            when(selectRole){
+                "user"->{
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, RegisterUserFragment())
+                        .addToBackStack(null)
+                        .commit()
+                }
+
+                "seller"->{
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, RegisterSellerFragment())
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
+        }
+
     }
+
 }

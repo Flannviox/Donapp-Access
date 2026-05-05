@@ -72,6 +72,10 @@
         <item name="backgroundTint">@android:color/transparent</item>
     </style>
 
+    <style name="TextAppearance.DonappAccess" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/donapp_text_primary</item>
+    </style>
+
     <!-- Texto título grande -->
     <style name="TextAppearance.DonappAccess.Title">
         <item name="android:textSize">28sp</item>
