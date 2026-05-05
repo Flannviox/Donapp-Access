@@ -25,6 +25,12 @@ class HomeFragment : Fragment() {
 
         btnCrearCuenta.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right, //entra
+                    R.anim.slide_out_left, //sale
+                    R.anim.slide_in_left, //vuelve a entrar
+                    R.anim.slide_out_right //vuelve a salir
+                )
                 .replace(R.id.fragmentContainer, RoleSelectionFragment())
                 .addToBackStack(null)
                 .commit()
@@ -32,6 +38,12 @@ class HomeFragment : Fragment() {
 
         btnIniciarSesion.setOnClickListener {
             parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right, //entra
+                    R.anim.slide_out_left, //sale
+                    R.anim.slide_in_left, //vuelve a entrar
+                    R.anim.slide_out_right //vuelve a salir
+                )
                 .replace(R.id.fragmentContainer, LoginFragment())
                 .addToBackStack(null)
                 .commit()

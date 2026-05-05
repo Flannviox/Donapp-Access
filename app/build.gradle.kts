@@ -9,6 +9,7 @@ plugins {
 
 }
 val localProps = Properties()
+
 val localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
     localProps.load(localPropsFile.inputStream())
@@ -100,7 +101,8 @@ dependencies {
 
     // ── Mapbox ────────────────────────────────────────────────
     implementation(libs.mapbox.android)
-
+    implementation(libs.mapbox.search)
+    implementation(libs.mapbox.search.ui)
     // ── Glide (carga de imágenes desde URL) ──────────────────
     implementation(libs.glide)
 

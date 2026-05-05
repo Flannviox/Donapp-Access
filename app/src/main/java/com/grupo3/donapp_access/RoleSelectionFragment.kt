@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,9 +31,17 @@ class RoleSelectionFragment : Fragment() {
         val cardUsuario = view.findViewById<MaterialCardView>(R.id.cardUsuario)
         val cardComerciante = view.findViewById<MaterialCardView>(R.id.cardComerciante)
         val btnContinuar = view.findViewById<MaterialButton>(R.id.btnContinuar)
-
+        val chipUsuario = view.findViewById<Chip>(R.id.chipUsuarioSelected)
+        val chipComerciante = view.findViewById<Chip>(R.id.chipComercianteSelected)
+        val btnVolver = view.findViewById<ImageButton>(R.id.btnBack)
 
         var selectRole: String? = null
+
+        chipUsuario.visibility = View.GONE
+        chipComerciante.visibility = View.GONE
+        cardUsuario.strokeWidth = 0
+        cardComerciante.strokeWidth = 0
+
 
         fun seleccionUsuario(){
             selectRole = "user"
@@ -39,6 +49,9 @@ class RoleSelectionFragment : Fragment() {
             cardUsuario.strokeWidth = 4
             cardUsuario.setStrokeColor(resources.getColor(R.color.donapp_primary))
             cardComerciante.strokeWidth= 0
+
+            chipUsuario.visibility = View.VISIBLE
+            chipComerciante.visibility = View.GONE
 
         }
 
@@ -48,6 +61,10 @@ class RoleSelectionFragment : Fragment() {
             cardComerciante.strokeWidth = 4
             cardComerciante.setStrokeColor(resources.getColor(R.color.role_usuario_stroke))
             cardUsuario.strokeWidth= 0
+
+            chipUsuario.visibility = View.GONE
+            chipComerciante.visibility = View.VISIBLE
+
         }
 
 
@@ -63,6 +80,12 @@ class RoleSelectionFragment : Fragment() {
             when(selectRole){
                 "user"->{
                     parentFragmentManager.beginTransaction()
+                        .setCustomAnimations(
+                            R.anim.slide_in_right, //entra
+                            R.anim.slide_out_left, //sale
+                            R.anim.slide_in_left, //vuelve a entrar
+                            R.anim.slide_out_right //vuelve a salir
+                        )
                         .replace(R.id.fragmentContainer, RegisterUserFragment())
                         .addToBackStack(null)
                         .commit()
@@ -70,12 +93,26 @@ class RoleSelectionFragment : Fragment() {
 
                 "seller"->{
                     parentFragmentManager.beginTransaction()
+                        .setCustomAnimations(
+                            R.anim.slide_in_right, //entra
+                            R.anim.slide_out_left, //sale
+                            R.anim.slide_in_left, //vuelve a entrar
+                            R.anim.slide_out_right //vuelve a salir
+                        )
                         .replace(R.id.fragmentContainer, RegisterSellerFragment())
                         .addToBackStack(null)
                         .commit()
                 }
             }
         }
+
+
+        btnVolver.setOnClickListener {
+            parentFragmentManager.popBackStack()
+
+        }
+
+
 
     }
 

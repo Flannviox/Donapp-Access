@@ -91,7 +91,6 @@
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipUsuarioSelected"
-                    style="@style/Widget.MaterialComponents.Chip.Entry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="✓ Seleccionado"
