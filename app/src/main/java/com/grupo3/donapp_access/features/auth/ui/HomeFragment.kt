@@ -1,12 +1,12 @@
-package com.grupo3.donapp_access
+package com.grupo3.donapp_access.features.auth.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
-
+import com.grupo3.donapp_access.R
 
 class HomeFragment : Fragment() {
 

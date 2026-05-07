@@ -88,6 +88,9 @@
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
+
+        <!-- Ubicación -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,11 +115,52 @@
 
         </LinearLayout>
 
+        <!--MAPA INTERACTIVO-->
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="8dp">
+
+            <com.mapbox.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mapbox_cameraZoom="15.0"/>
+
+            <!-- Pin fijo en el centro -->
+            <ImageView
+                android:id="@+id/ivPin"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_mylocation"
+                android:layout_gravity="center"
+                android:translationY="-18dp"
+                app:tint="@color/donapp_primary"
+                android:contentDescription="PIN DE UBICACIÓN"/>
+
+            <!--Indicdor de carga-->
+            <TextView
+                android:id="@+id/tvMapStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mueve el mapa para elegir la ubicación"
+                android:textColor="@color/donapp_text_primary"
+                android:textSize="12sp"
+                android:background="#AA131317"
+                android:padding="6dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="6dp"/>
+
+        </FrameLayout>
+
+        <!-- Dirección resultante -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilUbicacion"
+            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
 
 
 
@@ -124,14 +168,27 @@
                 android:id="@+id/etUbicacion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mi Ubicación"
-                android:drawableEnd="@android:drawable/ic_dialog_map"
+                android:hint="Tu dirección aparecera aquí..."
                 android:textColor="@color/donapp_text_primary"
                 android:textColorHint="@color/donapp_text_hint"
-                android:inputType="textPersonName"
-                android:imeOptions="actionNext"/>
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="false"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUsarUbicacion"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="Usar mi ubicación actual"
+            android:textColor="@color/donapp_primary"
+            android:textSize="14sp"
+            app:strokeColor="@color/donapp_primary"
+            app:strokeWidth="1dp"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 

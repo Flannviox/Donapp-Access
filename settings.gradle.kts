@@ -1,11 +1,3 @@
-import java.util.Properties
-
-val localProps = Properties()
-val localPropsFile = file("local.properties")
-if (localPropsFile.exists()) {
-    localProps.load(localPropsFile.inputStream())
-}
-
 pluginManagement {
     repositories {
         google {
@@ -28,7 +20,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-        // Mapbox repository — obligatorio para descargar el SDK
         maven {
             url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
             authentication {
@@ -36,7 +27,10 @@ dependencyResolutionManagement {
             }
             credentials(HttpHeaderCredentials::class) {
                 name = "Authorization"
-                value = "Bearer ${localProps["MAPBOX_SECRET_TOKEN"]}"
+                val props = java.util.Properties()
+                val f = file("local.properties")
+                if (f.exists()) props.load(f.inputStream())
+                value = "Bearer ${props["MAPBOX_SECRET_TOKEN"]}"
             }
         }
     }

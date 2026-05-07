@@ -1,18 +1,17 @@
-package com.grupo3.donapp_access
+package com.grupo3.donapp_access.features.auth.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
+import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.RegisterSellerFragment
+import com.grupo3.donapp_access.RegisterUserFragment
 
 class RoleSelectionFragment : Fragment() {
 
@@ -25,7 +24,7 @@ class RoleSelectionFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_role_selection, container, false)
     }
 
-    override fun onViewCreated( view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val cardUsuario = view.findViewById<MaterialCardView>(R.id.cardUsuario)
