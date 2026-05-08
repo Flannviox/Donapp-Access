@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.RegisterSellerFragment
 import com.grupo3.donapp_access.RegisterUserFragment
+import com.grupo3.donapp_access.features.auth.RegisterViewModel
 
 class RoleSelectionFragment : Fragment() {
+    private val sharedViewModel: RegisterViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -35,6 +39,7 @@ class RoleSelectionFragment : Fragment() {
         val btnVolver = view.findViewById<ImageButton>(R.id.btnBack)
 
         var selectRole: String? = null
+
 
         chipUsuario.visibility = View.GONE
         chipComerciante.visibility = View.GONE
@@ -76,33 +81,45 @@ class RoleSelectionFragment : Fragment() {
         }
 
         btnContinuar.setOnClickListener {
-            when(selectRole){
-                "user"->{
+            when (selectRole) {
+                "user" -> {
+                    // 1. Guardamos el rol en el SharedViewModel para la base de datos
+                    sharedViewModel.selectedRole = "Cliente"
+
+                    // 2. Ejecutamos tu código original de navegación
                     parentFragmentManager.beginTransaction()
                         .setCustomAnimations(
-                            R.anim.slide_in_right, //entra
-                            R.anim.slide_out_left, //sale
-                            R.anim.slide_in_left, //vuelve a entrar
-                            R.anim.slide_out_right //vuelve a salir
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right
                         )
                         .replace(R.id.fragmentContainer, RegisterUserFragment())
                         .addToBackStack(null)
                         .commit()
                 }
 
-                "seller"->{
+                "seller" -> {
+                    // 1. Guardamos el rol en el SharedViewModel
+                    sharedViewModel.selectedRole = "Comerciante"
+
+                    // 2. Ejecutamos tu código original de navegación
                     parentFragmentManager.beginTransaction()
                         .setCustomAnimations(
-                            R.anim.slide_in_right, //entra
-                            R.anim.slide_out_left, //sale
-                            R.anim.slide_in_left, //vuelve a entrar
-                            R.anim.slide_out_right //vuelve a salir
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right
                         )
                         .replace(R.id.fragmentContainer, RegisterSellerFragment())
                         .addToBackStack(null)
                         .commit()
                 }
-            }
+
+                null -> {
+                    // Si el usuario le da a continuar sin elegir tarjeta, le avisamos
+                    Toast.makeText(requireContext(), "Por favor, selecciona cómo usarás la app", Toast.LENGTH_SHORT).show()
+                }
         }
 
 
@@ -111,8 +128,20 @@ class RoleSelectionFragment : Fragment() {
 
         }
 
+        btnContinuar.setOnClickListener {
+            when(selectRole){
+                "user" ->{
+                    sharedViewModel.selectedRole = "Cliente"
+                }
+
+                "seller"->{
+                    sharedViewModel.selectedRole = "Comerciante"
+                }
+            }
+        }
+
 
 
     }
 
-}
+} }

@@ -38,7 +38,26 @@ class RegisterSellerFragment : Fragment() {
     private var latitudSeleccionada: Double = -8.1116
     private var longitudSeleccionada: Double = -79.0287
     private var mapView : MapView? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ){ permissions ->
+        val granted = permissions [Manifest.permission.ACCESS_FINE_LOCATION] == true || permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        if(granted){
+            val et = view?.findViewById<TextInputEditText>(R.id.etUbicacion) ?: return@registerForActivityResult
+            val tv = view?.findViewById<TextView>(R.id.tvMapStatus) ?: return@registerForActivityResult
+            obtenerUbicacion(et, tv)
+        }else{
+            Toast.makeText(
+                requireActivity(),
+                "Permiso de ubicación denegado",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +80,9 @@ class RegisterSellerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
+        val btnUbicacion     = view.findViewById<MaterialButton>(R.id.btnUsarUbicacion)
         val btnVolver        = view.findViewById<ImageView>(R.id.btnBack)
         val etUbicacion      = view.findViewById<TextInputEditText>(R.id.etUbicacion)
         val tvStatus         = view.findViewById<TextView>(R.id.tvMapStatus)
@@ -71,9 +92,81 @@ class RegisterSellerFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
+        // Opción 1 — GPS automático
 
+        btnUbicacion.setOnClickListener {
+            verificarYPedirPermiso(etUbicacion, tvStatus)
+        }
+
+
+        // Opción 2 — Mapa interactivo
         configurarMapa(etUbicacion, tvStatus)
     }
+
+
+    // ── Opción 1: GPS
+    private fun verificarYPedirPermiso(etUbicacion: TextInputEditText, tvStatus: TextView){
+        val finePerm = Manifest.permission.ACCESS_FINE_LOCATION
+        val coarsePerm = Manifest.permission.ACCESS_COARSE_LOCATION
+
+        val tienePermiso = ContextCompat.checkSelfPermission(
+            requireContext(), finePerm
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if(tienePermiso){
+            obtenerUbicacion(etUbicacion, tvStatus)
+        }else{
+            locationPermissionLauncher.launch(
+                arrayOf(finePerm, coarsePerm))
+        }
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun obtenerUbicacion(
+        etUbicacion: TextInputEditText,
+        tvStatus: TextView
+    ){
+        tvStatus.text ="Obteniendo ubicacion GPS..."
+
+        fusedLocationClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY, null
+        ).addOnSuccessListener { location ->
+            if(location != null){
+                latitudSeleccionada = location.latitude
+                longitudSeleccionada = location.longitude
+
+                mapView?.getMapboxMap()?.setCamera(
+                    CameraOptions.Builder()
+                        .center(Point.fromLngLat(location.longitude, location.latitude))
+                        .zoom(16.0)
+                        .build()
+                )
+
+                convertirCoordenadasADireccion(
+                    location.latitude,
+                    location.longitude,
+                    etUbicacion,
+                    tvStatus
+                )
+            }else{
+                tvStatus.text = "No se pudo obtener la ubicación"
+                Toast.makeText(
+                    requireContext(),
+                    "No se pudo obtener la ubicación. Activa el GPS",
+                    Toast.LENGTH_SHORT
+                    ).show()
+
+            }
+        }.addOnFailureListener {
+            tvStatus.text = "Error al obtener ubicación"
+            Toast.makeText(requireContext(), "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+
+    // ── Opción 2: Mapa interactivo
 
     private fun configurarMapa(
         etUbicacion: TextInputEditText,
@@ -81,7 +174,7 @@ class RegisterSellerFragment : Fragment() {
     ){
         mapView?.getMapboxMap()?.apply {
 
-            //centra el mapa en Lima al inicio
+            //centra el mapa en Trujillo al inicio
             setCamera(
                 CameraOptions.Builder()
                     .center(Point.fromLngLat(longitudSeleccionada, latitudSeleccionada))
@@ -95,14 +188,15 @@ class RegisterSellerFragment : Fragment() {
                 latitudSeleccionada = centro.latitude()
                 longitudSeleccionada = centro.longitude()
                 tvStatus.text ="Cargando dirección"
-            }
+
 
             convertirCoordenadasADireccion(
                 latitudSeleccionada,
                 longitudSeleccionada,
                 etUbicacion,
                 tvStatus
-            )
+             )
+            }
 
 
         }

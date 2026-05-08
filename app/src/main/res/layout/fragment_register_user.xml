@@ -76,7 +76,7 @@
                 android:id="@+id/etNombres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nombres y Apellidos"
+                android:hint="Nombres"
                 android:textColor="@color/donapp_text_primary"
                 android:textColorHint="@color/donapp_text_hint"
                 android:inputType="textPersonName"
@@ -85,6 +85,48 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="6dp">
+
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_menu_user"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono persona"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Apellidos"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilApellidos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etApellidos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Apellidos"
+                android:textColor="@color/donapp_text_primary"
+                android:textColorHint="@color/donapp_text_hint"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
@@ -272,6 +314,51 @@
                 android:inputType="phone"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                app:tint="@color/donapp_text_secondary"
+                android:contentDescription="Ícono DNI"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="DNI"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="13sp"
+                android:layout_marginStart="6dp"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDni"
+            style="@style/Widget.DonappAccess.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="12345678"
+                android:textColor="@color/donapp_text_primary"
+                android:textColorHint="@color/donapp_text_hint"
+                android:inputType="number"
+                android:maxLength="8"
+                android:imeOptions="actionNext"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
