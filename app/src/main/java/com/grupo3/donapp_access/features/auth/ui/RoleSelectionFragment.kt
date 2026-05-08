@@ -128,17 +128,7 @@ class RoleSelectionFragment : Fragment() {
 
         }
 
-        btnContinuar.setOnClickListener {
-            when(selectRole){
-                "user" ->{
-                    sharedViewModel.selectedRole = "Cliente"
-                }
-
-                "seller"->{
-                    sharedViewModel.selectedRole = "Comerciante"
-                }
-            }
-        }
+      
 
 
 

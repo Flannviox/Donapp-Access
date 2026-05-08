@@ -21,7 +21,6 @@ class AuthRepository @Inject constructor(){
     //esta tarea va a tardar, así que no bloquees
     suspend fun signUp(email: String, pass: String): io.github.jan.supabase.auth.user.UserInfo?{
 
-
         val result = supabaseAuth.signUpWith(Email) {
             this.email = email
             password = pass
