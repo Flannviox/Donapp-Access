@@ -6,6 +6,9 @@
     android:fillViewport="true"
     android:background="@color/donapp_bg"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
+    android:overScrollMode="never"
     >
 
 
