@@ -26,8 +26,6 @@ class AuthViewModel @Inject constructor(
     val registerState: StateFlow<AuthState> =_registerState
 
 
-
-
     fun login(email: String, pass: String){
         //viewModelScope.Launch: inicia una corrutina que se cancela si el usuario sale de la pantalla
 
