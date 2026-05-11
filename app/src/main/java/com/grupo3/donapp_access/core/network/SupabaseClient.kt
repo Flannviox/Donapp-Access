@@ -18,9 +18,9 @@ object SupabaseClient {
         supabaseKey = BuildConfig.SUPABASE_ANON_KEY
     ){
         //instalamos los módulos necesarios para el mvp
-        install(Auth) //registro y login
-        install(Postgrest) //consultar tablas como tiendas o lotes
-        install(Storage) // para gestionar las fotos de productos y tiendas
+        install(Auth) //login, signup, sesiones, currentuser, JWT
+        install(Postgrest) //Permite trabajar con tablas sql(comandos)
+        install(Storage) // para subir las fotos de productos y tiendas
         install(Realtime) //Para notificaciones y cambios de estado en vivo
     }
 }
