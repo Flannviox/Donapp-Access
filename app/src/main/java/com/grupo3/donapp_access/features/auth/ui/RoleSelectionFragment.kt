@@ -12,8 +12,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.RegisterSellerFragment
-import com.grupo3.donapp_access.RegisterUserFragment
+import com.grupo3.donapp_access.features.auth.ui.RegisterSellerFragment
+import com.grupo3.donapp_access.features.auth.ui.RegisterUserFragment
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
 
 class RoleSelectionFragment : Fragment() {

@@ -1,27 +1,25 @@
-package com.grupo3.donapp_access
+package com.grupo3.donapp_access.features.auth.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.grupo3.donapp_access.BuildConfig
+import com.grupo3.donapp_access.R
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapView
@@ -31,7 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
-
 
 class RegisterSellerFragment : Fragment() {
 
@@ -233,7 +230,7 @@ class RegisterSellerFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     // Si falla la API, muestra las coordenadas directamente
                     etUbicacion.setText("Lat: $lat, Lng: $lng")
-                    tvStatus.text ="Mueve el mapa para ajustar la ubicación"
+                    tvStatus.text = "Mueve el mapa para ajustar la ubicación"
                 }
             }
         }

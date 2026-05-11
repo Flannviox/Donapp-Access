@@ -10,10 +10,12 @@ import javax.inject.Inject
 import com.grupo3.donapp_access.features.auth.dto.UsuarioDTO
 
 //@Inject constructor(): Le permite a Hilt suministrar esta clase a los viewmodels
-class AuthRepository @Inject constructor(){
+class AuthRepository @Inject constructor(
+    private val client: io.github.jan.supabase.SupabaseClient
+){
 
     //accedemos al modulo de autenticacion del cliente que creamos antes
-    private val supabaseAuth = SupabaseClient.client.auth
+    private val supabaseAuth = client.auth
 
 
     //suspend permite que la funcion se ejecute sin bloquear la UI

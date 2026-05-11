@@ -1,20 +1,20 @@
-package com.grupo3.donapp_access
+package com.grupo3.donapp_access.features.auth.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentRegisterUserBinding
 import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class RegisterUserFragment : Fragment() {
@@ -60,7 +60,8 @@ class RegisterUserFragment : Fragment() {
 
     private fun configurarSelectorDiscapacidad(){
         val opciones = arrayOf("NINGUNA", "MOTRIZ","VISUAL")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, opciones)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, opciones)
         binding.actvDiscapacidad.setAdapter(adapter)
 
         binding.actvDiscapacidad.setOnClickListener {
