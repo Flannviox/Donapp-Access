@@ -2,4 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="donapp_yellow">#F5C518</color>
+    <color name="donapp_yellow_soft">#FFD85A</color>
+    <color name="donapp_background">#1A1A1A</color>
+    <color name="donapp_background_bottom">#23232B</color>
+    <color name="donapp_surface">#242428</color>
+    <color name="donapp_surface_high">#2F3038</color>
+    <color name="donapp_surface_muted">#444450</color>
+    <color name="donapp_text_primary">#FFFFFFFF</color>
+    <color name="donapp_text_secondary">#B8B8BE</color>
+    <color name="donapp_text_muted">#8D8D93</color>
+    <color name="donapp_success">#4CAF50</color>
+    <color name="donapp_error">#F44336</color>
+    <color name="donapp_blue">#3D73FF</color>
+    <color name="donapp_orange">#FF914D</color>
 </resources>

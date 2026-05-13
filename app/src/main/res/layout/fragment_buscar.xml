@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bienvenido!!"
+                    android:textColor="@color/donapp_text_secondary"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quispe"
+                    android:textColor="@color/donapp_text_primary"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Que haremos hoy?"
+                    android:textColor="@color/donapp_text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_icon_yellow"
+                android:gravity="center"
+                android:text="Q"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/inputBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_input"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="10dp"
+            android:drawableTint="@color/donapp_text_muted"
+            android:hint="Busca productos u ofertas"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/donapp_text_primary"
+            android:textColorHint="@color/donapp_text_muted"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Busquedas Recientes"
+            android:textColor="@color/donapp_text_secondary"
+            android:textSize="13sp" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.Donapp.Chip"
+                    android:text="Pan integral" />
+
+                <TextView
+                    style="@style/Widget.Donapp.Chip"
+                    android:layout_marginStart="8dp"
+                    android:text="Leche" />
+
+                <TextView
+                    style="@style/Widget.Donapp.Chip"
+                    android:layout_marginStart="8dp"
+                    android:text="Yogurt" />
+
+                <TextView
+                    style="@style/Widget.Donapp.Chip"
+                    android:layout_marginStart="8dp"
+                    android:text="Arroz" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Categorias"
+            android:textColor="@color/donapp_text_secondary"
+            android:textSize="13sp" />
+
+        <ProgressBar
+            android:id="@+id/progressCategorias"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dp"
+            android:indeterminateTint="@color/donapp_yellow"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textEstadoCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:textColor="@color/donapp_text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:text="Sin categorias" />
+
+        <TextView
+            android:id="@+id/buttonRecargarCategorias"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_button_yellow"
+            android:gravity="center"
+            android:minWidth="120dp"
+            android:text="Reintentar"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCategorias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_categoria" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
