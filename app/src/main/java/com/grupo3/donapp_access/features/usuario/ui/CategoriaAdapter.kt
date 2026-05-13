@@ -37,7 +37,7 @@ class CategoriaAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(categoria: Categoria) {
             val nombre = categoria.nombre.ifBlank { "Categoria" }
-            binding.textCategoriaInicial.text = nombre.first().uppercaseChar().toString()
+            binding.textCategoriaInicial.text = iconoCategoria(nombre)
             binding.textCategoriaNombre.text = nombre
             binding.textCategoriaConteo.text = if (categoria.totalOfertas > 0) {
                 "${categoria.totalOfertas} ofertas"
@@ -45,6 +45,18 @@ class CategoriaAdapter(
                 "Ver ofertas"
             }
             binding.root.setOnClickListener { onCategoriaClick(categoria) }
+        }
+
+        private fun iconoCategoria(nombre: String): String {
+            return when (nombre.lowercase()) {
+                "panaderia", "panadería" -> "🥐"
+                "lacteos", "lácteos" -> "🥛"
+                "frutas" -> "🍉"
+                "abarrotes" -> "🧺"
+                "granja" -> "🏚"
+                "bebidas" -> "🍹"
+                else -> nombre.first().uppercaseChar().toString()
+            }
         }
     }
 }

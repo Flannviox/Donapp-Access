@@ -14,13 +14,13 @@
 
     <style name="Widget.Donapp.Chip" parent="">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_height">32dp</item>
         <item name="android:background">@drawable/bg_chip</item>
         <item name="android:gravity">center</item>
-        <item name="android:minWidth">76dp</item>
+        <item name="android:minWidth">92dp</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>
         <item name="android:textColor">@color/donapp_text_secondary</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>

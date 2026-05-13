@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.grupo3.donapp_access.databinding.ActivityMainBinding
 import com.grupo3.donapp_access.features.usuario.ui.BuscarFragment
+import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
 import com.grupo3.donapp_access.features.usuario.ui.OfertasFragment
 
 class MainActivity : AppCompatActivity() {
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         configurarBottomNavigation()
         if (savedInstanceState == null) {
-            binding.bottomNavigation.selectedItemId = R.id.nav_buscar
+            binding.bottomNavigation.selectedItemId = R.id.nav_home
         }
     }
 
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_home -> {
-                    mostrarFragment(OfertasFragment())
+                    mostrarFragment(HomeFragment())
                     true
                 }
                 R.id.nav_perfil -> {

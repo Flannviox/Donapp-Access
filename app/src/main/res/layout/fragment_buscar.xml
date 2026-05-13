@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="20dp"
-        android:paddingTop="28dp"
+        android:paddingTop="36dp"
         android:paddingEnd="20dp"
         android:paddingBottom="24dp">
 
@@ -51,21 +51,21 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/bg_icon_yellow"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:background="@drawable/bg_circle_yellow"
                 android:gravity="center"
                 android:text="Q"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/inputBuscar"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_marginTop="18dp"
+            android:layout_height="44dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/bg_input"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="10dp"
@@ -74,17 +74,17 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
-            android:paddingStart="16dp"
+            android:paddingStart="28dp"
             android:paddingEnd="16dp"
             android:textColor="@color/donapp_text_primary"
             android:textColorHint="@color/donapp_text_muted"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Busquedas Recientes"
+            android:layout_marginTop="14dp"
+            android:text="Búsquedas Recientes"
             android:textColor="@color/donapp_text_secondary"
             android:textSize="13sp" />
 
@@ -102,30 +102,30 @@
 
                 <TextView
                     style="@style/Widget.Donapp.Chip"
-                    android:text="Pan integral" />
+                    android:text="◷  Pan integral" />
 
                 <TextView
                     style="@style/Widget.Donapp.Chip"
                     android:layout_marginStart="8dp"
-                    android:text="Leche" />
+                    android:text="◷  Leche" />
 
                 <TextView
                     style="@style/Widget.Donapp.Chip"
                     android:layout_marginStart="8dp"
-                    android:text="Yogurt" />
+                    android:text="◷  Yogurt" />
 
                 <TextView
                     style="@style/Widget.Donapp.Chip"
                     android:layout_marginStart="8dp"
-                    android:text="Arroz" />
+                    android:text="◷  Arroz" />
             </LinearLayout>
         </HorizontalScrollView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Categorias"
+            android:layout_marginTop="20dp"
+            android:text="Categorías"
             android:textColor="@color/donapp_text_secondary"
             android:textSize="13sp" />
 
