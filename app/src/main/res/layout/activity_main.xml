@@ -20,7 +20,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
-        android:layout_height="82dp"
+        android:layout_height="72dp"
         android:background="@color/donapp_background_bottom"
         app:itemActiveIndicatorStyle="@style/Widget.Donapp.BottomNav.ActiveIndicator"
         app:itemIconTint="@color/bottom_nav_item_color"

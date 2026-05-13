@@ -3,6 +3,7 @@ package com.grupo3.donapp_access.features.usuario
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.model.Categoria
 import com.grupo3.donapp_access.model.OfertaLote
+import com.grupo3.donapp_access.model.TiendaHome
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -37,17 +38,18 @@ class ClienteRepository(
             supabaseClient.get(
                 table = "lote",
                 query = mapOf(
-                    "select" to "id_lote,numero_lote,cantidad,fecha_vencimiento,precio_normal,precio_oferta,estado,productos(nombre,imagen,presentacion),tiendas(nombre,direccion,rating_promedio)",
+                    "select" to "id_lote,numero_lote,cantidad,fecha_vencimiento,precio_normal,precio_oferta,estado,productos!productos_id(nombre,imagen,presentacion),tiendas!tiendas_id(nombre,direccion,rating_promedio)",
                     "estado" to "eq.en_oferta",
                     "fecha_vencimiento" to "gte.$today",
                     "order" to "fecha_vencimiento.asc"
                 )
             )
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            android.util.Log.e("Donapp", "Error con joins, fallback sin joins: ${e.message}")
             supabaseClient.get(
                 table = "lote",
                 query = mapOf(
-                    "select" to "id_lote,numero_lote,cantidad,fecha_vencimiento,precio_normal,precio_oferta,estado",
+                    "select" to "id_lote,numero_lote,cantidad,fecha_vencimiento,precio_normal,precio_oferta,estado,productos_id,tiendas_id",
                     "estado" to "eq.en_oferta",
                     "fecha_vencimiento" to "gte.$today",
                     "order" to "fecha_vencimiento.asc"
@@ -73,6 +75,24 @@ class ClienteRepository(
                 precioOferta = item.optNullableDouble("precio_oferta") ?: 0.0,
                 numeroLote = item.optNullableString("numero_lote"),
                 ratingTienda = tienda?.optNullableDouble("rating_promedio")
+            )
+        }
+    }
+
+    fun obtenerTiendas(): List<TiendaHome> {
+        val response = supabaseClient.get(
+            table = "tiendas",
+            query = mapOf(
+                "select" to "nombre,direccion,rating_promedio",
+                "order" to "nombre.asc"
+            )
+        )
+
+        return JSONArray(response).mapObjects { item ->
+            TiendaHome(
+                nombre = item.optString("nombre").takeIf { it.isNotBlank() } ?: "Tienda",
+                direccion = item.optNullableString("direccion"),
+                rating = item.optNullableDouble("rating_promedio")
             )
         }
     }

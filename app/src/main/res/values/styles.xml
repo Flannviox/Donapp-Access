@@ -2,14 +2,14 @@
 <resources>
     <style name="Widget.Donapp.BottomNav.ActiveIndicator" parent="">
         <item name="android:color">@color/donapp_yellow</item>
-        <item name="android:width">56dp</item>
-        <item name="android:height">48dp</item>
+        <item name="android:width">64dp</item>
+        <item name="android:height">36dp</item>
         <item name="shapeAppearance">@style/ShapeAppearance.Donapp.BottomNav</item>
     </style>
 
     <style name="ShapeAppearance.Donapp.BottomNav" parent="">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">14dp</item>
+        <item name="cornerSize">18dp</item>
     </style>
 
     <style name="Widget.Donapp.Chip" parent="">
