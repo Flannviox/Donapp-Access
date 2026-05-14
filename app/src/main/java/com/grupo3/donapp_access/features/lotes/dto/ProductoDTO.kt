@@ -1,0 +1,19 @@
+package com.grupo3.donapp_access.features.lotes.dto
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ProductoDTO(
+    @SerialName("id_producto")
+    val idProducto: String? = null,
+
+    @SerialName("categoria_id")
+    val categoriaId: String,
+
+    val nombre: String,
+
+    val descripcion: String? = null,
+    val presentacion: String? = null,
+    val imagen: String? = null
+)
