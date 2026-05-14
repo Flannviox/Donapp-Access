@@ -2,4 +2,9 @@
     <string name="app_name">Donapp Access</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Tienda Detail & Valoraciones -->
+    <string name="offers_count_format">%1$d ofertas activas</string>
+    <string name="reviews_label_format">Reseñas (%1$d)</string>
+    <string name="reviews_total_format">(%1$d)</string>
 </resources>

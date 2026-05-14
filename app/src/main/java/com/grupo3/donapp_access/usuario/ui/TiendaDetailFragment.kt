@@ -1,0 +1,192 @@
+package com.grupo3.donapp_access.usuario.ui
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.comerciante.ui.ValoracionesAdapter
+import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
+import com.grupo3.donapp_access.usuario.dto.LoteDTO
+import com.grupo3.donapp_access.usuario.dto.TiendaDTO
+import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.launch
+import java.util.Locale
+
+class TiendaDetailFragment : Fragment() {
+
+    private var _binding: FragmentTiendaDetailBinding? = null
+    private val binding get() = _binding!!
+
+    private var tiendaId: String? = null
+    private lateinit var reviewsAdapter: ValoracionesAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentTiendaDetailBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Recuperamos el id_tienda de los argumentos de navegación
+        tiendaId = arguments?.getString("id_tienda")
+        
+        // Si no hay ID, mostramos error y volvemos (para evitar crashes en pruebas)
+        if (tiendaId == null) {
+            Log.e("TiendaDetail", "No se recibió el ID de la tienda")
+            // Descomenta la siguiente línea cuando tengas la navegación configurada
+            // parentFragmentManager.popBackStack() 
+        }
+
+        setupRecyclerViews()
+        setupButtons()
+        cargarDatos()
+    }
+
+    private fun setupRecyclerViews() {
+        // Inicializar el adaptador de reseñas
+        reviewsAdapter = ValoracionesAdapter(emptyList())
+        binding.rvReviews.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = reviewsAdapter
+            isNestedScrollingEnabled = false // Importante para scroll fluido dentro de NestedScrollView
+        }
+    }
+
+    private fun setupButtons() {
+        binding.btnBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+
+        binding.btnAddReview.setOnClickListener {
+            Toast.makeText(context, "Próximamente: Añadir reseña", Toast.LENGTH_SHORT).show()
+        }
+        
+        binding.btnCall.setOnClickListener {
+            Toast.makeText(context, "Llamando a la tienda...", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnHowToGet.setOnClickListener {
+            Toast.makeText(context, "Abriendo mapa...", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun cargarDatos() {
+        val id = tiendaId ?: return
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                // 1. Obtener detalles básicos de la tienda
+                val tienda = SupabaseClient.client.from("tiendas")
+                    .select {
+                        filter { eq("id_tienda", id) }
+                    }.decodeSingle<TiendaDTO>()
+
+                bindTienda(tienda)
+
+                // 2. Obtener lotes en oferta (con información del producto relacionada)
+                val lotes = SupabaseClient.client.from("lote")
+                    .select(Columns.raw("*, productos(*)")) {
+                        filter {
+                            eq("tiendas_id", id)
+                            eq("estado", "en_oferta")
+                        }
+                    }.decodeList<LoteDTO>()
+                
+                binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
+                // TODO: Configurar rvAvailableOffers con su adaptador
+
+                // 3. Obtener valoraciones (con información del usuario que la hizo)
+                val valoraciones = SupabaseClient.client.from("valoraciones")
+                    .select(Columns.raw("*, usuarios(nombres, apellidos)")) {
+                        filter { 
+                            eq("tiendas_id", id)
+                            eq("estado", "ACTIVO")
+                        }
+                    }.decodeList<ValoracionDTO>()
+
+                bindResenas(valoraciones)
+                reviewsAdapter.updateList(valoraciones)
+
+            } catch (e: Exception) {
+                Log.e("TiendaDetail", "Error al cargar datos: ${e.message}", e)
+                Toast.makeText(context, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun bindTienda(tienda: TiendaDTO) {
+        binding.tvStoreName.text = tienda.nombre
+        binding.tvAddress.text = tienda.direccion
+        binding.tvRatingValue.text = String.format(Locale.getDefault(), "%.1f", tienda.ratingPromedio)
+        binding.tvSchedule.text = tienda.horaAtencion ?: "Horario no disponible"
+
+        // Cargar logo con Glide
+        tienda.imagenReferencia?.let { url ->
+            Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.logo)
+                .into(binding.ivStoreLogo)
+        }
+    }
+
+    private fun bindResenas(valoraciones: List<ValoracionDTO>) {
+        val total = valoraciones.size
+        binding.tvReviewsLabel.text = getString(R.string.reviews_label_format, total)
+        binding.tvTotalReviewsText.text = getString(R.string.reviews_total_format, total)
+
+        if (total > 0) {
+            val promedio = valoraciones.map { it.calificacion }.average().toFloat()
+            binding.rbAverage.rating = promedio
+
+            // Conteo de estrellas para las barras de progreso
+            val conteo = IntArray(6) // 0-5
+            valoraciones.forEach { v ->
+                val nota = v.calificacion.toInt().coerceIn(1, 5)
+                conteo[nota]++
+            }
+
+            // Actualizar barras de progreso y textos de porcentaje
+            binding.pb5Stars.progress = (conteo[5] * 100) / total
+            binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
+
+            binding.pb4Stars.progress = (conteo[4] * 100) / total
+            binding.tv4StarsPct.text = "${(conteo[4] * 100) / total}%"
+
+            binding.pb3Stars.progress = (conteo[3] * 100) / total
+            binding.tv3StarsPct.text = "${(conteo[3] * 100) / total}%"
+
+            binding.pb2Stars.progress = (conteo[2] * 100) / total
+            binding.tv2StarsPct.text = "${(conteo[2] * 100) / total}%"
+
+            binding.pb1Star.progress = (conteo[1] * 100) / total
+            binding.tv1StarPct.text = "${(conteo[1] * 100) / total}%"
+        } else {
+            binding.rbAverage.rating = 0f
+            limpiarBarrasProgreso()
+        }
+    }
+
+    private fun limpiarBarrasProgreso() {
+        listOf(binding.pb5Stars, binding.pb4Stars, binding.pb3Stars, binding.pb2Stars, binding.pb1Star).forEach { it.progress = 0 }
+        listOf(binding.tv5StarsPct, binding.tv4StarsPct, binding.tv3StarsPct, binding.tv2StarsPct, binding.tv1StarPct).forEach { it.text = "0%" }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

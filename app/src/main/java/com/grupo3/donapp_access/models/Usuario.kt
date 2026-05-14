@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.auth.models
+package com.grupo3.donapp_access.models
 
 data class Usuario (
     val id: String,
