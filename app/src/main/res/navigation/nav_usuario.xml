@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_usuario"
+    app:startDestination="@id/homeFragmentCliente">
+
+    <fragment
+        android:id="@+id/homeFragmentCliente"
+        android:name="com.grupo3.donapp_access.features.auth.ui.HomeUsuarioFragment"
+        tools:layout="@layout/fragment_home_usuario" /> </navigation>
