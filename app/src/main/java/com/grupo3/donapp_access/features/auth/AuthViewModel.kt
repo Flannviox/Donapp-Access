@@ -155,7 +155,7 @@ class AuthViewModel @Inject constructor(
                 )
                 repository.registrarTienda(tienda)
 
-                _registerState.value = AuthState.Success
+                _registerState.value = AuthState.Success("Comerciante")
             } catch (e: Exception) {
                 _registerState.value = AuthState.Error(e.message ?: "Error al registrar comerciante")
             }

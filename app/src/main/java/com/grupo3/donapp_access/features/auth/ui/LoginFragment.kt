@@ -91,24 +91,40 @@ class LoginFragment : Fragment() {
                             btnLogin.isEnabled = true
                             btnLogin.text = "Iniciar Sesión"
 
-                            // 5. Redirección final al nav_graph correspondiente usando tu rol
                             val rolUsuario = state.rol.lowercase()
-                            if (rolUsuario == "cliente") {
-                                findNavController().navigate(R.id.action_global_nav_usuario)
-                            } else if (rolUsuario == "comerciante") {
-                                findNavController().navigate(R.id.action_global_nav_comerciante)
-                            } else {
+
+                            val destino = when(rolUsuario){
+                                "cliente" -> HomeFragment()
+                                "comerciante" -> HomeFragment()
+                            else -> {
                                 Toast.makeText(requireContext(), "Rol no válido", Toast.LENGTH_SHORT).show()
+                                return@collect
+
                             }
+
                         }
-                        is AuthViewModel.AuthState.Error -> {
-                            btnLogin.isEnabled = true
-                            btnLogin.text = "Iniciar Sesión"
-                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
-                        }
+                            requireActivity().supportFragmentManager.beginTransaction()
+                                .setCustomAnimations(
+                                    R.anim.slide_in_right,
+                                    R.anim.slide_out_left,
+                                    R.anim.slide_in_left,
+                                    R.anim.slide_out_right
+                                )
+                                .replace(R.id.fragmentContainer, destino)
+                                .commit()
+
+                    }
+                    is AuthViewModel.AuthState.Error -> {
+                        btnLogin.isEnabled = true
+                        btnLogin.text = "Iniciar Sesión"
+                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
+
+                    }
+
                     }
                 }
             }
         }
+
     }
 }
