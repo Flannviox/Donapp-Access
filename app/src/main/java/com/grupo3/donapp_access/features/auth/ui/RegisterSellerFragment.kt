@@ -30,7 +30,22 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
+import androidx.fragment.app.viewModels
+import com.grupo3.donapp_access.features.auth.AuthViewModel
+import dagger.hilt.android.AndroidEntryPoint
+
+
+
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.Lifecycle
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint // importante para inyectar el ViewModel
 class RegisterSellerFragment : Fragment() {
+    // 3. Declarar el ViewModel a nivel de clase (fuera de las funciones)
+    private val authViewModel: AuthViewModel by viewModels()
+
 
     private var latitudSeleccionada: Double = -8.1116
     private var longitudSeleccionada: Double = -79.0287
@@ -98,6 +113,74 @@ class RegisterSellerFragment : Fragment() {
 
         // Opción 2 — Mapa interactivo
         configurarMapa(etUbicacion, tvStatus)
+
+
+        val btnCrearCuenta = view.findViewById<MaterialButton>(R.id.btnCrearCuenta)
+
+        btnCrearCuenta.setOnClickListener {
+            val email = view.findViewById<TextInputEditText>(R.id.etCorreo).text.toString().trim()
+            val password = view.findViewById<TextInputEditText>(R.id.etPassword).text.toString().trim()
+            val nombreTienda = view.findViewById<TextInputEditText>(R.id.etNombreNegocio).text.toString().trim()
+            val direccion = view.findViewById<TextInputEditText>(R.id.etUbicacion).text.toString().trim()
+            val telefono = view.findViewById<TextInputEditText>(R.id.etTelefono).text.toString().trim()
+
+            // Verificamos que la función crearCuentaComerciante esté en tu AuthViewModel
+            authViewModel.crearCuentaComerciante(
+                email = email,
+                pass = password,
+                nombres = "Nombre_Pendiente", // En un MVP de comerciante podemos pedir estos datos después o agregar los campos
+                apellidos = "Apellido_Pendiente",
+                dni = "00000000",
+                telefono = telefono,
+                nombreTienda = nombreTienda,
+                direccion = direccion,
+                lat = latitudSeleccionada,
+                lng = longitudSeleccionada,
+                horario = "08:00 - 18:00"
+            )
+        }
+
+        // Observar los estados del ViewModel
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.registerState.collect { state ->
+                    when (state) {
+                        is AuthViewModel.AuthState.Idle -> {
+                            // Estado inicial, no hacemos nada
+                        }
+                        is AuthViewModel.AuthState.Loading -> {
+                            // Deshabilitamos el botón para evitar múltiples clics
+                            btnCrearCuenta.isEnabled = false
+                            btnCrearCuenta.text = "Registrando..."
+                        }
+                        is AuthViewModel.AuthState.Success -> {
+                            Toast.makeText(requireContext(), "¡Tienda registrada con éxito!", Toast.LENGTH_SHORT).show()
+
+                            // Restauramos el botón por si el usuario presiona "Atrás" luego
+                            btnCrearCuenta.isEnabled = true
+                            btnCrearCuenta.text = "Crear Cuenta"
+
+                            // Navegamos de vuelta al Login
+                            // Usamos popBackStack para limpiar la pila de fragmentos de registro
+                            parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmentContainer, LoginFragment())
+                                .commit()
+                        }
+                        is AuthViewModel.AuthState.Error -> {
+                            // Ocurrió un error (ej. correo ya existe, sin internet)
+                            btnCrearCuenta.isEnabled = true
+                            btnCrearCuenta.text = "Crear Cuenta"
+                            Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+        }
+
+
+
     }
 
 

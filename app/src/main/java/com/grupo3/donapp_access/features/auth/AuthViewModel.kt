@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Message
 import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.core.network.SupabaseClient.client
+import com.grupo3.donapp_access.features.auth.dto.TiendaDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,6 +97,58 @@ class AuthViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun crearCuentaComerciante(
+        email: String,
+        pass: String,
+        nombres: String,
+        apellidos: String,
+        dni: String,
+        telefono: String,
+        nombreTienda: String,
+        direccion: String,
+        lat: Double,
+        lng: Double,
+        horario: String
+    ) {
+        viewModelScope.launch {
+            _registerState.value = AuthState.Loading
+            try {
+                // Auth en Supabase
+                repository.signUp(email, pass)
+                val userId = client.auth.currentUserOrNull()?.id
+                    ?: throw Exception("No se pudo obtener el ID de usuario")
+
+                // registra en la tablita de usuarios
+                repository.registrarEnTablaUsuarios(
+                    id = userId,
+                    nombres = nombres,
+                    apellidos = apellidos,
+                    correo = email,
+                    dni = dni,
+                    rol = "Comerciante",
+                    discapacidad = null,
+                    correoApoderado = null,
+                    telefono = telefono
+                )
+
+                //registra en la tabla de tiendas también
+                val tienda = TiendaDTO(
+                    usuariosId = userId,
+                    nombre = nombreTienda,
+                    direccion = direccion,
+                    latitud = lat,
+                    longitud = lng,
+                    horaAtencion = horario
+                )
+                repository.registrarTienda(tienda)
+
+                _registerState.value = AuthState.Success
+            } catch (e: Exception) {
+                _registerState.value = AuthState.Error(e.message ?: "Error al registrar comerciante")
+            }
+        }
     }
 
     sealed class AuthState{

@@ -1,6 +1,7 @@
 package com.grupo3.donapp_access.features.auth
 
 import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.features.auth.dto.TiendaDTO
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
@@ -78,6 +79,10 @@ class AuthRepository @Inject constructor(
         }
 
 
+    }
+
+    suspend fun registrarTienda(tienda: TiendaDTO) {
+        client.from("tiendas").insert(tienda)
     }
 
 
