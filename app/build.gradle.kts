@@ -17,12 +17,13 @@ if (localPropsFile.exists()) {
 
 android {
     namespace = "com.grupo3.donapp_access"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
+
         applicationId = "com.grupo3.donapp_access"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -36,6 +37,7 @@ android {
 
         manifestPlaceholders["MAPBOX_ACCESS_TOKEN"] =
             localProps["MAPBOX_TOKEN"] ?: ""
+
     }
 
     buildTypes {
@@ -60,6 +62,13 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+    }
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+            keepDebugSymbols.add("*/libmapbox-common.so")
+            keepDebugSymbols.add("*/libmapbox-maps.so")
+        }
     }
 }
 
