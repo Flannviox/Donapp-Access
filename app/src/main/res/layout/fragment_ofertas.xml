@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:orientation="vertical"
+    android:paddingStart="18dp"
+    android:paddingTop="28dp"
+    android:paddingEnd="18dp"
+    android:paddingBottom="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="%Ofertas cercanas a ti"
+            android:textColor="@color/donapp_text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/buttonRecargarOfertas"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_chip_selected"
+            android:gravity="center"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="Actualizar"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/Widget.Donapp.Chip"
+            android:background="@drawable/bg_chip_selected"
+            android:text="Todas"
+            android:textColor="@color/black" />
+
+        <TextView
+            style="@style/Widget.Donapp.Chip"
+            android:layout_marginStart="8dp"
+            android:text="Vencen hoy" />
+
+        <TextView
+            style="@style/Widget.Donapp.Chip"
+            android:layout_marginStart="8dp"
+            android:text="Mejor precio" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressOfertas"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="22dp"
+        android:indeterminateTint="@color/donapp_yellow"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textEstadoOfertas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:gravity="center"
+        android:textColor="@color/donapp_text_secondary"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="Sin ofertas activas" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerOfertas"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:paddingBottom="8dp"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_oferta" />
+</LinearLayout>
