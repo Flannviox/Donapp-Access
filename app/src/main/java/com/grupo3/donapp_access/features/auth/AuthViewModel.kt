@@ -35,7 +35,18 @@ class AuthViewModel @Inject constructor(
             try {
                 //llamamos a la funcion suspendia del repositorio
                 repository.signIn(email, pass)
-                _loginState.value = AuthState.Success
+
+                // Obtenemos el ID del usuario que acaba de entrar
+                val currentUser = SupabaseClient.client.auth.currentUserOrNull()
+                val userId = currentUser?.id
+
+                if (userId != null) {
+                    // Consultamos el rol usando la función que agregamos al repositorio
+                    val rolUsuario = repository.obtenerRolUsuario(userId)
+                    _loginState.value = AuthState.Success(rolUsuario)
+                } else {
+                    _loginState.value = AuthState.Error("No se encontró el ID del usuario")
+                }
             }catch (e: Exception){
                 //si hay un error como datos incorrectos, se captura
                 e.printStackTrace()
@@ -82,7 +93,7 @@ class AuthViewModel @Inject constructor(
 
                         )
 
-                    _registerState.value = AuthState.Success
+                    _registerState.value = AuthState.Success(rol)
 
                 }else {
                     _registerState.value = AuthState.Error("No se pudo obtener el ID del usuario")
@@ -100,7 +111,8 @@ class AuthViewModel @Inject constructor(
     sealed class AuthState{
         object Idle : AuthState() //sin accion
         object Loading : AuthState() //cargando
-        object Success : AuthState() //exito
+        data class Success(val rol: String) : AuthState() // Ahora recibe el rol
         data class Error (val message: String) : AuthState()
+
     }
 }

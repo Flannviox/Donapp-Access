@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.grupo3.donapp_access.R
 
@@ -19,34 +20,19 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val btnCrearCuenta = view.findViewById<MaterialButton>(R.id.btnCrearAccount)
         val btnIniciarSesion = view.findViewById<MaterialButton>(R.id.btnIniciarSesion)
 
         btnCrearCuenta.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_right, //entra
-                    R.anim.slide_out_left, //sale
-                    R.anim.slide_in_left, //vuelve a entrar
-                    R.anim.slide_out_right //vuelve a salir
-                )
-                .replace(R.id.fragmentContainer, RoleSelectionFragment())
-                .addToBackStack(null)
-                .commit()
+            // Saltamos usando la acción del nav_graph.xml
+            findNavController().navigate(R.id.action_welcome_to_roleSelection)
         }
 
         btnIniciarSesion.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_right, //entra
-                    R.anim.slide_out_left, //sale
-                    R.anim.slide_in_left, //vuelve a entrar
-                    R.anim.slide_out_right //vuelve a salir
-                )
-                .replace(R.id.fragmentContainer, LoginFragment())
-                .addToBackStack(null)
-                .commit()
+            // Saltamos usando la acción del nav_graph.xml
+            findNavController().navigate(R.id.action_welcome_to_login)
         }
     }
 }

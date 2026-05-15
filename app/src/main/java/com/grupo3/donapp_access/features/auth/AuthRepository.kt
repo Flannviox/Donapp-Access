@@ -77,6 +77,19 @@ class AuthRepository @Inject constructor(){
 
 
     }
+    suspend fun obtenerRolUsuario(id: String): String {
+        try {
+            val usuario = SupabaseClient.client.from("usuarios")
+                .select {
+                    filter { eq("id_usuarios", id) }
+                }.decodeSingle<UsuarioDTO>()
+
+            return usuario.rol
+        } catch (e: Exception) {
+            android.util.Log.e("SUPABASE_ERROR", "Error al obtener rol: ${e.message}", e)
+            throw e
+        }
+    }
 
 
 
