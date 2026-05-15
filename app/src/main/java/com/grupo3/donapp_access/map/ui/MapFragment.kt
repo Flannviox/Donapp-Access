@@ -126,7 +126,7 @@ class MapFragment : Fragment() {
                     viewModel.ubicacionState.collect { state ->
                         when(state){
                             is MapViewModel.UbicacionState.Loading->{
-                                mostrarLoading("Obteniendo ubicación")
+                                mostarLoading("Obteniendo ubicación")
                             }
                             is MapViewModel.UbicacionState.Success->{
                                 centrarMapaEnUsuario(
@@ -155,7 +155,7 @@ class MapFragment : Fragment() {
                                 pintarMarcadores(state.tiendas)
                             }
                             is MapViewModel.TiendasState.Error ->{
-                                ocutarLaoding()
+                                ocultarLaoding()
                                 mostrarError(state.message)
                             }
                             else -> Unit
