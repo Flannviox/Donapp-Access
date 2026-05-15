@@ -2,6 +2,7 @@ package com.grupo3.donapp_access.map
 
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.features.auth.models.Tienda
+import com.grupo3.donapp_access.features.map.TiendaConLotes
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.serialization.Serializable
@@ -20,7 +21,7 @@ class TiendaDao @Inject constructor() {
         latitud: Double,
         longitud: Double,
         radioMetros: Int = 5000
-    ): List<Tienda>{
+    ): List<TiendaConLotes>{
         return SupabaseClient.client.postgrest //activa el modulo PostgREST de supa (queries, insert, rpc, filters)
             .rpc( //llamar a una funcion del server desde android ("SELECT * FROM tiendas_cercanas)
             function = "tiendas_cercanas",
@@ -30,7 +31,7 @@ class TiendaDao @Inject constructor() {
                 radio = radioMetros
             )
         )
-            .decodeList<Tienda>()
+            .decodeList<TiendaConLotes>()
     }
 }
 

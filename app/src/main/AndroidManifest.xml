@@ -17,12 +17,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.DonappAccess">
-        <activity
-            android:name=".ragment_tienda_detail"
-            android:exported="false" />
-        <activity
-            android:name=".fragment_tienda_detail"
-            android:exported="false" />
+
 
         <meta-data
             android:name="com.mapbox.token"

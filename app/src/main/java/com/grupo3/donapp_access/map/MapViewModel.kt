@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.grupo3.donapp_access.features.auth.models.Tienda
+import com.grupo3.donapp_access.features.map.TiendaConLotes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -73,7 +74,7 @@ class MapViewModel @Inject constructor(
     sealed class TiendasState {
         object Idle : TiendasState()
         object Loading : TiendasState()
-        data class Success(val tiendas: List<Tienda>) : TiendasState()
+        data class Success(val tiendas: List<TiendaConLotes>) : TiendasState()
         data class Error(val message: String) : TiendasState()
     }
 }

@@ -1,6 +1,6 @@
 package com.grupo3.donapp_access.usuario.dto
 
-import com.grupo3.donapp_access.models.Tienda
+import com.grupo3.donapp_access.features.auth.models.Tienda
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -30,16 +30,17 @@ data class TiendaDTO(
     companion object {
         fun from(tienda: Tienda): TiendaDTO {
             return TiendaDTO(
-                idTienda = tienda.idTienda,
+                idTienda = tienda.id,
                 usuariosId = tienda.usuariosId,
                 nombre = tienda.nombre,
                 direccion = tienda.direccion,
                 referencia = tienda.referencia,
                 latitud = tienda.latitud,
                 longitud = tienda.longitud,
-                imagenReferencia = tienda.imagenReferencia,
-                ratingPromedio = tienda.ratingPromedio,
-                horaAtencion = tienda.horaAtencion
+                imagenReferencia = tienda.imagen,
+                ratingPromedio = tienda.rating,
+                horaAtencion = tienda.horario
+
             )
         }
     }

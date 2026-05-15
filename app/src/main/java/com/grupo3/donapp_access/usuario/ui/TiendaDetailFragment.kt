@@ -1,5 +1,7 @@
 package com.grupo3.donapp_access.usuario.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.comerciante.ui.ValoracionesAdapter
+import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
 import com.grupo3.donapp_access.usuario.dto.LoteDTO
@@ -28,7 +30,21 @@ class TiendaDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var tiendaId: String? = null
+
+    private var tiendaActual: TiendaDTO? = null
     private lateinit var reviewsAdapter: ValoracionesAdapter
+
+    //AGREGADO
+    companion object{
+        fun newInstance(tiendaId: String, tiendaNombre: String): TiendaDetailFragment{
+            return TiendaDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString("id_tienda", tiendaId)
+                    putString("nombre_tienda", tiendaNombre)
+                }
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +53,8 @@ class TiendaDetailFragment : Fragment() {
         _binding = FragmentTiendaDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,7 +98,39 @@ class TiendaDetailFragment : Fragment() {
         }
 
         binding.btnHowToGet.setOnClickListener {
-            Toast.makeText(context, "Abriendo mapa...", Toast.LENGTH_SHORT).show()
+            abrirEnGoogleMaps() //AGREGADO
+        }
+
+
+    }
+
+    //AGREGADO
+    private fun abrirEnGoogleMaps(){
+        val tienda = tiendaActual?: run {
+            Toast.makeText(context, "No se pudo obtener la ubicacion", Toast.LENGTH_SHORT)
+            return
+        }
+
+
+        val uri = Uri.parse(
+            "geo:${tienda.latitud},${tienda.longitud}?" +
+                    "q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})"
+        )
+
+        //intent pasará las coordenadas al google maps
+        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+            setPackage("com.google.android.apps.maps")
+        }
+
+        if(intent.resolveActivity(requireActivity().packageManager)!= null){
+            startActivity(intent)
+        }else{
+            //si no tiene google maps, abrir en el navegador
+            val webUri = Uri.parse(
+                "https://www.google.com/maps/search/?api=1" +
+                        "&query=${tienda.latitud},${tienda.longitud}"
+            )
+            startActivity(Intent(Intent.ACTION_VIEW, webUri))
         }
     }
 
@@ -129,6 +179,7 @@ class TiendaDetailFragment : Fragment() {
     }
 
     private fun bindTienda(tienda: TiendaDTO) {
+        tiendaActual = tienda
         binding.tvStoreName.text = tienda.nombre
         binding.tvAddress.text = tienda.direccion
         binding.tvRatingValue.text = String.format(Locale.getDefault(), "%.1f", tienda.ratingPromedio)

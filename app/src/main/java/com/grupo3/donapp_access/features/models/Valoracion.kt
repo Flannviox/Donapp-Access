@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.models
+package com.grupo3.donapp_access.features.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -17,7 +16,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentMapBinding
 import com.grupo3.donapp_access.features.auth.models.Tienda
+import com.grupo3.donapp_access.features.map.TiendaConLotes
 import com.grupo3.donapp_access.map.MapViewModel
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.CameraOptions
@@ -53,7 +54,8 @@ class MapFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        arguments?.let {//(let) solo trabaja con ese objeto si no es null
+            //sirve para pasar datos entre fragmentos
 
         }
     }
@@ -83,14 +85,20 @@ class MapFragment : Fragment() {
         }
     }
 
+    //preguntar a que se refiere con que la view se destruye pero el fragment sigue vivo
 
     //MAPA
     private fun inicializarMapa(){
-        mapView?.getMapboxMap()?.setCamera(
-            CameraOptions.Builder()
+        mapView?.getMapboxMap()?.setCamera(//mueve la vista del usuario
+            CameraOptions.Builder()//entrar a las configuraciones y construirlas paso a paso
                 .center(Point.fromLngLat(-79.0287, -8.1116)) // Trujillo por defecto
                 .zoom(13.0)
                 .build()
+            /*1  → planeta entero
+              5  → país
+              10 → ciudad
+              15 → calles
+              20 → edificios*/
 
         )
         verificarYPedirPermiso()
@@ -105,8 +113,8 @@ class MapFragment : Fragment() {
         if(tienePermiso){
             viewModel.obtenerUbicacionYTiendas()
         }else{
-            locationPermissionLauncher.launch(
-                arrayOf(
+            locationPermissionLauncher.launch(//inicia la peticion de permisos
+                arrayOf(//array porque puede pedir varios permisos al mismo tiempo
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 )
@@ -118,8 +126,11 @@ class MapFragment : Fragment() {
 
     //OBSERVAR ESTADOS
     private fun observarEstados(){
+        //usar el ciclo de vida de la View
+        //lifecyclescop es una coroutinescop ligado al lifecycle,
+        //"esta courutine vive mientras el lifecycle viva, osea, mientras la UI exista
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED){//ejecuta este bloque solo cuando este al menos en started(visible y listo)
 
                 //ESTADO DE UBICACION
                 launch {
@@ -176,7 +187,7 @@ class MapFragment : Fragment() {
         )
     }
 
-    private fun pintarMarcadores(tiendas: List<Tienda>){
+    private fun pintarMarcadores(tiendas: List<TiendaConLotes>){
         val annotationApi = mapView?.annotations ?: return
         val pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
@@ -204,9 +215,9 @@ class MapFragment : Fragment() {
 
 
     //NAVEGACION
-    private fun navegarAdetalle(tienda: Tienda){
+    private fun navegarAdetalle(tienda: TiendaConLotes){
         val fragment = TiendaDetailFragment.newInstance(
-            tiendaID = tienda.id,
+            tiendaId = tienda.id,
             tiendaNombre = tienda.nombre
         )
         parentFragmentManager.beginTransaction()

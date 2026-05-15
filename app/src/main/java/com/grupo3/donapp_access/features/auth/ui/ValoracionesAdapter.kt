@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.comerciante.ui
+package com.grupo3.donapp_access.features.auth.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ class ValoracionesAdapter(private var valoraciones: List<ValoracionDTO>) :
 
     inner class ValoracionViewHolder(private val binding: ItemValoracionBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        
+
         fun bind(valoracion: ValoracionDTO) {
             // Mostramos el nombre del usuario que dejó la reseña
             val usuario = valoracion.usuarios
@@ -20,7 +20,7 @@ class ValoracionesAdapter(private var valoraciones: List<ValoracionDTO>) :
             } else {
                 "Usuario Anónimo"
             }
-            
+
             // Formateamos la fecha (ejemplo: 2023-10-25)
             binding.tvFecha.text = valoracion.createdAt.split("T").firstOrNull() ?: ""
             binding.rbCalificacion.rating = valoracion.calificacion.toFloat()

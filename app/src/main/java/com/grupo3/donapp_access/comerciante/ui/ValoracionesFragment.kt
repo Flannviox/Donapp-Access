@@ -13,6 +13,7 @@ import com.grupo3.donapp_access.databinding.FragmentValoracionesBinding
 import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
 import com.google.android.material.button.MaterialButton
+import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 
 class ValoracionesFragment : Fragment() {
 
