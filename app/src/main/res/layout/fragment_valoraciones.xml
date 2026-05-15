@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A1A1A"
+    android:orientation="vertical">
+
+    <!-- HEADER ACCESIBLE -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_back"
+            android:contentDescription="Regresar a la pantalla anterior"
+            app:tint="@color/donapp_text_primary" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Valoraciones"
+            android:textColor="@color/donapp_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:accessibilityHeading="true" />
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lo que dicen tus clientes"
+                android:textColor="@color/donapp_text_secondary"
+                android:layout_marginBottom="16dp"
+                android:textSize="14sp"/>
+
+            <!-- RESUMEN DE RATING (Adaptable) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_launcher_background"
+                android:backgroundTint="@color/donapp_surface"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:importantForAccessibility="noHideDescendants">
+                    <TextView
+                        android:id="@+id/tvAverageRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.8"
+                        android:textColor="@color/donapp_primary"
+                        android:textSize="36sp"
+                        android:textStyle="bold" />
+                    <RatingBar
+                        android:id="@+id/rbSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:numStars="5"
+                        android:rating="4.8"
+                        android:progressTint="@color/donapp_primary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:orientation="vertical">
+
+                    <!-- Fila de Estrellas Dinámica -->
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="16dp" android:text="5" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp" android:importantForAccessibility="no"/>
+                        <ProgressBar android:id="@+id/pb5Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="85" android:progressTint="@color/donapp_primary"/>
+                        <TextView android:id="@+id/tv5StarsPct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="35dp" android:text="85%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="16dp" android:text="4" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp" android:importantForAccessibility="no"/>
+                        <ProgressBar android:id="@+id/pb4Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="10" android:progressTint="@color/donapp_primary"/>
+                        <TextView android:id="@+id/tv4StarsPct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="35dp" android:text="10%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="16dp" android:text="3" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp" android:importantForAccessibility="no"/>
+                        <ProgressBar android:id="@+id/pb3Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="@color/donapp_primary"/>
+                        <TextView android:id="@+id/tv3StarsPct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="35dp" android:text="5%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="16dp" android:text="2" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp" android:importantForAccessibility="no"/>
+                        <ProgressBar android:id="@+id/pb2Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="0" android:progressTint="@color/donapp_primary"/>
+                        <TextView android:id="@+id/tv2StarsPct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="35dp" android:text="0%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="16dp" android:text="1" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="12dp" android:layout_height="12dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp" android:importantForAccessibility="no"/>
+                        <ProgressBar android:id="@+id/pb1Star" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="0" android:progressTint="@color/donapp_primary"/>
+                        <TextView android:id="@+id/tv1StarPct" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="35dp" android:text="0%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ESTADÍSTICAS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/ic_launcher_background"
+                    android:backgroundTint="@color/donapp_surface"
+                    android:padding="12dp"
+                    android:orientation="vertical"
+                    android:focusable="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📈 Tendencia" android:textColor="@color/donapp_text_secondary" android:textSize="12sp"/>
+                    <TextView android:id="@+id/tvTendencia" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+12% este mes" android:textColor="@color/donapp_success" android:textStyle="bold" android:layout_marginTop="4dp" android:textSize="14sp"/>
+                </LinearLayout>
+
+                <View android:layout_width="12dp" android:layout_height="1dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/ic_launcher_background"
+                    android:backgroundTint="@color/donapp_surface"
+                    android:padding="12dp"
+                    android:orientation="vertical"
+                    android:focusable="true">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="💬 Tasa respuesta" android:textColor="@color/donapp_text_secondary" android:textSize="12sp"/>
+                    <TextView android:id="@+id/tvTasaRespuesta" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="85%" android:textColor="#448AFF" android:textStyle="bold" android:layout_marginTop="4dp" android:textSize="14sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- FILTROS COMPLETOS (CON SCROLL HORIZONTAL) -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:scrollbars="none"
+                android:overScrollMode="never">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilterAll"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Todas (5)"
+                        android:backgroundTint="@color/donapp_primary"
+                        android:textColor="@color/donapp_bg"
+                        android:layout_marginEnd="8dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilter5"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5 ★"
+                        android:backgroundTint="@color/donapp_surface"
+                        android:textColor="@color/donapp_text_primary"
+                        android:layout_marginEnd="8dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilter4"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4 ★"
+                        android:backgroundTint="@color/donapp_surface"
+                        android:textColor="@color/donapp_text_primary"
+                        android:layout_marginEnd="8dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilter3"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3 ★"
+                        android:backgroundTint="@color/donapp_surface"
+                        android:textColor="@color/donapp_text_primary"
+                        android:layout_marginEnd="8dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilter2"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2 ★"
+                        android:backgroundTint="@color/donapp_surface"
+                        android:textColor="@color/donapp_text_primary"
+                        android:layout_marginEnd="8dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFilter1"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1 ★"
+                        android:backgroundTint="@color/donapp_surface"
+                        android:textColor="@color/donapp_text_primary"
+                        android:layout_marginEnd="8dp"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- LISTA DE RESEÑAS -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvValoraciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="2"
+                tools:listitem="@android:layout/simple_list_item_1" />
+
+            <!-- CONSEJOS (Cuadro adaptable) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/ic_launcher_background"
+                android:backgroundTint="#1A1A1A"
+                android:padding="15dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Consejos para mejorar tu calificación"
+                    android:textColor="@color/donapp_primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="• Responde a todas las reseñas en menos de 24 horas\n• Mantén tus productos frescos y bien organizados\n• Envía notificaciones de ofertas relevantes\n• Ofrece un buen servicio al cliente"
+                    android:textColor="@color/donapp_text_secondary"
+                    android:textSize="13sp"
+                    android:lineSpacingExtra="4dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/donapp_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+        <LinearLayout
+            android:id="@+id/btnNavInicio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/ic_launcher_background"
+                android:backgroundTint="@color/donapp_primary"
+                android:padding="6dp"
+                android:src="@android:drawable/ic_menu_home"
+                app:tint="@color/donapp_bg" />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inicio"
+                android:textColor="@color/donapp_primary"
+                android:textSize="11sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnNavNegocio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_secure"
+                app:tint="@color/donapp_text_secondary" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Negocio"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="11sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnNavPerfil"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="@color/donapp_text_secondary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Perfil" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
