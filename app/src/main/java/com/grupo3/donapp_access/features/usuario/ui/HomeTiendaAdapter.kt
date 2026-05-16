@@ -7,7 +7,9 @@ import com.grupo3.donapp_access.databinding.ItemHomeStoreCardBinding
 import com.grupo3.donapp_access.model.TiendaHome
 import java.util.Locale
 
-class HomeTiendaAdapter : RecyclerView.Adapter<HomeTiendaAdapter.TiendaViewHolder>() {
+class HomeTiendaAdapter(
+    private val onItemClick: (TiendaHome) -> Unit = {}
+) : RecyclerView.Adapter<HomeTiendaAdapter.TiendaViewHolder>() {
     private val items = mutableListOf<TiendaHome>()
 
     fun submitList(tiendas: List<TiendaHome>) {
@@ -26,7 +28,7 @@ class HomeTiendaAdapter : RecyclerView.Adapter<HomeTiendaAdapter.TiendaViewHolde
     }
 
     override fun onBindViewHolder(holder: TiendaViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], onItemClick)
     }
 
     override fun getItemCount(): Int = items.size
@@ -34,13 +36,15 @@ class HomeTiendaAdapter : RecyclerView.Adapter<HomeTiendaAdapter.TiendaViewHolde
     class TiendaViewHolder(
         private val binding: ItemHomeStoreCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(tienda: TiendaHome) = with(binding) {
+        fun bind(tienda: TiendaHome, onItemClick: (TiendaHome) -> Unit) = with(binding) {
             textTiendaNombre.text = tienda.nombre
             textDistancia.text = tienda.direccion?.takeIf { it.isNotBlank() } ?: "Cerca de ti"
 
             val rating = tienda.rating ?: 0.0
             textEstrellas.text = if (rating > 0.0) "%.1f".format(Locale.US, rating) else "Sin rating"
             textRating.text = if (rating > 0.0) "(%.1f)".format(Locale.US, rating) else ""
+            root.setOnClickListener { onItemClick(tienda) }
+
         }
     }
 }

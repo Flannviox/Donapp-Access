@@ -11,7 +11,10 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
-class HomeOfertaAdapter : RecyclerView.Adapter<HomeOfertaAdapter.OfertaViewHolder>() {
+class HomeOfertaAdapter(
+    private val onClick: (OfertaLote) -> Unit
+) : RecyclerView.Adapter<HomeOfertaAdapter.OfertaViewHolder>() {
+
     private val items = mutableListOf<OfertaLote>()
 
     fun submitList(ofertas: List<OfertaLote>) {

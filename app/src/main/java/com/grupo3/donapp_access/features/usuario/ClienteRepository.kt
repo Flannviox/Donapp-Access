@@ -40,7 +40,8 @@ class ClienteRepository @Inject constructor() {
         return SupabaseClient.client.from("tiendas")
             .select(Columns.raw("nombre,direccion,rating_promedio"))
             .decodeList<TiendaHomeDTO>()
-            .map { TiendaHome(nombre = it.nombre, direccion = it.direccion, rating = it.rating) }
+            .map { TiendaHome(idTienda = it.idTienda, nombre = it.nombre, direccion = it.direccion, rating = it.rating)
+            }
     }
 
     suspend fun obtenerCategorias(): List<Categoria> {
@@ -98,6 +99,7 @@ private data class TiendaRef(
 
 @Serializable
 private data class TiendaHomeDTO(
+    @SerialName("id_tienda") val idTienda: String? = null,
     val nombre: String,
     val direccion: String? = null,
     @SerialName("rating_promedio") val rating: Double? = null
