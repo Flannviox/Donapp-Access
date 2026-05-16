@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentOfertasBinding
 import com.grupo3.donapp_access.features.usuario.OfertasViewModel
 import com.grupo3.donapp_access.model.OfertaLote
+import kotlinx.coroutines.launch
+
 
 class OfertasFragment : Fragment() {
     private var _binding: FragmentOfertasBinding? = null
@@ -49,11 +54,15 @@ class OfertasFragment : Fragment() {
     }
 
     private fun observarOfertas() {
-        viewModel.ofertas.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                UiState.Loading -> mostrarCarga()
-                is UiState.Success -> mostrarOfertas(state.data)
-                is UiState.Error -> mostrarError(state.message)
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.ofertas.collect { state ->
+                    when (state) {
+                        is UiState.Loading -> mostrarCarga()
+                        is UiState.Success -> mostrarOfertas(state.data)
+                        is UiState.Error -> mostrarError(state.message)
+                    }
+                }
             }
         }
     }

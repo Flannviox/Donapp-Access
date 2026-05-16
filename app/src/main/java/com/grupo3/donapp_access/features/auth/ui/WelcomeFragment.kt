@@ -9,14 +9,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.grupo3.donapp_access.R
 
-class HomeFragment : Fragment() {
+class WelcomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_welcome, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,12 +27,18 @@ class HomeFragment : Fragment() {
 
         btnCrearCuenta.setOnClickListener {
             // Saltamos usando la acción del nav_graph.xml
-            findNavController().navigate(R.id.action_welcome_to_roleSelection)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, RoleSelectionFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         btnIniciarSesion.setOnClickListener {
             // Saltamos usando la acción del nav_graph.xml
-            findNavController().navigate(R.id.action_welcome_to_login)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, LoginFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

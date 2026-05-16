@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.auth.models
+package com.grupo3.donapp_access.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -17,4 +17,4 @@ data class Tienda(
     @SerialName("imagen_referencia")    val imagen: String?=null,
     @SerialName("hora_atencion")        val horario: String?= null,
 
-)
+    )

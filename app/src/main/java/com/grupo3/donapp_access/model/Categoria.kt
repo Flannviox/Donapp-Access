@@ -1,8 +1,12 @@
 package com.grupo3.donapp_access.model
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Categoria(
-    val idCategoria: String,
-    val nombre: String,
-    val estado: String,
+    @SerialName("id_categoria")  val idCategoria: String,
+    @SerialName("nombre")        val nombre: String,
+    @SerialName("estado")        val estado: String = "ACTIVO",
     val totalOfertas: Int = 0
 )

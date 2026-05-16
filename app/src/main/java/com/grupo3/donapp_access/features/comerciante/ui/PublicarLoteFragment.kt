@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.lotes.ui
+package com.grupo3.donapp_access.features.comerciante.ui
 
 import android.net.Uri
 import android.os.Bundle

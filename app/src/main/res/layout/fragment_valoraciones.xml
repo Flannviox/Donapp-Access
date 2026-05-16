@@ -18,7 +18,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@android:drawable/ic_menu_back"
+            android:src="@drawable/ic_back"
             android:contentDescription="Regresar a la pantalla anterior"
             app:tint="@color/donapp_text_primary" />
 
@@ -280,45 +280,54 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="8dp">
+
         <LinearLayout
             android:id="@+id/btnNavInicio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:background="@drawable/ic_launcher_background"
                 android:backgroundTint="@color/donapp_primary"
                 android:padding="6dp"
-                android:src="@android:drawable/ic_menu_home"
+                android:src="@drawable/ic_home"
                 app:tint="@color/donapp_bg" />
-            <TextView android:layout_width="wrap_content"
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Inicio"
                 android:textColor="@color/donapp_primary"
                 android:textSize="11sp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/btnNavNegocio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_secure"
                 app:tint="@color/donapp_text_secondary" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -326,18 +335,31 @@
                 android:textColor="@color/donapp_text_secondary"
                 android:textSize="11sp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/btnNavPerfil"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="@color/donapp_text_secondary" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Perfil" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" />
+            android:gravity="center"
+            android:minHeight="48dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:tint="@color/donapp_text_secondary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perfil"
+                android:textColor="@color/donapp_text_secondary"
+                android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
 

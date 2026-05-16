@@ -3,7 +3,7 @@ package com.grupo3.donapp_access.map
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.grupo3.donapp_access.features.auth.models.Tienda
+import com.grupo3.donapp_access.model.Tienda
 import com.grupo3.donapp_access.features.map.TiendaConLotes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

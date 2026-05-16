@@ -1,7 +1,7 @@
 package com.grupo3.donapp_access.map
 
 import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.features.auth.models.Tienda
+import com.grupo3.donapp_access.model.Tienda
 import com.grupo3.donapp_access.features.map.TiendaConLotes
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc

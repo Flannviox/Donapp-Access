@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/homeFragmentWelcome"
-        android:name="com.grupo3.donapp_access.features.auth.ui.HomeFragment"
-        tools:layout="@layout/fragment_home">
+        android:name="com.grupo3.donapp_access.features.auth.ui.WelcomeFragment"
+        tools:layout="@layout/fragment_welcome">
         <action
             android:id="@+id/action_welcome_to_login"
             app:destination="@id/loginFragment" />
@@ -27,20 +27,6 @@
         android:name="com.grupo3.donapp_access.features.auth.ui.RoleSelectionFragment"
         tools:layout="@layout/fragment_role_selection" />
 
-    <action
-        android:id="@+id/action_global_nav_usuario"
-        app:destination="@id/nav_usuario" />
 
-    <action
-        android:id="@+id/action_global_nav_comerciante"
-        app:destination="@id/nav_comerciante" />
-
-    <include
-        android:id="@+id/nav_usuario"
-        app:graph="@navigation/nav_usuario" />
-
-    <include
-        android:id="@+id/nav_comerciante"
-        app:graph="@navigation/nav_comerciante" />
 
 </navigation>

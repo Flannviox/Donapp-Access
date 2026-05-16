@@ -296,7 +296,7 @@ class RegisterSellerFragment : Fragment() {
 
                 val response = URL(url).readText()
                 val json     = JSONObject(response)
-                val features = json.getJSONArray("com/grupo3/donapp_access/features")
+                val features = json.getJSONArray("features")
 
                 val direccion = if (features.length() > 0) {
                     features.getJSONObject(0).getString("place_name")

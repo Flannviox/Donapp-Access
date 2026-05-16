@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grupo3.donapp_access.databinding.FragmentHomeBinding
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
 import com.grupo3.donapp_access.model.OfertaLote
 import com.grupo3.donapp_access.model.TiendaHome
@@ -14,9 +13,21 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import androidx.lifecycle.lifecycleScope
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.databinding.FragmentHomeUsuarioBinding
+import com.grupo3.donapp_access.map.ui.MapFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.model.Usuario
+import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
 
 class HomeFragment : Fragment() {
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentHomeUsuarioBinding? = null
     private val binding get() = _binding!!
 
     private val ofertaAdapter = HomeOfertaAdapter()
@@ -27,10 +38,12 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeUsuarioBinding.inflate(inflater, container, false)
         setupRecyclerViews()
         cargarDatos()
+        cargarNombreUsuario()
         return binding.root
+
     }
 
     private fun setupRecyclerViews() {
@@ -44,42 +57,50 @@ class HomeFragment : Fragment() {
     }
 
     private fun cargarDatos() {
-        Thread {
+        val repository = ClienteRepository()
+
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val repository = ClienteRepository()
-                val ofertas = repository.obtenerOfertas()
-                val tiendas = repository.obtenerTiendas()
+                val ofertas = withContext(Dispatchers.IO) { repository.obtenerOfertas() }
+                val tiendas = withContext(Dispatchers.IO) { repository.obtenerTiendas() }
 
                 val ofertasFinales = if (ofertas.isEmpty()) datosEjemploOfertas() else ofertas
                 val tiendasFinales = if (tiendas.isEmpty()) datosEjemploTiendas() else tiendas
 
-                activity?.runOnUiThread {
-                    val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-                    val vencenHoy = ofertasFinales.count { it.fechaVencimiento == hoy }
+                val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+                val vencenHoy = ofertasFinales.count { it.fechaVencimiento == hoy }
 
-                    binding.textAlertaOfertas.text = when {
-                        vencenHoy > 0 -> "$vencenHoy ofertas vencen hoy!!"
-                        ofertasFinales.isNotEmpty() -> "${ofertasFinales.size} ofertas activas cerca de ti"
-                        else -> "No hay ofertas activas aún"
-                    }
-
-                    ofertaAdapter.submitList(ofertasFinales.take(10))
-                    tiendaAdapter.submitList(tiendasFinales.take(10))
+                binding.textAlertaOfertas.text = when {
+                    vencenHoy > 0 -> "$vencenHoy ofertas vencen hoy!!"
+                    ofertasFinales.isNotEmpty() -> "${ofertasFinales.size} ofertas activas cerca de ti"
+                    else -> "No hay ofertas activas aún"
                 }
+
+                ofertaAdapter.submitList(ofertasFinales.take(10))
+                tiendaAdapter.submitList(tiendasFinales.take(10))
+
             } catch (e: Exception) {
                 android.util.Log.e("Donapp", "Error cargando home: ${e.message}", e)
-                activity?.runOnUiThread {
-                    val ofertasEjemplo = datosEjemploOfertas()
-                    val tiendasEjemplo = datosEjemploTiendas()
-                    val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-                    val vencenHoy = ofertasEjemplo.count { it.fechaVencimiento == hoy }
-
-                    binding.textAlertaOfertas.text = if (vencenHoy > 0) "$vencenHoy ofertas vencen hoy!!" else "3 ofertas activas cerca de ti"
-                    ofertaAdapter.submitList(ofertasEjemplo)
-                    tiendaAdapter.submitList(tiendasEjemplo)
-                }
+                ofertaAdapter.submitList(datosEjemploOfertas())
+                tiendaAdapter.submitList(datosEjemploTiendas())
             }
-        }.start()
+        }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnVerMapa.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+                )
+                .replace(R.id.fragmentContainer, MapFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     private fun datosEjemploOfertas(): List<OfertaLote> {
@@ -174,5 +195,29 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun cargarNombreUsuario() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val userId = SupabaseClient.client.auth.currentUserOrNull()?.id ?: return@launch
+
+                val usuario = SupabaseClient.client
+
+                    .from("usuarios")
+                    .select {
+                        filter { eq("id_usuarios", userId) }
+                    }
+                    .decodeSingle<UsuarioNombreDTO>()
+
+                binding.tvNombreUsuario.text = usuario.nombres
+                binding.tvAvatarInicial.text = usuario.nombres.first().uppercase()
+
+            }catch (e: Exception){
+                android.util.Log.e("HOME_USER", "Error: ${e.message}", e )
+                binding.tvNombreUsuario.text ="Usuario"
+            }
+        }
+
     }
 }

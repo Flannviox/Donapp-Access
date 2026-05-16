@@ -32,4 +32,17 @@
     <color name="role_comerciante_bg">#1A1F2E</color>
     <color name="role_comerciante_stroke">#1565C0</color>
 
+    <color name="donapp_yellow">#FFCA28</color>
+    <color name="donapp_background">#131317</color>
+    <color name="donapp_background_bottom">#1E1E24</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="donapp_surface_high">#2F2F36</color>
+    <color name="donapp_surface_muted">#24242B</color>
+
+    <color name="donapp_text_muted">#8A8A8A</color>
+    <color name="donapp_blue">#2196F3</color>
+    <color name="donapp_orange">#FF9800</color>
 </resources>

@@ -8,12 +8,16 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentBuscarBinding
 import com.grupo3.donapp_access.features.usuario.BuscarViewModel
 import com.grupo3.donapp_access.model.Categoria
+import kotlinx.coroutines.launch
 
 class BuscarFragment : Fragment() {
     private var _binding: FragmentBuscarBinding? = null
@@ -55,13 +59,17 @@ class BuscarFragment : Fragment() {
     }
 
     private fun observarCategorias() {
-        viewModel.categorias.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                UiState.Loading -> mostrarCarga()
-                is UiState.Success -> mostrarCategorias(state.data)
-                is UiState.Error -> mostrarError(state.message)
-            }
-        }
+       viewLifecycleOwner.lifecycleScope.launch {
+           repeatOnLifecycle(Lifecycle.State.STARTED){
+               viewModel.categorias.collect { state ->
+                   when (state) {
+                       is UiState.Loading -> mostrarCarga()
+                       is UiState.Success -> mostrarCategorias(state.data)
+                       is UiState.Error -> mostrarError(state.message)
+                   }
+               }
+           }
+       }
     }
 
     private fun seleccionarCategoria(categoria: Categoria) {

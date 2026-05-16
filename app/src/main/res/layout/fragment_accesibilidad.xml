@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/donapp_bg"
@@ -18,7 +19,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Regresar"
-            android:src="@android:drawable/ic_menu_back"
+            android:src="@drawable/ic_back"
             app:tint="@color/donapp_text_primary" />
 
         <TextView
@@ -220,12 +221,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:value="18.0"
                         android:valueFrom="12.0"
                         android:valueTo="30.0"
-                        android:value="18.0"
                         app:thumbColor="#FFC107"
                         app:trackColorActive="#2196F3"
-                        app:trackColorInactive="#FFFFFF" />
+                        app:trackColorInactive="#FFFFFF"
+                        tools:ignore="SpeakableTextPresentCheck" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -361,90 +363,6 @@
         android:layout_height="1dp"
         android:background="#33FFFFFF" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/donapp_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/btnNavInicio"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/ic_menu_home"
-                app:tint="@color/donapp_text_secondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inicio"
-                android:textColor="@color/donapp_text_secondary"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btnNavNegocio"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="64dp"
-                android:layout_height="40dp"
-                app:cardBackgroundColor="#FFC107"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="0dp">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="#000000" />
-            </com.google.android.material.card.MaterialCardView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Negocio"
-                android:textColor="#FFC107"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btnNavPerfil"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:tint="@color/donapp_text_secondary" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Perfil"
-                android:textColor="@color/donapp_text_secondary"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </LinearLayout>
 
 </LinearLayout>

@@ -123,15 +123,16 @@ class RoleSelectionFragment : Fragment() {
         }
 
 
-        btnVolver.setOnClickListener {
-            parentFragmentManager.popBackStack()
-
-        }
 
 
 
 
 
     }
+        btnVolver.setOnClickListener {
+            parentFragmentManager.popBackStack()
 
-} }
+        }
+
+
+    } }

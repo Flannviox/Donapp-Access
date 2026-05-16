@@ -7,4 +7,8 @@
     <string name="offers_count_format">%1$d ofertas activas</string>
     <string name="reviews_label_format">Reseñas (%1$d)</string>
     <string name="reviews_total_format">(%1$d)</string>
+    <string name="inicio">Inicio</string>
+    <string name="buscar">Buscar</string>
+    <string name="ofertas">Ofertas</string>
+    <string name="perfil">Perfil</string>
 </resources>

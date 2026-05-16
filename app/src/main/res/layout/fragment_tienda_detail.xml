@@ -19,7 +19,7 @@
             android:layout_margin="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Volver"
-            android:src="@android:drawable/ic_menu_back"
+            android:src="@drawable/ic_back"
             app:tint="@color/donapp_text_primary" />
         <View
             android:layout_width="match_parent"
@@ -223,7 +223,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/donapp_surface_background"
                 android:backgroundTint="@color/donapp_surface"
                 android:drawablePadding="12dp"
                 android:paddingHorizontal="16dp"
@@ -366,30 +365,6 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- BOTTOM NAVIGATION (MOCK) -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/donapp_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="8dp">
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:background="@drawable/ic_launcher_background" android:backgroundTint="@color/donapp_primary" android:padding="6dp" android:src="@android:drawable/ic_menu_home" app:tint="@color/donapp_bg" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Inicio" android:textColor="@color/donapp_primary" android:textSize="11sp" />
-        </LinearLayout>
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_search" app:tint="@color/donapp_text_secondary" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Buscar" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" />
-        </LinearLayout>
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_agenda" app:tint="@color/donapp_text_secondary" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ofertas" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" />
-        </LinearLayout>
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="@color/donapp_text_secondary" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Perfil" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" />
-        </LinearLayout>
-    </LinearLayout>
+   
 
 </LinearLayout>

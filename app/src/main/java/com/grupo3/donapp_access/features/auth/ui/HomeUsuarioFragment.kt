@@ -40,7 +40,7 @@ class HomeUsuarioFragment : Fragment() {
                     Toast.makeText(requireContext(), "Ofertas de hoy: ${listaOfertas.size}", Toast.LENGTH_LONG).show()
 
                     // CAMBIO AQUÍ: Ahora usamos .producto (en singular) como pusimos en el LoteDTO
-                    val primerProducto = listaOfertas[0].producto?.nombre
+                    val primerProducto = listaOfertas[0].productosId
                     Log.d("OFERTAS", "Primer producto: $primerProducto")
                 }
             }

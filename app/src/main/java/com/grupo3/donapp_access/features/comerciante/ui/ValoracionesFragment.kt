@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.comerciante.ui
+package com.grupo3.donapp_access.features.comerciante.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,18 +8,18 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentValoracionesBinding
+import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
-import com.google.android.material.button.MaterialButton
-import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 
 class ValoracionesFragment : Fragment() {
 
     private var _binding: FragmentValoracionesBinding? = null
     private val binding get() = _binding!!
-    
+
     private lateinit var adapter: ValoracionesAdapter
     private var todasLasValoraciones = listOf<ValoracionDTO>()
 
@@ -56,9 +56,9 @@ class ValoracionesFragment : Fragment() {
         }
 
         // Configuración de Filtros
-        binding.btnFilterAll.setOnClickListener { 
+        binding.btnFilterAll.setOnClickListener {
             actualizarEstiloFiltro(it)
-            adapter.updateList(todasLasValoraciones) 
+            adapter.updateList(todasLasValoraciones)
         }
         binding.btnFilter5.setOnClickListener { filterByRating(5, it) }
         binding.btnFilter4.setOnClickListener { filterByRating(4, it) }
@@ -90,7 +90,7 @@ class ValoracionesFragment : Fragment() {
             binding.btnFilterAll, binding.btnFilter5, binding.btnFilter4,
             binding.btnFilter3, binding.btnFilter2, binding.btnFilter1
         )
-        
+
         filtros.forEach { button ->
             button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.donapp_surface)
             button.setTextColor(ContextCompat.getColor(requireContext(), R.color.donapp_text_primary))
@@ -106,30 +106,60 @@ class ValoracionesFragment : Fragment() {
     private fun cargarDatosSimulados() {
         // Datos basados en la estructura DTO consolidada
         todasLasValoraciones = listOf(
-            ValoracionDTO("1", 5.0, "Excelente atención, muy accesibles para sillas de ruedas.", "2023-10-25T10:00:00", UsuarioNombreDTO("Carlos", "García")),
-            ValoracionDTO("2", 4.0, "Local muy limpio y rampa bien ubicada.", "2023-10-24T15:30:00", UsuarioNombreDTO("María", "López")),
-            ValoracionDTO("3", 5.0, "Personal capacitado en trato inclusivo.", "2023-10-23T09:15:00", UsuarioNombreDTO("Juan", "Pérez")),
-            ValoracionDTO("4", 2.0, "Los pasillos están un poco obstruidos hoy.", "2023-10-22T12:00:00", UsuarioNombreDTO("Ana", "Rodríguez")),
-            ValoracionDTO("5", 5.0, "¡La mejor experiencia inclusiva!", "2023-10-21T18:45:00", UsuarioNombreDTO("Luis", "Sánchez"))
+            ValoracionDTO(
+                "1",
+                5.0,
+                "Excelente atención, muy accesibles para sillas de ruedas.",
+                "2023-10-25T10:00:00",
+                UsuarioNombreDTO("Carlos", "García")
+            ),
+            ValoracionDTO(
+                "2",
+                4.0,
+                "Local muy limpio y rampa bien ubicada.",
+                "2023-10-24T15:30:00",
+                UsuarioNombreDTO("María", "López")
+            ),
+            ValoracionDTO(
+                "3",
+                5.0,
+                "Personal capacitado en trato inclusivo.",
+                "2023-10-23T09:15:00",
+                UsuarioNombreDTO("Juan", "Pérez")
+            ),
+            ValoracionDTO(
+                "4",
+                2.0,
+                "Los pasillos están un poco obstruidos hoy.",
+                "2023-10-22T12:00:00",
+                UsuarioNombreDTO("Ana", "Rodríguez")
+            ),
+            ValoracionDTO(
+                "5",
+                5.0,
+                "¡La mejor experiencia inclusiva!",
+                "2023-10-21T18:45:00",
+                UsuarioNombreDTO("Luis", "Sánchez")
+            )
         )
-        
+
         adapter.updateList(todasLasValoraciones)
-        
+
         // Actualizar UI de estadísticas
         binding.tvAverageRating.text = "4.2"
         binding.tvTendencia.text = "+15% este mes"
         binding.tvTasaRespuesta.text = "92%"
-        
+
         // Configurar todas las barras de progreso según IDs del XML
         binding.pb5Stars.progress = 60
         binding.tv5StarsPct.text = "60%"
-        
+
         binding.pb4Stars.progress = 20
         binding.tv4StarsPct.text = "20%"
-        
+
         binding.pb3Stars.progress = 0
         binding.tv3StarsPct.text = "0%"
-        
+
         binding.pb2Stars.progress = 20
         binding.tv2StarsPct.text = "20%"
 

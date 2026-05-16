@@ -10,11 +10,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.databinding.FragmentRegisterUserBinding
 import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
+import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RegisterUserFragment : Fragment() {
@@ -55,6 +59,8 @@ class RegisterUserFragment : Fragment() {
         binding.btnCrearCuenta.setOnClickListener {
             ejecutarRegistro()
         }
+
+        observarRegistro()
     }
 
 
@@ -131,10 +137,68 @@ class RegisterUserFragment : Fragment() {
             else -> true
         }
 
+
+
     }
+
 
     private fun mostrarToast(mensaje: String){
         Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
+    }
+
+
+
+    private fun observarRegistro() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            authViewModel.registerState.collect { state ->
+
+                when(state) {
+
+                    is AuthViewModel.AuthState.Loading -> {
+
+                        binding.btnCrearCuenta.isEnabled = false
+                    }
+
+                    is AuthViewModel.AuthState.Success -> {
+
+                        binding.btnCrearCuenta.isEnabled = true
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Cuenta creada correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        val destino: Fragment = when(state.rol.lowercase()) {
+
+                            "cliente" -> HomeFragment()
+
+                            "comerciante" -> DashboardFragment()
+
+                            else -> WelcomeFragment()
+                        }
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainer, destino)
+                            .commit()
+                    }
+
+                    is AuthViewModel.AuthState.Error -> {
+
+                        binding.btnCrearCuenta.isEnabled = true
+
+                        Toast.makeText(
+                            requireContext(),
+                            state.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                    else -> Unit
+                }
+            }
+        }
     }
 
 }

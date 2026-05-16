@@ -15,8 +15,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.features.auth.AuthViewModel
+import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -85,17 +88,18 @@ class LoginFragment : Fragment() {
                         }
                         is AuthViewModel.AuthState.Loading -> {
                             btnLogin.isEnabled = false
-                            btnLogin.text = "Cargando..." // Feedback visual
+                            btnLogin.text = "Cargando..."
                         }
                         is AuthViewModel.AuthState.Success -> {
                             btnLogin.isEnabled = true
                             btnLogin.text = "Iniciar Sesión"
+                            (requireActivity() as MainActivity).configurarNavbar(state.rol)
 
                             val rolUsuario = state.rol.lowercase()
 
                             val destino = when(rolUsuario){
                                 "cliente" -> HomeFragment()
-                                "comerciante" -> HomeFragment()
+                                "comerciante" -> DashboardFragment()
                             else -> {
                                 Toast.makeText(requireContext(), "Rol no válido", Toast.LENGTH_SHORT).show()
                                 return@collect
