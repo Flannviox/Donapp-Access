@@ -14,14 +14,13 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.lifecycle.lifecycleScope
-import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.databinding.FragmentHomeUsuarioBinding
 import com.grupo3.donapp_access.map.ui.MapFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.model.Usuario
 import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
@@ -90,16 +89,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnVerMapa.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_right,
-                    R.anim.slide_out_left,
-                    R.anim.slide_in_left,
-                    R.anim.slide_out_right
-                )
-                .replace(R.id.fragmentContainer, MapFragment())
-                .addToBackStack(null)
-                .commit()
+            (requireActivity() as MainActivity).navegarA(MapFragment())
         }
     }
 

@@ -40,6 +40,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.Lifecycle
 import kotlinx.coroutines.launch
+import kotlin.math.ln
 
 @AndroidEntryPoint // importante para inyectar el ViewModel
 class RegisterSellerFragment : Fragment() {
@@ -88,6 +89,7 @@ class RegisterSellerFragment : Fragment() {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -100,9 +102,28 @@ class RegisterSellerFragment : Fragment() {
         val tvStatus         = view.findViewById<TextView>(R.id.tvMapStatus)
         mapView              = view.findViewById(R.id.mapView)
 
+
+        mapView?.setOnTouchListener { v, event ->
+            when (event.action){
+                android.view.MotionEvent.ACTION_DOWN,
+                android.view.MotionEvent.ACTION_MOVE ->{
+                    v.parent?.requestDisallowInterceptTouchEvent(true)
+                }
+                android.view.MotionEvent.ACTION_UP,
+                    android.view.MotionEvent.ACTION_CANCEL->{
+                        v.parent?.requestDisallowInterceptTouchEvent(false)
+                    }
+            }
+            false
+        }
+
+
         btnVolver.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+
+
 
         // Opción 1 — GPS automático
 
@@ -251,34 +272,26 @@ class RegisterSellerFragment : Fragment() {
     private fun configurarMapa(
         etUbicacion: TextInputEditText,
         tvStatus: TextView
-    ){
-        mapView?.getMapboxMap()?.apply {
+    ) {
+        mapView?.getMapboxMap()?.setCamera(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat(longitudSeleccionada, latitudSeleccionada))
+                .zoom(15.0)
+                .build()
+        )
 
-            //centra el mapa en Trujillo al inicio
-            setCamera(
-                CameraOptions.Builder()
-                    .center(Point.fromLngLat(longitudSeleccionada, latitudSeleccionada))
-                    .zoom(15.0)
-                    .build()
-            )
-
-            //cuando el usuario deja de mover el mapa -> captura el centro
-            addOnMapIdleListener {
-                val centro = cameraState.center
-                latitudSeleccionada = centro.latitude()
-                longitudSeleccionada = centro.longitude()
-                tvStatus.text ="Cargando dirección"
-
+        mapView?.getMapboxMap()?.addOnMapIdleListener {
+            val centro = mapView?.getMapboxMap()?.cameraState?.center ?: return@addOnMapIdleListener
+            latitudSeleccionada = centro.latitude()
+            longitudSeleccionada = centro.longitude()
+            tvStatus.text = "Cargando dirección..."
 
             convertirCoordenadasADireccion(
                 latitudSeleccionada,
                 longitudSeleccionada,
                 etUbicacion,
                 tvStatus
-             )
-            }
-
-
+            )
         }
     }
     private fun convertirCoordenadasADireccion(
@@ -288,18 +301,21 @@ class RegisterSellerFragment : Fragment() {
         tvStatus: TextView
     ) {
         val token = BuildConfig.MAPBOX_TOKEN
+        android.util.Log.d("GEOCODING", "Iniciando lat=$lat lng=$lng")
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-                        "$lng,$lat.json?access_token=$token&language=es&limit=1"
-
+                android.util.Log.d("GEOCODING", "Haciendo request...")
+                val url = "https://api.mapbox.com/search/geocode/v6/reverse?" +
+                        "longitude=$lng&latitude=$lat&access_token=$token&language=es&limit=1"
                 val response = URL(url).readText()
-                val json     = JSONObject(response)
-                val features = json.getJSONArray("features")
+                android.util.Log.d("GEOCODING", "Response: ${response.take(200)}")
 
+                val json = JSONObject(response)
+                val features = json.getJSONArray("features")
                 val direccion = if (features.length() > 0) {
-                    features.getJSONObject(0).getString("place_name")
+                    val properties = features.getJSONObject(0).getJSONObject("properties")
+                    properties.getString("full_address")
                 } else {
                     "Lat: $lat, Lng: $lng"
                 }
@@ -308,15 +324,16 @@ class RegisterSellerFragment : Fragment() {
                     etUbicacion.setText(direccion)
                     tvStatus.text = "Mueve el mapa para ajustar la ubicación"
                 }
-
             } catch (e: Exception) {
+                android.util.Log.e("GEOCODING", "ERROR: ${e.javaClass.simpleName}: ${e.message}", e)
                 withContext(Dispatchers.Main) {
-                    // Si falla la API, muestra las coordenadas directamente
                     etUbicacion.setText("Lat: $lat, Lng: $lng")
                     tvStatus.text = "Mueve el mapa para ajustar la ubicación"
                 }
             }
+
         }
+
     }
 
     //ciclo de vida del mapview

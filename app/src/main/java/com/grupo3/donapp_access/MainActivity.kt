@@ -52,23 +52,31 @@ class MainActivity : AppCompatActivity() {
 
     private fun verificarSesionActiva() {
 
-        val usuarioActual = SupabaseClient.client.auth.currentUserOrNull()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, androidx.fragment.app.Fragment())
+            .commit()
 
-        if (usuarioActual != null) {
-            mostrarFragment(HomeFragment())
             lifecycleScope.launch {
-                try {
-                    val rol = authRepository.obtenerRolUsuario(usuarioActual.id)
-                    rolActual = rol
-                    configurarNavbar(rol)
-                } catch (e: Exception) {
+                kotlinx.coroutines.delay(500)
+
+                val usuarioActual = SupabaseClient.client.auth.currentUserOrNull()
+
+                if(usuarioActual!=null){
+                    try {
+                        val rol = authRepository.obtenerRolUsuario(usuarioActual.id)
+                        configurarNavbar(rol)
+                    }catch (e: Exception){
+                        mostrarSinNav(WelcomeFragment())
+
+                    }
+
+                }else{
                     mostrarSinNav(WelcomeFragment())
                 }
             }
-        } else {
-            mostrarFragment(WelcomeFragment())
+
+
         }
-    }
 
     fun configurarNavbar(rol: String){
         rolActual = rol
@@ -118,8 +126,25 @@ class MainActivity : AppCompatActivity() {
         mostrarFragment(fragment)
     }
     private fun mostrarFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack(null,
+            androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
+    fun navegarA(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,
+                R.anim.slide_out_right
+            )
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
             .commit()
     }
 }

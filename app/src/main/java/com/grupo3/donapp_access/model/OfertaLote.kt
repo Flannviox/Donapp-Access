@@ -2,6 +2,7 @@ package com.grupo3.donapp_access.model
 
 data class OfertaLote(
     val idLote: String,
+    val tiendaId: String?,
     val productoNombre: String,
     val productoImagen: String?,
     val productoPresentacion: String?,

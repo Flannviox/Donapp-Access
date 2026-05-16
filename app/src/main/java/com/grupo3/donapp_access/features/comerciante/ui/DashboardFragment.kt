@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.comerciante.ui.InventarioAdapter
 import com.grupo3.donapp_access.databinding.FragmentDashboardBinding
@@ -74,18 +75,12 @@ class DashboardFragment : Fragment() {
 
         // NAVEGACIÓN AL INVENTARIO
         binding.tvVerTodas.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, InventarioFragment())
-                .addToBackStack(null)
-                .commit()
+            (requireActivity() as MainActivity).navegarA(InventarioFragment())
         }
 
         // Botón para publicar nuevo lote
         binding.btnNuevaOferta.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, PublicarLoteFragment())
-                .addToBackStack(null)
-                .commit()
+            (requireActivity() as MainActivity).navegarA(PublicarLoteFragment())
         }
     }
 

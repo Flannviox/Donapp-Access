@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.comerciante.ui.DetalleLoteFragment
 import com.grupo3.donapp_access.features.comerciante.ui.InventarioAdapter
@@ -69,16 +70,14 @@ class InventarioFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = InventarioAdapter { loteSeleccionado ->
-            val fragment = DetalleLoteFragment()
-            val bundle = Bundle().apply {
-                putString("lote_id", loteSeleccionado.id_lote)
-            }
-            fragment.arguments = bundle
+            val fragment = DetalleLoteFragment().apply {
 
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit()
+                arguments = Bundle().apply {
+                    putString("lote_id", loteSeleccionado.id_lote)
+
+                }
+            }
+            (requireActivity() as MainActivity).navegarA(fragment)
         }
         binding.rvInventario.layoutManager = LinearLayoutManager(requireContext())
         binding.rvInventario.adapter = adapter

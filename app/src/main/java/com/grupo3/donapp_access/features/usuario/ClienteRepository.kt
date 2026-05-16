@@ -25,7 +25,7 @@ class ClienteRepository @Inject constructor() {
                 "id_lote,numero_lote,cantidad,fecha_vencimiento," +
                         "precio_normal,precio_oferta,estado," +
                         "productos(nombre,imagen,presentacion)," +
-                        "tiendas(nombre,direccion,rating_promedio)"
+                        "tiendas(id_tienda,nombre,direccion,rating_promedio)"
             )) {
                 filter {
                     eq("estado", "en_oferta")
@@ -55,6 +55,7 @@ class ClienteRepository @Inject constructor() {
 @Serializable
 private data class LoteConRelaciones(
     @SerialName("id_lote")           val idLote: String,
+    @SerialName("id_tienda")         val idTienda: String? = null,
     @SerialName("numero_lote")       val numeroLote: String? = null,
     @SerialName("cantidad")          val cantidad: Int,
     @SerialName("fecha_vencimiento") val fechaVencimiento: String,
@@ -66,6 +67,7 @@ private data class LoteConRelaciones(
     fun toOfertaLote() = OfertaLote(
         idLote = idLote,
         productoNombre = producto?.nombre ?: "Producto en oferta",
+        tiendaId = tienda?.idTienda,
         productoImagen = producto?.imagen,
         productoPresentacion = producto?.presentacion,
         tiendaNombre = tienda?.nombre ?: "Tienda Donapp",
@@ -88,6 +90,7 @@ private data class ProductoRef(
 
 @Serializable
 private data class TiendaRef(
+    @SerialName("id_tienda") val idTienda: String? = null,
     val nombre: String,
     val direccion: String? = null,
     @SerialName("rating_promedio") val rating: Double? = null

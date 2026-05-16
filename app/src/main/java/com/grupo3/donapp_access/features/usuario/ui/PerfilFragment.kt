@@ -71,16 +71,7 @@ class PerfilFragment : Fragment() {
 
     private fun configurarBotones(){
         binding.btnAccesibilidad.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.slide_in_right,
-                    R.anim.slide_out_left,
-                    R.anim.slide_in_left,
-                    R.anim.slide_out_right
-                )
-                .replace(R.id.fragmentContainer, AccesibilidadFragment())
-                .addToBackStack(null)
-                .commit()
+            (requireActivity() as MainActivity).navegarA(AccesibilidadFragment())
         }
         binding.btnCerrarSesion.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
