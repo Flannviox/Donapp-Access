@@ -76,6 +76,8 @@ class HomeFragment : Fragment() {
                 val ofertas = withContext(Dispatchers.IO) { repository.obtenerOfertas() }
                 val tiendas = withContext(Dispatchers.IO) { repository.obtenerTiendas() }
 
+                if(_binding ==null) return@launch
+
                 val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
                 val vencenHoy = ofertas.count { it.fechaVencimiento == hoy }
 
@@ -89,8 +91,10 @@ class HomeFragment : Fragment() {
                 tiendaAdapter.submitList(tiendas.take(10))
 
             } catch (e: Exception) {
+                if (_binding == null) return@launch
                 android.util.Log.e("Donapp", "Error cargando home: ${e.message}", e)
                 binding.textAlertaOfertas.text = "Error al cargar ofertas"
+
             }
         }
     }
@@ -115,17 +119,22 @@ class HomeFragment : Fragment() {
 
                 val usuario = SupabaseClient.client
 
+
                     .from("usuarios")
                     .select {
                         filter { eq("id_usuarios", userId) }
                     }
                     .decodeSingle<UsuarioNombreDTO>()
 
+                if (_binding == null) return@launch
+
+
                 binding.tvNombreUsuario.text = usuario.nombres
                 binding.tvAvatarInicial.text = usuario.nombres.first().uppercase()
 
             }catch (e: Exception){
                 android.util.Log.e("HOME_USER", "Error: ${e.message}", e )
+                if (_binding == null) return@launch
                 binding.tvNombreUsuario.text ="Usuario"
             }
         }
