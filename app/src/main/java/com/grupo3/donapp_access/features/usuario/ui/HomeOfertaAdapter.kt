@@ -10,12 +10,28 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
+import android.speech.tts.TextToSpeech
+import android.content.Context
+
 
 class HomeOfertaAdapter(
+    private val context: Context,
     private val onClick: (OfertaLote) -> Unit
 ) : RecyclerView.Adapter<HomeOfertaAdapter.OfertaViewHolder>() {
 
     private val items = mutableListOf<OfertaLote>()
+    private var tts : TextToSpeech? = null
+
+    init{
+        tts = TextToSpeech(
+            context
+        ){status->
+            if(status == TextToSpeech.SUCCESS){
+                tts?.language= Locale("es", "ES")
+
+            }
+        }
+    }
 
     fun submitList(ofertas: List<OfertaLote>) {
         items.clear()
@@ -38,7 +54,7 @@ class HomeOfertaAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    class OfertaViewHolder(
+    inner class OfertaViewHolder(
         private val binding: ItemHomeOfferCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(oferta: OfertaLote) = with(binding) {
@@ -49,6 +65,27 @@ class HomeOfertaAdapter(
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
             textDistancia.text = oferta.tiendaDireccion?.takeIf { it.isNotBlank() } ?: "Cerca de ti"
             textExpiracion.text = tiempoRestante(oferta.fechaVencimiento)
+
+            btnAudio.setOnClickListener {
+                val texto = """
+                    Oferta disponible
+                    Producto ${oferta.productoNombre}
+                    Tienda ${oferta.tiendaNombre}
+                    Precio oferta ${oferta.precioOferta.toSoles()}
+                    ${textExpiracion.text}
+                    Direccion ${textDistancia.text}
+                """.trimIndent()
+
+                tts?.speak(
+                    texto,
+                    TextToSpeech.QUEUE_FLUSH,
+                    null,
+                    null
+                )
+
+            }
+
+
 
             // Ajustar ancho de la línea de tachado al texto
             viewTachado.post {
@@ -88,5 +125,10 @@ class HomeOfertaAdapter(
         }
 
         private fun Double.toSoles(): String = "S/ %.2f".format(Locale.US, this)
+    }
+
+    fun releaseTTS(){
+        tts?.stop()
+        tts?.shutdown()
     }
 }

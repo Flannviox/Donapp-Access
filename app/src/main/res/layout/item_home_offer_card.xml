@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="340dp"
     android:layout_height="168dp"
     android:layout_marginEnd="12dp"
@@ -121,7 +122,8 @@
                     android:layout_height="14dp"
                     android:contentDescription="Distancia"
                     android:src="@drawable/ic_location_pin"
-                    android:tint="@color/donapp_blue" />
+                    android:tint="@color/donapp_blue"
+                    tools:ignore="UseAppTint" />
 
                 <TextView
                     android:id="@+id/textDistancia"
@@ -143,6 +145,18 @@
                 android:text="Expira en\n2h 30 min"
                 android:textColor="@color/donapp_orange"
                 android:textSize="12sp" />
+
+            <ImageButton
+                android:id="@+id/btnAudio"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Escuchar oferta"
+                android:src="@android:drawable/ic_btn_speak_now"
+                android:tint="@color/donapp_primary"
+                tools:ignore="UseAppTint" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -105,7 +105,9 @@
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:paddingVertical="12dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="#F5C518"
             android:text="Guardar Cambios"
@@ -117,7 +119,9 @@
         <Button
             android:id="@+id/btnAgotado"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:paddingVertical="12dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="#FF9800"
             android:text="Marcar como Agotado (Stock 0)"
@@ -128,7 +132,9 @@
         <Button
             android:id="@+id/btnEliminar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:paddingVertical="12dp"
             android:layout_marginTop="12dp"
             android:backgroundTint="#F44336"
             android:text="Eliminar Lote Definitivamente"

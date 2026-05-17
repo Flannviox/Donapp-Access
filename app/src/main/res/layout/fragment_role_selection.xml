@@ -167,7 +167,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinuar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:paddingVertical="12dp"
             android:text="Continuar"
             android:textColor="@color/donapp_bg"
             android:textSize="18sp"

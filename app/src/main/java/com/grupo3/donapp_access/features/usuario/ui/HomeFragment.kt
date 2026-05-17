@@ -30,11 +30,13 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeUsuarioBinding? = null
     private val binding get() = _binding!!
 
-    private val ofertaAdapter = HomeOfertaAdapter { oferta ->
-        oferta.tiendaId?.let { id ->
+    private val ofertaAdapter by lazy{
+        HomeOfertaAdapter(requireContext()){
+            oferta -> oferta.tiendaId?.let{id ->
             (requireActivity() as MainActivity).navegarA(
                 TiendaDetailFragment.newInstance(id, oferta.tiendaNombre)
             )
+        }
         }
     }
 
@@ -108,6 +110,7 @@ class HomeFragment : Fragment() {
 
 
     override fun onDestroyView() {
+        ofertaAdapter.releaseTTS()
         _binding = null
         super.onDestroyView()
     }
@@ -142,6 +145,9 @@ class HomeFragment : Fragment() {
 
 
     }
+
+
+
 
 
 }

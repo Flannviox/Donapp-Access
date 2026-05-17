@@ -58,6 +58,15 @@ class AccesibilidadFragment : Fragment() {
     }
 
     private fun cargarPreferencias(){
+
+        val prefs = requireContext().getSharedPreferences(
+            "donapp_prefs",
+            android.content.Context.MODE_PRIVATE
+        )
+
+        val fontScale = prefs.getFloat("font_scale", 1f)
+        binding.sliderFontSize.value= fontScale * 18f
+
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val userId = SupabaseClient.client.auth.currentUserOrNull()?.id
@@ -169,9 +178,7 @@ class AccesibilidadFragment : Fragment() {
         }
     }
 
-    private fun aplicarTamanoLetra(valor: Float){
 
-    }
 
     private fun guardarPreferencias(){
         viewLifecycleOwner.lifecycleScope.launch {
