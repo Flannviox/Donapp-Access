@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.grupo3.donapp_access.worker.AlertasWorker
@@ -171,4 +173,34 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
     }
+
+    override fun onStop() {
+        super.onStop()
+        ejecutarWorkerInmediato()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        WorkManager.getInstance(this).cancelUniqueWork("DonappAlertaInmediata")
+    }
+
+    private fun ejecutarWorkerInmediato() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<AlertasWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        // Lo encolamos de forma única
+        WorkManager.getInstance(this).enqueueUniqueWork(
+            "DonappAlertaInmediata",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
+
+
+
 }
