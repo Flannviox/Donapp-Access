@@ -81,7 +81,7 @@ class BuscarFragment : Fragment() {
         }
     }
     private fun configurarOfertas() {
-        ofertaAdapter = OfertaAdapter { oferta ->
+        ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
             // Aquí luego haremos la navegación al detalle de la tienda/oferta
             Toast.makeText(requireContext(), "Seleccionaste: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
         }

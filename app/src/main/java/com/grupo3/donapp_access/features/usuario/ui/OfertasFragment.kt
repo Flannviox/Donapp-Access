@@ -22,16 +22,8 @@ class OfertasFragment : Fragment() {
     private var _binding: FragmentOfertasBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: OfertasViewModel
+    private lateinit var ofertaAdapter: OfertaAdapter
 
-    private val ofertaAdapter = OfertaAdapter { oferta ->
-        // Por ahora solo mostraremos un mensaje al hacer clic
-        // Luego lo cambiaremos para navegar al detalle de la oferta
-        android.widget.Toast.makeText(
-            requireContext(),
-            "Seleccionaste: ${oferta.productoNombre}",
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +36,18 @@ class OfertasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this)[OfertasViewModel::class.java]
+
+        ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
+
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Seleccionaste: ${oferta.productoNombre}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
+
         configurarLista()
         observarOfertas()
 

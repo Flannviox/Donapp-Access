@@ -19,6 +19,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.grupo3.donapp_access.worker.AlertasWorker
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -48,6 +55,23 @@ class MainActivity : AppCompatActivity() {
             verificarSesionActiva()
 
         }
+        iniciarWorkerDeAlertas()
+    }
+
+    private fun iniciarWorkerDeAlertas() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequestBuilder<AlertasWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "DonappAlertasWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 
     private fun verificarSesionActiva() {

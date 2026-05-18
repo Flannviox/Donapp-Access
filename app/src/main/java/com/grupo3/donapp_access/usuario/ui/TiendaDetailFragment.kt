@@ -84,7 +84,7 @@ class TiendaDetailFragment : Fragment() {
         }
 
         // AGREGADO: Configurar el adaptador de lotes disponibles
-        ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter { oferta ->
+        ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter(requireContext()) { oferta ->
             // Opcional: ¿Qué hacer al tocar la carta dentro del detalle de la tienda?
             Toast.makeText(context, "Viendo detalle de: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
         }
@@ -270,6 +270,9 @@ class TiendaDetailFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+
+        ofertasAdapter.releaseTTS()
+
         super.onDestroyView()
         _binding = null
     }

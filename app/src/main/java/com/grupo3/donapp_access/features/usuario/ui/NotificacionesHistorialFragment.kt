@@ -42,7 +42,7 @@ class NotificacionesHistorialFragment : Fragment() {
 
             val detalleTiendaFragment = TiendaDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString("tienda_id", tiendaId)
+                    putString("id_tienda", tiendaId)
                 }
             }
 

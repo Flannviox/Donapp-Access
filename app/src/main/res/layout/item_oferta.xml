@@ -157,5 +157,13 @@
             android:textColor="@color/donapp_blue"
             android:textSize="11sp"
             tools:text="0.3 km" />
+
+        <ImageButton
+            android:id="@+id/btnAudio"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:background="@android:color/transparent"
+            android:contentDescription="Escuchar información del producto"/>
     </LinearLayout>
 </LinearLayout>

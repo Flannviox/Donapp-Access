@@ -1,5 +1,6 @@
 package com.grupo3.donapp_access.features.usuario.ui
 
+import android.content.Context
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,22 @@ import com.grupo3.donapp_access.databinding.ItemOfertaBinding
 import com.grupo3.donapp_access.model.OfertaLote
 import java.util.Locale
 import kotlin.math.roundToInt
+import android.speech.tts.TextToSpeech
 
 class OfertaAdapter(
+    private val context: Context,
     private val onItemClick: (OfertaLote) -> Unit = {}
 ) : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     private val items = mutableListOf<OfertaLote>()
+    private var tts : TextToSpeech? = null
+
+    init {
+        tts = TextToSpeech(context) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                tts?.language = Locale("es", "ES")
+            }
+        }
+    }
 
     fun submitList(ofertas: List<OfertaLote>) {
         items.clear()
@@ -36,7 +48,7 @@ class OfertaAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    class OfertaViewHolder(
+    inner class OfertaViewHolder(
         private val binding: ItemOfertaBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(oferta: OfertaLote, onItemClick: (OfertaLote) -> Unit) = with(binding) {
@@ -68,6 +80,25 @@ class OfertaAdapter(
 
             // AGREGADO: Restaurar el clic de la tarjeta
             root.setOnClickListener { onItemClick(oferta) }
+            btnAudio.setOnClickListener {
+                val texto = """
+                Producto $producto.
+                Tienda ${oferta.tiendaNombre}.
+                Precio en oferta ${oferta.precioOferta.toSoles()}.
+                ${textStock.text}.
+                ${textVencimiento.text}.
+                ${textDistancia.text}.
+            """.trimIndent()
+
+                tts?.speak(
+                    texto,
+                    TextToSpeech.QUEUE_FLUSH,
+                    null,
+                    null
+                )
+            }
+
+
         }
 
         private fun descuento(precioNormal: Double, precioOferta: Double): String {
@@ -77,5 +108,9 @@ class OfertaAdapter(
         }
 
         private fun Double.toSoles(): String = "S/ %.2f".format(Locale.US, this)
+    }
+    fun releaseTTS(){
+        tts?.stop()
+        tts?.shutdown()
     }
 }
