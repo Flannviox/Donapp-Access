@@ -65,6 +65,14 @@ class HomeOfertaAdapter(
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
             textDistancia.text = oferta.tiendaDireccion?.takeIf { it.isNotBlank() } ?: "Cerca de ti"
             textExpiracion.text = tiempoRestante(oferta.fechaVencimiento)
+            // AGREGADO: Cargar imagen real con Glide
+            com.bumptech.glide.Glide.with(itemView.context)
+                .load(oferta.productoImagen)
+                .placeholder(com.grupo3.donapp_access.R.drawable.ic_bread_product)
+                .into(imageProducto)
+
+            // AGREGADO: Restaurar el clic para navegar
+            root.setOnClickListener { onClick(oferta) }
 
             // AQUÍ CONECTAMOS LA CARTA: Al hacer clic, ejecuta la función de navegación
             root.setOnClickListener {

@@ -246,44 +246,26 @@ class PublicarLoteFragment : Fragment() {
     }
 
     private fun crearProductoNuevo() {
-        //Validación: nombre
         val nombre = etNombreProducto.text?.toString()?.trim().orEmpty()
-        if (nombre.isEmpty()) {
-            tilNombreProducto.error = "Ingresá un nombre"
-            return
-        }
+        if (nombre.isEmpty()) { tilNombreProducto.error = "Ingresá un nombre"; return }
         tilNombreProducto.error = null
 
-        //Validación: categoría seleccionada
         val categoriaSel = spinnerCategoria.selectedItem as? CategoriaDTO
         val catId = categoriaSel?.idCategoria
-        if (catId == null) {
-            mostrarToast("Seleccioná una categoría")
-            return
-        }
+        if (catId == null) { mostrarToast("Seleccioná una categoría"); return }
 
-        //Validación: imagen elegida
         val uri = imagenUri
-        if (uri == null) {
-            mostrarToast("Seleccioná una imagen")
-            return
-        }
+        if (uri == null) { mostrarToast("Seleccioná una imagen"); return }
 
-        //Leer bytes del archivo
         val bytes = try {
             requireContext().contentResolver.openInputStream(uri)?.use { it.readBytes() }
-        } catch (e: Exception) {
-            null
-        }
-        if (bytes == null) {
-            mostrarToast("No se pudo leer la imagen")
-            return
-        }
+        } catch (e: Exception) { null }
 
-        // AQUÍ CONVERTIMOS LA IMAGEN A BASE 64
+        if (bytes == null) { mostrarToast("No se pudo leer la imagen"); return }
+
+        // AQUÍ CONVERTIMOS LA IMAGEN A BASE 64 (¡No lo borres!)
         val imagenBase64 = android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
 
-        //Derivar extensión a partir del MIME
         val mime = requireContext().contentResolver.getType(uri)
         val ext = when (mime) {
             "image/jpeg" -> "jpg"
@@ -292,10 +274,9 @@ class PublicarLoteFragment : Fragment() {
             else -> "jpg"
         }
 
-        // Enviamos la imagen en formato Base64 al ViewModel
+        // Enviamos el STRING en Base64 al ViewModel
         viewModel.crearProductoNuevo(nombre, catId, imagenBase64, ext)
     }
-
     private fun mostrarDatePicker() {
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTitleText("Fecha de vencimiento")

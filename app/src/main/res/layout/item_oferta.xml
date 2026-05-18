@@ -13,6 +13,14 @@
         android:layout_height="92dp"
         android:background="@drawable/bg_surface_stroke">
 
+        <ImageView
+            android:id="@+id/imageProducto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/textOfertaIcon"
             android:layout_width="match_parent"

@@ -2,15 +2,18 @@ package com.grupo3.donapp_access.features.usuario.ui
 
 import android.graphics.Paint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.ItemOfertaBinding
 import com.grupo3.donapp_access.model.OfertaLote
 import java.util.Locale
 import kotlin.math.roundToInt
 
 class OfertaAdapter(
-    private val onItemClick: (OfertaLote) -> Unit = {} // AGREGADO: Parámetro para manejar el clic
+    private val onItemClick: (OfertaLote) -> Unit = {}
 ) : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     private val items = mutableListOf<OfertaLote>()
 
@@ -22,15 +25,13 @@ class OfertaAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OfertaViewHolder {
         val binding = ItemOfertaBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return OfertaViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: OfertaViewHolder, position: Int) {
-        holder.bind(items[position], onItemClick) // AGREGADO: Pasamos el evento de clic
+        holder.bind(items[position], onItemClick)
     }
 
     override fun getItemCount(): Int = items.size
@@ -38,9 +39,8 @@ class OfertaAdapter(
     class OfertaViewHolder(
         private val binding: ItemOfertaBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(oferta: OfertaLote, onItemClick: (OfertaLote) -> Unit) = with(binding) { // AGREGADO: Recibimos el evento
+        fun bind(oferta: OfertaLote, onItemClick: (OfertaLote) -> Unit) = with(binding) {
             val producto = oferta.productoNombre.ifBlank { "Producto en oferta" }
-            textOfertaIcon.text = producto.first().uppercaseChar().toString()
             textProductoNombre.text = producto
             textTiendaNombre.text = oferta.tiendaNombre
             textPresentacion.text = oferta.productoPresentacion ?: oferta.numeroLote?.let { "Lote: $it" }.orEmpty()
@@ -52,14 +52,26 @@ class OfertaAdapter(
             textDistancia.text = oferta.ratingTienda?.let { "Rating ${"%.1f".format(Locale.US, it)}" } ?: "Oferta activa"
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
 
-            // AGREGADO: Asignamos el clic a la tarjeta completa
+            // AGREGADO: Cargar imagen con Glide
+            if (!oferta.productoImagen.isNullOrEmpty()) {
+                imageProducto.visibility = View.VISIBLE
+                textOfertaIcon.visibility = View.GONE
+                Glide.with(itemView.context)
+                    .load(oferta.productoImagen)
+                    .placeholder(R.drawable.ic_bread_product)
+                    .into(imageProducto)
+            } else {
+                imageProducto.visibility = View.GONE
+                textOfertaIcon.visibility = View.VISIBLE
+                textOfertaIcon.text = producto.first().uppercaseChar().toString()
+            }
+
+            // AGREGADO: Restaurar el clic de la tarjeta
             root.setOnClickListener { onItemClick(oferta) }
         }
 
         private fun descuento(precioNormal: Double, precioOferta: Double): String {
-            if (precioNormal <= 0.0 || precioOferta <= 0.0 || precioOferta >= precioNormal) {
-                return "Oferta"
-            }
+            if (precioNormal <= 0.0 || precioOferta <= 0.0 || precioOferta >= precioNormal) return "Oferta"
             val porcentaje = ((1 - (precioOferta / precioNormal)) * 100).roundToInt()
             return "-$porcentaje%"
         }
