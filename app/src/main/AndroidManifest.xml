@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+
     <application
         android:name=".DonappApplication"
         android:allowBackup="true"
@@ -19,7 +24,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DonappAccess">
 
-
         <meta-data
             android:name="com.mapbox.token"
             android:value="${MAPBOX_ACCESS_TOKEN}" />
@@ -30,10 +34,14 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name=".core.services.GeofenceService"
+            android:foregroundServiceType="location"
+            android:exported="false" />
+
+    </application>
 </manifest>

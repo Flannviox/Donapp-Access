@@ -73,6 +73,13 @@ android {
 }
 
 dependencies {
+
+    // Google Play Services para obtener la ubicación exacta
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // Herramientas matemáticas de Mapbox (Turf y GeoJSON) para calcular distancias
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-turf:6.15.0")
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-geojson:6.15.0")
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

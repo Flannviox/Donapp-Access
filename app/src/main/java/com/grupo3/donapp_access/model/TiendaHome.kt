@@ -4,5 +4,7 @@ data class TiendaHome(
     val idTienda: String? = null,
     val nombre: String,
     val direccion: String?,
-    val rating: Double?
+    val rating: Double?,
+    val latitud: Double? = null,
+    val longitud: Double? = null
 )

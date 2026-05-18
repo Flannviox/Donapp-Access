@@ -40,7 +40,6 @@ data class TiendaDTO(
                 imagenReferencia = tienda.imagen,
                 ratingPromedio = tienda.rating,
                 horaAtencion = tienda.horario
-
             )
         }
     }
@@ -50,17 +49,19 @@ data class TiendaDTO(
 data class LoteDTO(
     @SerialName("id_lote")
     val idLote: String,
-    
+
     @SerialName("precio_normal")
     val precioNormal: Double,
-    
+
     @SerialName("precio_oferta")
     val precioOferta: Double? = null,
-    
+
     val cantidad: Int,
     val estado: String,
-    
-    // Relación para el join con productos
+
+    @SerialName("fecha_vencimiento")
+    val fechaVencimiento: String = "",
+
     val productos: ProductoDTO? = null
 )
 

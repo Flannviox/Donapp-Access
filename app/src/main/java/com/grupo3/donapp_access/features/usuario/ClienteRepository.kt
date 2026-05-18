@@ -14,6 +14,9 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+import com.grupo3.donapp_access.features.lotes.dto.OfertaViewDTO
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.rpc
 @Singleton
 class ClienteRepository @Inject constructor() {
 
@@ -36,11 +39,46 @@ class ClienteRepository @Inject constructor() {
         return lotes.map { it.toOfertaLote() }
     }
 
+
+
+
+    suspend fun buscarOfertas(query: String): List<OfertaLote> {
+        val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+        val lotes = SupabaseClient.client.from("vw_ofertas_busqueda")
+            .select {
+                filter {
+                    isIn("estado", listOf("disponible", "en_oferta"))
+                    gte("fecha_vencimiento", hoy)
+
+                    // Búsqueda simultánea usando el bloque 'or' de Kotlin
+                    or {
+                        ilike("producto_nombre", "%$query%")
+                        ilike("categoria_nombre", "%$query%")
+                    }
+                }
+            }.decodeList<OfertaViewDTO>()
+
+        return lotes.map { it.toOfertaLote() }
+    }
+
+
+
+
     suspend fun obtenerTiendas(): List<TiendaHome> {
         return SupabaseClient.client.from("tiendas")
-            .select(Columns.raw("nombre,direccion,rating_promedio"))
+            // Agrega latitud y longitud a la consulta raw
+            .select(Columns.raw("id_tienda,nombre,direccion,rating_promedio,latitud,longitud"))
             .decodeList<TiendaHomeDTO>()
-            .map { TiendaHome(idTienda = it.idTienda, nombre = it.nombre, direccion = it.direccion, rating = it.rating)
+            .map {
+                TiendaHome(
+                    idTienda = it.idTienda,
+                    nombre = it.nombre,
+                    direccion = it.direccion,
+                    rating = it.rating,
+                    latitud = it.latitud,
+                    longitud = it.longitud
+                )
             }
     }
 
@@ -50,6 +88,25 @@ class ClienteRepository @Inject constructor() {
                 filter { eq("estado", "ACTIVO") }
             }.decodeList<Categoria>()
     }
+    suspend fun obtenerTiendasCercanas(latUsuario: Double, lngUsuario: Double, radioMetros: Int = 10000): List<TiendaHome> {
+        // Empaquetamos las coordenadas para enviarlas a Supabase
+        val parametros = CoordenadasParam(lat = latUsuario, lng = lngUsuario, radio = radioMetros)
+
+        // Llamamos a tu función SQL "tiendas_cercanas" usando .rpc()
+        return SupabaseClient.client.postgrest.rpc("tiendas_cercanas", parametros)
+            .decodeList<TiendaHomeDTO>()
+            .map {
+                TiendaHome(
+                    idTienda = it.idTienda,
+                    nombre = it.nombre,
+                    direccion = it.direccion,
+                    rating = it.rating,
+                    latitud = it.latitud,
+                    longitud = it.longitud
+                )
+            }
+    }
+
 }
 
 // DTOs internos para deserializar los joins
@@ -102,5 +159,18 @@ private data class TiendaHomeDTO(
     @SerialName("id_tienda") val idTienda: String? = null,
     val nombre: String,
     val direccion: String? = null,
-    @SerialName("rating_promedio") val rating: Double? = null
+    @SerialName("rating_promedio") val rating: Double? = null,
+
+    val latitud: Double? = null,
+    val longitud: Double? = null
+)
+
+
+
+
+@Serializable
+data class CoordenadasParam(
+    val lat: Double,
+    val lng: Double,
+    val radio: Int
 )

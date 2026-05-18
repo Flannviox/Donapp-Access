@@ -40,7 +40,10 @@ class PerfilFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cargarDatosUsuario()
         configurarBotones()
-
+//Conectar con historial de notificaciones
+        binding.btnNotificaciones.setOnClickListener {
+            (requireActivity() as MainActivity).navegarA(NotificacionesHistorialFragment())
+        }
 
     }
 
