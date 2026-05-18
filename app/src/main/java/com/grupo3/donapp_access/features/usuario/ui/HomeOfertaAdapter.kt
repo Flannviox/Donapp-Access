@@ -66,6 +66,11 @@ class HomeOfertaAdapter(
             textDistancia.text = oferta.tiendaDireccion?.takeIf { it.isNotBlank() } ?: "Cerca de ti"
             textExpiracion.text = tiempoRestante(oferta.fechaVencimiento)
 
+            // AQUÍ CONECTAMOS LA CARTA: Al hacer clic, ejecuta la función de navegación
+            root.setOnClickListener {
+                onClick(oferta)
+            }
+
             btnAudio.setOnClickListener {
                 val texto = """
                     Oferta disponible
@@ -82,10 +87,7 @@ class HomeOfertaAdapter(
                     null,
                     null
                 )
-
             }
-
-
 
             // Ajustar ancho de la línea de tachado al texto
             viewTachado.post {
@@ -126,7 +128,6 @@ class HomeOfertaAdapter(
 
         private fun Double.toSoles(): String = "S/ %.2f".format(Locale.US, this)
     }
-
     fun releaseTTS(){
         tts?.stop()
         tts?.shutdown()

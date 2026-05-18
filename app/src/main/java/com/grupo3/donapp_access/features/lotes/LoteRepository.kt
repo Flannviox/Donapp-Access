@@ -56,12 +56,15 @@ class LoteRepository @Inject constructor() {
     }
 
     suspend fun uploadImagenProducto(
-        bytes: ByteArray,
+        imagenBase64: String, // Ahora recibimos el String en Base64
         idTienda: String,
         extension: String
     ): String {
         val path = "$idTienda/${UUID.randomUUID()}.$extension"
         try {
+            // Decodificamos el Base64 de vuelta a ByteArray para subirlo a Supabase
+            val bytes = android.util.Base64.decode(imagenBase64, android.util.Base64.DEFAULT)
+
             supabase.storage.from("productos").upload(path, bytes) {
                 upsert = false
             }

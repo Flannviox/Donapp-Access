@@ -63,7 +63,7 @@ class PublicarViewModel @Inject constructor(
     fun crearProductoNuevo(
         nombre: String,
         categoriaId: String,
-        imagenBytes: ByteArray,
+        imagenBase64: String, // Se cambió a String para recibir Base64
         extension: String
     ) {
         val idTienda = idTiendaCache
@@ -75,7 +75,8 @@ class PublicarViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = PublicarState.Loading
             try {
-                val urlImagen = repository.uploadImagenProducto(imagenBytes, idTienda, extension)
+                // Pasamos el String de Base64 al repositorio
+                val urlImagen = repository.uploadImagenProducto(imagenBase64, idTienda, extension)
 
                 val dto = ProductoDTO(
                     categoriaId = categoriaId,
@@ -95,7 +96,6 @@ class PublicarViewModel @Inject constructor(
             }
         }
     }
-
     fun publicarLote(
         cantidad: Int,
         fechaVencimiento: String,

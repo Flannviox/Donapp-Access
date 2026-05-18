@@ -9,7 +9,9 @@ import com.grupo3.donapp_access.model.OfertaLote
 import java.util.Locale
 import kotlin.math.roundToInt
 
-class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
+class OfertaAdapter(
+    private val onItemClick: (OfertaLote) -> Unit = {} // AGREGADO: Parámetro para manejar el clic
+) : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     private val items = mutableListOf<OfertaLote>()
 
     fun submitList(ofertas: List<OfertaLote>) {
@@ -28,7 +30,7 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: OfertaViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(items[position], onItemClick) // AGREGADO: Pasamos el evento de clic
     }
 
     override fun getItemCount(): Int = items.size
@@ -36,7 +38,7 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     class OfertaViewHolder(
         private val binding: ItemOfertaBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(oferta: OfertaLote) = with(binding) {
+        fun bind(oferta: OfertaLote, onItemClick: (OfertaLote) -> Unit) = with(binding) { // AGREGADO: Recibimos el evento
             val producto = oferta.productoNombre.ifBlank { "Producto en oferta" }
             textOfertaIcon.text = producto.first().uppercaseChar().toString()
             textProductoNombre.text = producto
@@ -49,6 +51,9 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
             textVencimiento.text = "Vence: ${oferta.fechaVencimiento}"
             textDistancia.text = oferta.ratingTienda?.let { "Rating ${"%.1f".format(Locale.US, it)}" } ?: "Oferta activa"
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
+
+            // AGREGADO: Asignamos el clic a la tarjeta completa
+            root.setOnClickListener { onItemClick(oferta) }
         }
 
         private fun descuento(precioNormal: Double, precioOferta: Double): String {

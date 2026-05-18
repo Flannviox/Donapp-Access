@@ -16,7 +16,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
-import com.grupo3.donapp_access.usuario.dto.LoteDTO
+import com.grupo3.donapp_access.features.lotes.dto.LoteDTO
 import com.grupo3.donapp_access.usuario.dto.TiendaDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
 import io.github.jan.supabase.postgrest.from
@@ -26,13 +26,13 @@ import java.util.Locale
 
 class TiendaDetailFragment : Fragment() {
 
+
     private var _binding: FragmentTiendaDetailBinding? = null
     private val binding get() = _binding!!
-
     private var tiendaId: String? = null
-
     private var tiendaActual: TiendaDTO? = null
     private lateinit var reviewsAdapter: ValoracionesAdapter
+    private lateinit var ofertasAdapter: com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
 
     //AGREGADO
     companion object{
@@ -81,6 +81,18 @@ class TiendaDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = reviewsAdapter
             isNestedScrollingEnabled = false // Importante para scroll fluido dentro de NestedScrollView
+        }
+
+        // AGREGADO: Configurar el adaptador de lotes disponibles
+        ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter { oferta ->
+            // Opcional: ¿Qué hacer al tocar la carta dentro del detalle de la tienda?
+            Toast.makeText(context, "Viendo detalle de: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.rvAvailableOffers.apply {
+            // Se usa LayoutManager Horizontal para deslizar de lado, tal como en el Home
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = ofertasAdapter
         }
     }
 
@@ -155,14 +167,35 @@ class TiendaDetailFragment : Fragment() {
                             eq("estado", "en_oferta")
                         }
                     }.decodeList<LoteDTO>()
-                
+
                 binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
-                // TODO: Configurar rvAvailableOffers con su adaptador
+
+                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
+                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
+                val ofertasLote = lotes.map { lote ->
+                    com.grupo3.donapp_access.model.OfertaLote(
+                        idLote = lote.idLote ?: "", // Faltaba incluir este campo
+                        tiendaId = id,
+                        productoNombre = lote.productos?.nombre ?: "Producto",
+                        productoImagen = lote.productos?.imagen, // Faltaba incluir este campo
+                        productoPresentacion = lote.productos?.presentacion,
+                        tiendaNombre = tiendaActual?.nombre ?: "",
+                        tiendaDireccion = tiendaActual?.direccion ?: "",
+                        cantidad = lote.cantidad, // Ya no necesita ?: porque no es nulo en el DTO
+                        fechaVencimiento = lote.fechaVencimiento, // Ya no necesita ?: porque no es nulo
+                        precioNormal = lote.precioNormal, // Ya no necesita ?: porque no es nulo
+                        precioOferta = lote.precioOferta ?: 0.0,
+                        numeroLote = lote.numeroLote,
+                        ratingTienda = tiendaActual?.ratingPromedio ?: 0.0
+                    )
+                }
+                // ¡Magia! Pintamos las cartas en la UI
+                ofertasAdapter.submitList(ofertasLote)
 
                 // 3. Obtener valoraciones (con información del usuario que la hizo)
                 val valoraciones = SupabaseClient.client.from("valoraciones")
                     .select(Columns.raw("*, usuarios(nombres, apellidos)")) {
-                        filter { 
+                        filter {
                             eq("tiendas_id", id)
                             eq("estado", "ACTIVO")
                         }

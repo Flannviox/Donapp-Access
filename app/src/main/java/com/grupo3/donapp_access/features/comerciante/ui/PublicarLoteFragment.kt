@@ -185,6 +185,8 @@ class PublicarLoteFragment : Fragment() {
                 btnUsarProductoExistente.isEnabled = false
             }
             is PublicarViewModel.PublicarState.ProductoCreado -> {
+                // AQUÍ AGREGAMOS EL TOAST DE CONFIRMACIÓN
+                mostrarToast("Tu producto ha sido creado con éxito, ya puedes crear un lote", long = true)
                 layoutPaso1.visibility = View.GONE
                 layoutPaso2.visibility = View.VISIBLE
             }
@@ -278,6 +280,9 @@ class PublicarLoteFragment : Fragment() {
             return
         }
 
+        // AQUÍ CONVERTIMOS LA IMAGEN A BASE 64
+        val imagenBase64 = android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
+
         //Derivar extensión a partir del MIME
         val mime = requireContext().contentResolver.getType(uri)
         val ext = when (mime) {
@@ -287,7 +292,8 @@ class PublicarLoteFragment : Fragment() {
             else -> "jpg"
         }
 
-        viewModel.crearProductoNuevo(nombre, catId, bytes, ext)
+        // Enviamos la imagen en formato Base64 al ViewModel
+        viewModel.crearProductoNuevo(nombre, catId, imagenBase64, ext)
     }
 
     private fun mostrarDatePicker() {
