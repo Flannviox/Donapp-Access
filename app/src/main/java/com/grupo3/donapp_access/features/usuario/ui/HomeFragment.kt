@@ -26,6 +26,16 @@ import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 
+
+import android.content.Intent
+import android.os.Build
+import com.grupo3.donapp_access.core.services.GeofenceService
+
+
+import android.Manifest
+import androidx.activity.result.contract.ActivityResultContracts
+
+
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeUsuarioBinding? = null
     private val binding get() = _binding!!
@@ -110,8 +120,23 @@ class HomeFragment : Fragment() {
         binding.btnVerMapa.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(MapFragment())
         }
-    }
 
+        // 👇 AQUÍ LLAMAMOS A LA VENTANITA DE PERMISOS PRIMERO 👇
+        solicitarPermisosYArrancar()
+    }
+    private fun solicitarPermisosYArrancar() {
+        val permisosNecesarios = mutableListOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+
+        // Si el celular tiene Android 13 o superior, pedimos permiso para notificaciones
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permisosNecesarios.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        requestPermissionLauncher.launch(permisosNecesarios.toTypedArray())
+    }
 
     override fun onDestroyView() {
         ofertaAdapter.releaseTTS()
@@ -148,8 +173,27 @@ class HomeFragment : Fragment() {
 
 
 
+    }private fun iniciarServicioGeocercas() {
+        val intentService = Intent(requireContext(), com.grupo3.donapp_access.core.services.GeofenceService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            requireContext().startForegroundService(intentService)
+        } else {
+            requireContext().startService(intentService)
+        }
     }
 
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val locationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+
+        if (locationGranted) {
+            // Si el usuario acepta, arrancamos tu servicio
+            iniciarServicioGeocercas()
+        } else {
+            android.widget.Toast.makeText(requireContext(), "Activa la ubicación para recibir alertas de comida", android.widget.Toast.LENGTH_LONG).show()
+        }
+    }
 
 
 
