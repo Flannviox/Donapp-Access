@@ -16,6 +16,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
+import com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
 import com.grupo3.donapp_access.usuario.dto.LoteDTO
 import com.grupo3.donapp_access.usuario.dto.TiendaDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
@@ -33,6 +34,8 @@ class TiendaDetailFragment : Fragment() {
 
     private var tiendaActual: TiendaDTO? = null
     private lateinit var reviewsAdapter: ValoracionesAdapter
+
+    private lateinit var offersAdapter: OfertaAdapter
 
     //AGREGADO
     companion object{
@@ -81,6 +84,14 @@ class TiendaDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = reviewsAdapter
             isNestedScrollingEnabled = false // Importante para scroll fluido dentro de NestedScrollView
+        }
+
+        offersAdapter = OfertaAdapter { oferta ->
+        }
+        binding.rvAvailableOffers.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = offersAdapter
+            isNestedScrollingEnabled = false // Evita conflictos de scroll dentro del NestedScrollView
         }
     }
 
@@ -147,6 +158,8 @@ class TiendaDetailFragment : Fragment() {
 
                 bindTienda(tienda)
 
+
+
                 // 2. Obtener lotes en oferta (con información del producto relacionada)
                 val lotes = SupabaseClient.client.from("lote")
                     .select(Columns.raw("*, productos(*)")) {
@@ -155,6 +168,31 @@ class TiendaDetailFragment : Fragment() {
                             eq("estado", "en_oferta")
                         }
                     }.decodeList<LoteDTO>()
+
+                binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
+
+// CONVERTIR LoteDTO A OfertaLote UTILIZANDO LOS DATOS DE LA TIENDA
+                val ofertasMapeadas = lotes.map { lote ->
+                    com.grupo3.donapp_access.model.OfertaLote(
+                        idLote = lote.idLote,
+                        tiendaId = tienda.idTienda,
+                        productoNombre = lote.productos?.nombre ?: "Producto en oferta",
+                        productoImagen = lote.productos?.imagen,
+                        productoPresentacion = null,
+                        tiendaNombre = tienda.nombre,
+                        tiendaDireccion = tienda.direccion,
+                        cantidad = lote.cantidad,
+                        fechaVencimiento = lote.fechaVencimiento,
+                        precioNormal = lote.precioNormal,
+                        precioOferta = lote.precioOferta ?: 0.0,
+                        numeroLote = null,
+                        ratingTienda = tienda.ratingPromedio
+                    )
+                }
+
+                offersAdapter.submitList(ofertasMapeadas)
+
+
                 
                 binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
                 // TODO: Configurar rvAvailableOffers con su adaptador

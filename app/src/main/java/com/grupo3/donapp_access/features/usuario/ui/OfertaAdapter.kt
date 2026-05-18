@@ -9,7 +9,9 @@ import com.grupo3.donapp_access.model.OfertaLote
 import java.util.Locale
 import kotlin.math.roundToInt
 
-class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
+class OfertaAdapter(
+    private val onOfertaClick: (OfertaLote) -> Unit
+) : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     private val items = mutableListOf<OfertaLote>()
 
     fun submitList(ofertas: List<OfertaLote>) {
@@ -24,7 +26,8 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
             parent,
             false
         )
-        return OfertaViewHolder(binding)
+
+        return OfertaViewHolder(binding, onOfertaClick)
     }
 
     override fun onBindViewHolder(holder: OfertaViewHolder, position: Int) {
@@ -34,8 +37,10 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     class OfertaViewHolder(
-        private val binding: ItemOfertaBinding
+        private val binding: ItemOfertaBinding,
+        private val onOfertaClick: (OfertaLote) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(oferta: OfertaLote) = with(binding) {
             val producto = oferta.productoNombre.ifBlank { "Producto en oferta" }
             textOfertaIcon.text = producto.first().uppercaseChar().toString()
@@ -49,6 +54,11 @@ class OfertaAdapter : RecyclerView.Adapter<OfertaAdapter.OfertaViewHolder>() {
             textVencimiento.text = "Vence: ${oferta.fechaVencimiento}"
             textDistancia.text = oferta.ratingTienda?.let { "Rating ${"%.1f".format(Locale.US, it)}" } ?: "Oferta activa"
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
+
+
+            root.setOnClickListener {
+                onOfertaClick(oferta)
+            }
         }
 
         private fun descuento(precioNormal: Double, precioOferta: Double): String {

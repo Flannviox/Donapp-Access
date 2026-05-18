@@ -14,6 +14,8 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+import com.grupo3.donapp_access.features.lotes.dto.OfertaViewDTO
+
 @Singleton
 class ClienteRepository @Inject constructor() {
 
@@ -36,11 +38,44 @@ class ClienteRepository @Inject constructor() {
         return lotes.map { it.toOfertaLote() }
     }
 
+
+
+
+    suspend fun buscarOfertas(query: String): List<OfertaLote> {
+        val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+        val lotes = SupabaseClient.client.from("vw_ofertas_busqueda")
+            .select {
+                filter {
+                    isIn("estado", listOf("disponible", "en_oferta"))
+                    gte("fecha_vencimiento", hoy)
+
+                    // Búsqueda simultánea usando el bloque 'or' de Kotlin
+                    or {
+                        ilike("producto_nombre", "%$query%")
+                        ilike("categoria_nombre", "%$query%")
+                    }
+                }
+            }.decodeList<OfertaViewDTO>()
+
+        return lotes.map { it.toOfertaLote() }
+    }
+
+
+
+
     suspend fun obtenerTiendas(): List<TiendaHome> {
         return SupabaseClient.client.from("tiendas")
-            .select(Columns.raw("nombre,direccion,rating_promedio"))
+
+            .select(Columns.raw("id_tienda,nombre,direccion,rating_promedio"))
             .decodeList<TiendaHomeDTO>()
-            .map { TiendaHome(idTienda = it.idTienda, nombre = it.nombre, direccion = it.direccion, rating = it.rating)
+            .map {
+                TiendaHome(
+                    idTienda = it.idTienda,
+                    nombre = it.nombre,
+                    direccion = it.direccion,
+                    rating = it.rating
+                )
             }
     }
 
@@ -104,3 +139,4 @@ private data class TiendaHomeDTO(
     val direccion: String? = null,
     @SerialName("rating_promedio") val rating: Double? = null
 )
+

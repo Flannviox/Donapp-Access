@@ -19,8 +19,9 @@ data class LoteDTO(
 
     val cantidad: Int,
 
+
     @SerialName("fecha_vencimiento")
-    val fechaVencimiento: String,
+    val fechaVencimiento: String = "",
 
     @SerialName("precio_normal")
     val precioNormal: Double,
