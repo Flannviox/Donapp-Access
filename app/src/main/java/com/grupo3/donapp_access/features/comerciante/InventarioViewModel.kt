@@ -34,13 +34,14 @@ class InventarioViewModel @Inject constructor(
         viewModelScope.launch {
             _lotesState.value = UiState.Loading
             try {
+                // ...código anterior...
                 val lotes = SupabaseClient.client.from("lote")
                     .select(
                         Columns.raw(
-                        "id_lote,productos_id,tiendas_id,numero_lote,cantidad," +
-                                "fecha_vencimiento,precio_normal,precio_oferta,estado," +
-                                "productos(nombre)"
-                    )) {
+                            "id_lote,productos_id,tiendas_id,numero_lote,cantidad," +
+                                    "fecha_vencimiento,precio_normal,precio_oferta,estado," +
+                                    "productos(nombre, imagen)" // <--- AGREGAMOS 'imagen' AQUÍ
+                        )) {
                         filter { eq("tiendas_id", tiendaId) }
                     }.decodeList<LoteConProducto>()
 
@@ -156,6 +157,10 @@ class InventarioViewModel @Inject constructor(
                 }
                 // Recargamos la lista para que el cambio se vea en el inventario
                 obtenerInventario(tiendaId)
+
+                // NUEVO: Recargamos el lote para que la pantalla de detalles se actualice en vivo
+                cargarLoteSeleccionado(idLote)
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -225,11 +230,13 @@ data class LoteConProducto(
         fecha_vencimiento = fecha_vencimiento,
         precio_normal = precio_normal,
         precio_oferta = precio_oferta,
-        estado = estado
+        estado = estado,
+        imagenUrl = producto?.imagen
     )
 }
 
 @Serializable
 data class ProductoRef(
-    @SerialName("nombre") val nombre: String
+    @SerialName("nombre") val nombre: String,
+    @SerialName("imagen") val imagen: String? = null
 )

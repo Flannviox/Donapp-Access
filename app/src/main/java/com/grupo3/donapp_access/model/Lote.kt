@@ -14,5 +14,7 @@ data class Lote(
     @SerialName("precio_normal")     val precio_normal: Double,
     @SerialName("precio_oferta")     val precio_oferta: Double? = null,
     @SerialName("fecha_limite_oferta") val fecha_limite_oferta: String? = null,
-    @SerialName("estado")            val estado: String = "disponible"
+    @SerialName("estado")            val estado: String = "disponible",
+
+    val imagenUrl: String? = null
 )

@@ -56,7 +56,7 @@ class DashboardViewModel @Inject constructor(
                         Columns.raw(
                             "id_lote,productos_id,tiendas_id,numero_lote,cantidad," +
                                     "fecha_vencimiento,precio_normal,precio_oferta,estado," +
-                                    "productos(nombre)"
+                                    "productos(nombre, imagen)" // <--- AHORA SÍ PIDE LA IMAGEN
                         )){
                         filter {
                             eq("tiendas_id", idTiendaReal)

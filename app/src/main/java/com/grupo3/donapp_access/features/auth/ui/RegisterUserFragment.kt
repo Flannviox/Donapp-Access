@@ -117,10 +117,12 @@ class RegisterUserFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, opciones)
         binding.actvDiscapacidad.setAdapter(adapter)
 
+        // NUEVO: Asigna el valor por defecto sin activar el filtro de búsqueda
+        binding.actvDiscapacidad.setText(opciones[0], false)
+
         binding.actvDiscapacidad.setOnClickListener {
             binding.actvDiscapacidad.showDropDown()
         }
-
     }
 
 
@@ -197,20 +199,17 @@ class RegisterUserFragment : Fragment() {
 
 
     private fun observarRegistro() {
-
         viewLifecycleOwner.lifecycleScope.launch {
-
             authViewModel.registerState.collect { state ->
-
                 when(state) {
-
                     is AuthViewModel.AuthState.Loading -> {
-
                         binding.btnCrearCuenta.isEnabled = false
+                        binding.btnCrearCuenta.text = "Registrando..." // NUEVO TEXTO
                     }
 
                     is AuthViewModel.AuthState.Success -> {
                         binding.btnCrearCuenta.isEnabled = true
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
                         parentFragmentManager.beginTransaction()
                             .replace(
                                 R.id.fragmentContainer,
@@ -223,13 +222,12 @@ class RegisterUserFragment : Fragment() {
 
                     is AuthViewModel.AuthState.VerificacionPendiente ->{
                         binding.btnCrearCuenta.isEnabled = true
-
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
                     }
 
-
                     is AuthViewModel.AuthState.Error -> {
-
                         binding.btnCrearCuenta.isEnabled = true
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
 
                         Toast.makeText(
                             requireContext(),
@@ -239,7 +237,6 @@ class RegisterUserFragment : Fragment() {
                         configurarWebViewCaptcha()
                         tokenTurnstile = ""
                     }
-
                     else -> Unit
                 }
             }
