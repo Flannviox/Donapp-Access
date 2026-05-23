@@ -28,6 +28,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.grupo3.donapp_access.worker.AlertasWorker
 import java.util.concurrent.TimeUnit
+import io.github.jan.supabase.postgrest.from
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -141,6 +144,45 @@ class MainActivity : AppCompatActivity() {
 
     fun configurarNavbar(rol: String){
         rolActual = rol
+
+        // NUEVO: Validar si el usuario tiene discapacidad visual en su primer inicio de sesión
+        lifecycleScope.launch {
+            try {
+                val userId = SupabaseClient.client.auth.currentUserOrNull()?.id
+                if (userId != null) {
+                    val prefs = getSharedPreferences("donapp_prefs", MODE_PRIVATE)
+                    val checkHecho = prefs.getBoolean("check_accesibilidad_inicial", false)
+                    val currentScale = prefs.getFloat("font_scale", 1f)
+
+                    if (!checkHecho) {
+                        // Usamos un DTO privado para evitar crashes de serialización
+                        val usuario = SupabaseClient.client.from("usuarios")
+                            .select { filter { eq("id_usuarios", userId) } }
+                            .decodeSingle<CheckDiscapacidadDTO>()
+
+                        if (usuario.tipoDiscapacidad?.uppercase() == "VISUAL" && currentScale == 1f) {
+                            prefs.edit()
+                                .putFloat("font_scale", 1.5f) // Aplica la letra grande
+                                .putBoolean("check_accesibilidad_inicial", true) // Marca que ya se revisó
+                                .apply()
+
+                            // Reiniciamos la MainActivity para que el attachBaseContext aplique la fuente al instante
+                            val currentIntent = intent
+                            finish()
+                            startActivity(currentIntent)
+                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                            return@launch // Evitamos cargar fragmentos porque la actividad se reiniciará
+                        } else {
+                            // Si no es visual o ya cambió la letra, igual marcamos como revisado
+                            prefs.edit().putBoolean("check_accesibilidad_inicial", true).apply()
+                        }
+                    }
+                }
+            } catch(e: Exception) {
+                android.util.Log.e("MAIN_ACCESIBILIDAD", "Error verificando accesibilidad: ${e.message}")
+            }
+        }
+
         bottomNav.visibility = View.VISIBLE
 
         if(rol.lowercase()=="cliente"){
@@ -167,19 +209,12 @@ class MainActivity : AppCompatActivity() {
 
             bottomNav.setOnItemSelectedListener { item->
                 when(item.itemId){
-
-                    R.id.nav_negocio -> mostrarFragment(
-                        DashboardFragment()
-                    )
-                    R.id.nav_perfil_com -> mostrarFragment(
-                        PerfilComercianteFragment()
-                    )
+                    R.id.nav_negocio -> mostrarFragment(DashboardFragment())
+                    R.id.nav_perfil_com -> mostrarFragment(com.grupo3.donapp_access.PerfilComercianteFragment())
                 }
                 true
             }
         }
-
-
     }
 
     fun mostrarSinNav (fragment: Fragment){
@@ -249,3 +284,7 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+@Serializable
+private data class CheckDiscapacidadDTO(
+    @SerialName("tipo_discapacidad") val tipoDiscapacidad: String? = null
+)
