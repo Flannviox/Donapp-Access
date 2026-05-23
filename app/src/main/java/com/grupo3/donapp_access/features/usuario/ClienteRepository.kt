@@ -15,8 +15,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import com.grupo3.donapp_access.features.lotes.dto.OfertaViewDTO
+import com.grupo3.donapp_access.model.Reserva
+
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc
+
+
+
 @Singleton
 class ClienteRepository @Inject constructor() {
 
@@ -107,6 +112,37 @@ class ClienteRepository @Inject constructor() {
             }
     }
 
+    suspend fun crearReserva(usuarioId: String, loteId: String, cantidad: Int): Result<Unit> {
+        return try {
+            //Consultamos si ya existe una reserva activa para este usuario y lote
+            val reservasPrevias = SupabaseClient.client.from("reservas").select {
+                filter {
+                    eq("usuario_id", usuarioId)
+                    eq("id_lote", loteId)
+                    eq("estado", "activa") // Solo bloqueamos si la reserva actual sigue vigente
+                }
+            }.decodeList<Reserva>()
+
+            // Si la lista no está vacía, significa que ya tiene una reserva corriendo
+            if (reservasPrevias.isNotEmpty()) {
+                return Result.failure(Exception("Ya tienes una reserva activa para este producto. Debes recogerla o esperar a que expire."))
+            }
+
+            // guardamos si es que no hay reservas activas
+            val nuevaReserva = Reserva(
+                usuarioId = usuarioId,
+                idLote = loteId,
+                cantidad = cantidad
+            )
+
+            SupabaseClient.client.from("reservas").insert(nuevaReserva)
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
 
 // DTOs internos para deserializar los joins
@@ -174,3 +210,4 @@ data class CoordenadasParam(
     val lng: Double,
     val radio: Int
 )
+

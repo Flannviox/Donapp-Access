@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -17,16 +18,20 @@ import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
 import com.grupo3.donapp_access.features.lotes.dto.LoteDTO
+import com.grupo3.donapp_access.features.usuario.TiendaDetailViewModel
 import com.grupo3.donapp_access.usuario.dto.TiendaDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
 import java.util.Locale
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import io.github.jan.supabase.auth.auth
 
 class TiendaDetailFragment : Fragment() {
 
-
+    private val detailViewModel: TiendaDetailViewModel by viewModels()
     private var _binding: FragmentTiendaDetailBinding? = null
     private val binding get() = _binding!!
     private var tiendaId: String? = null
@@ -69,11 +74,39 @@ class TiendaDetailFragment : Fragment() {
             // parentFragmentManager.popBackStack() 
         }
 
+
         setupRecyclerViews()
         setupButtons()
+        setupObservers()
         cargarDatos()
     }
 
+    private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+                detailViewModel.reservaState.collect { state ->
+                    when (state) {
+                        is com.grupo3.donapp_access.core.common.UiState.Loading -> {
+                            // Opcional: Mostrar un progreso de carga en la pantalla - Aun no se implementa xd
+                        }
+                        is com.grupo3.donapp_access.core.common.UiState.Success -> {
+                            Toast.makeText(requireContext(), "¡Reserva realizada con éxito! Tienes 1 hora para recogerla.", Toast.LENGTH_LONG).show()
+
+                            // Volvemos a cargar los datos para que el stock se actualice en la pantalla
+                            cargarDatos()
+
+                            detailViewModel.limpiarEstadoReserva()
+                        }
+                        is com.grupo3.donapp_access.core.common.UiState.Error -> {
+                            Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_SHORT).show()
+                            detailViewModel.limpiarEstadoReserva()
+                        }
+                        null -> { /* Estado inicial, no hacemos nada */ }
+                    }
+                }
+            }
+        }
+    }
     private fun setupRecyclerViews() {
         // Inicializar el adaptador de reseñas
         reviewsAdapter = ValoracionesAdapter(emptyList())
@@ -83,10 +116,9 @@ class TiendaDetailFragment : Fragment() {
             isNestedScrollingEnabled = false // Importante para scroll fluido dentro de NestedScrollView
         }
 
-        // AGREGADO: Configurar el adaptador de lotes disponibles
         ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter(requireContext()) { oferta ->
-            // Opcional: ¿Qué hacer al tocar la carta dentro del detalle de la tienda?
-            Toast.makeText(context, "Viendo detalle de: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
+            // Al hacer clic, abrimos el diálogo y le pasamos los datos del producto
+            mostrarDialogoReserva(oferta)
         }
 
         binding.rvAvailableOffers.apply {
@@ -116,7 +148,6 @@ class TiendaDetailFragment : Fragment() {
 
     }
 
-    //AGREGADO
     private fun abrirEnGoogleMaps(){
         val tienda = tiendaActual?: run {
             Toast.makeText(context, "No se pudo obtener la ubicacion", Toast.LENGTH_SHORT)
@@ -276,4 +307,61 @@ class TiendaDetailFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun mostrarDialogoReserva(oferta: com.grupo3.donapp_access.model.OfertaLote) {
+        // Inflamos el XML
+        val dialogView = layoutInflater.inflate(R.layout.dialog_reserva, null)
+
+        val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
+        val btnMinus = dialogView.findViewById<android.widget.Button>(R.id.btnMinus)
+        val btnPlus = dialogView.findViewById<android.widget.Button>(R.id.btnPlus)
+        val tvQuantity = dialogView.findViewById<android.widget.TextView>(R.id.tvQuantity)
+
+        tvTitle.text = "Reservar ${oferta.productoNombre}"
+
+        var cantidadSeleccionada = 1
+        val stockDisponible = oferta.cantidad
+
+        btnMinus.setOnClickListener {
+            if (cantidadSeleccionada > 1) {
+                cantidadSeleccionada--
+                tvQuantity.text = cantidadSeleccionada.toString()
+            }
+        }
+
+        btnPlus.setOnClickListener {
+            if (cantidadSeleccionada < stockDisponible) {
+                cantidadSeleccionada++
+                tvQuantity.text = cantidadSeleccionada.toString()
+            } else {
+                Toast.makeText(requireContext(), "Solo quedan $stockDisponible disponibles", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setPositiveButton("Confirmar") { dialogInterface, _ ->
+                val idUsuarioActual = SupabaseClient.client.auth.currentUserOrNull()?.id
+
+                if (idUsuarioActual != null) {
+                    // Si hay un usuario logueado, hacemos la reserva real
+                    detailViewModel.reservarLote(idUsuarioActual, oferta.idLote, cantidadSeleccionada)
+                } else {
+                    // Si la sesión no existe o expiró, mostramos un error para que no colapse la app
+                    Toast.makeText(requireContext(), "Tu sesión ha expirado. Vuelve a iniciar sesión.", Toast.LENGTH_SHORT).show()
+                }
+
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton("Cancelar") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            .create()
+
+        dialog.show()
+
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
 }
