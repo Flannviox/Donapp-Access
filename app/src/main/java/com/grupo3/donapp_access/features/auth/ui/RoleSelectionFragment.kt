@@ -83,10 +83,8 @@ class RoleSelectionFragment : Fragment() {
         btnContinuar.setOnClickListener {
             when (selectRole) {
                 "user" -> {
-                    // 1. Guardamos el rol en el SharedViewModel para la base de datos
                     sharedViewModel.selectedRole = "Cliente"
 
-                    // 2. Ejecutamos tu código original de navegación
                     parentFragmentManager.beginTransaction()
                         .setCustomAnimations(
                             R.anim.slide_in_right,
@@ -100,10 +98,9 @@ class RoleSelectionFragment : Fragment() {
                 }
 
                 "seller" -> {
-                    // 1. Guardamos el rol en el SharedViewModel
                     sharedViewModel.selectedRole = "Comerciante"
 
-                    // 2. Ejecutamos tu código original de navegación
+                    //Ejecutamos tu código original de navegación
                     parentFragmentManager.beginTransaction()
                         .setCustomAnimations(
                             R.anim.slide_in_right,

@@ -74,6 +74,12 @@ android {
 
 dependencies {
 
+    //tipo de correo one time password que requieres que supabase envie
+    // SIGNUP -> VERIFICAR CORREO CUANDO ALGUIEN CREA CUENTA
+    //RECOVERY -> Recuperar contraseña
+    //EMAIL_CHANGE -> confirmar cambio de correo
+    implementation("io.github.jan-tennert.supabase:auth-kt:<version>")
+
     // Google Play Services para obtener la ubicación exacta
     implementation("com.google.android.gms:play-services-location:21.2.0")
 

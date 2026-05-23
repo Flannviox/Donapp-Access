@@ -22,21 +22,22 @@ class AuthRepository @Inject constructor(
     //suspend permite que la funcion se ejecute sin bloquear la UI
     //es una marca que le ponemos a una función como signIn o signUp para decir:
     //esta tarea va a tardar, así que no bloquees
-    suspend fun signUp(email: String, pass: String): io.github.jan.supabase.auth.user.UserInfo?{
-
-        val result = supabaseAuth.signUpWith(Email) {
+    suspend fun signUp(email: String, pass: String, captchaToken: String): io.github.jan.supabase.auth.user.UserInfo? {
+        return supabaseAuth.signUpWith(Email) {
             this.email = email
-            password = pass
+            this.password = pass
+            this.captchaToken = captchaToken // Aquí está la clave
         }
-    // Devolvemos la información del usuario (contiene el id de auth.users)
-        return result
     }
 
-    suspend fun signIn(email: String, pass: String){
-        //Inicias sesion con las credenciales proporcionadas
-        supabaseAuth.signInWith(Email){
+
+    suspend fun signIn(email: String, pass: String, captchaToken: String? = null) {
+        supabaseAuth.signInWith(Email) {
             this.email = email
             password = pass
+            if (!captchaToken.isNullOrEmpty()) {
+                this.captchaToken = captchaToken
+            }
         }
     }
 
@@ -66,7 +67,7 @@ class AuthRepository @Inject constructor(
             )
             SupabaseClient.client.from("usuarios").insert(nuevoUsuario)
 
-            android.util.Log.d("SUPABASE_OK", "¡Inserción exitosa para el usuario: $correo!")
+            android.util.Log.d("SUPABASE_OK", "Inserción exitosa para el usuario: $correo")
         }catch (e: Exception){
 
             android.util.Log.e(
@@ -96,6 +97,18 @@ class AuthRepository @Inject constructor(
 
     suspend fun registrarTienda(tienda: TiendaDTO) {
         client.from("tiendas").insert(tienda)
+    }
+
+    suspend fun correoEstaVerificado(): Boolean{
+        return try {
+            client.auth.retrieveUser(client.auth.currentAccessTokenOrNull()?: return false)
+            val user = client.auth.currentUserOrNull()
+
+            user?.emailConfirmedAt !=null
+        }catch (e: Exception){
+            android.util.Log.e("AUTH_REPO", "Error verificando correo: ${e.message}")
+            false
+        }
     }
 
 

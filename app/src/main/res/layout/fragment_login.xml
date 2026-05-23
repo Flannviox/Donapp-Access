@@ -115,7 +115,7 @@
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="tu@email.com"
+                android:hint="tucorreo@gmail.com"
 
                 android:textColor="@color/donapp_text_primary"
                 android:textColorHint="@color/donapp_text_hint"
@@ -172,7 +172,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <!-- Olvidaste contraseña -->
+        <!-- Olvidaste contraseña
         <TextView
             android:id="@+id/tvForgotPassword"
             android:layout_width="wrap_content"
@@ -185,7 +185,7 @@
             android:text="Olvidaste tu contraseña"
             android:textColor="@color/donapp_secondary"
             android:textSize="13sp" />
-
+ -->
         <Space android:layout_height="32dp" android:layout_width="match_parent"/>
 
 

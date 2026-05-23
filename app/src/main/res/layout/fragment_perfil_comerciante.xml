@@ -73,61 +73,65 @@
         </LinearLayout>
 
         <!-- Mi Cuenta -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:text="Mi Cuenta"
-            android:textColor="@color/donapp_text_primary"
-            android:textSize="15sp"
-            android:textStyle="bold"/>
+        <!--
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="20dp"
+                   android:layout_marginTop="24dp"
+                   android:text="Mi Cuenta"
+                   android:textColor="@color/donapp_text_primary"
+                   android:textSize="15sp"
+                   android:textStyle="bold"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/donapp_surface"
-            android:orientation="vertical">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_marginStart="20dp"
+                   android:layout_marginTop="10dp"
+                   android:layout_marginEnd="20dp"
+                   android:background="@color/donapp_surface"
+                   android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/btnInformacionPersonal"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                               <LinearLayout
+                                   android:id="@+id/btnInformacionPersonal"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="52dp"
+                                   android:gravity="center_vertical"
+                                   android:orientation="horizontal"
+                                   android:paddingStart="16dp"
+                                   android:paddingEnd="16dp">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_profile"
-                    android:drawablePadding="12dp"
-                    android:drawableTint="@color/donapp_text_secondary"
-                    android:text="Información Personal"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textSize="14sp"/>
+                                   <TextView
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_weight="1"
+                                       android:drawableStart="@drawable/ic_profile"
+                                       android:drawablePadding="12dp"
+                                       android:drawableTint="@color/donapp_text_secondary"
+                                       android:text="Información Personal"
+                                       android:textColor="@color/donapp_text_primary"
+                                       android:textSize="14sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="›"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="20sp"/>
-            </LinearLayout>
+                                   <TextView
+                                       android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
+                                       android:text="›"
+                                       android:textColor="@color/donapp_text_secondary"
+                                       android:textSize="20sp"/>
+
+
+                   </LinearLayout>
+
         </LinearLayout>
-
+ -->
         <!-- Mi Actividad -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
-            android:text="Mi Actividad"
+            android:text="Mis ofertas"
             android:textColor="@color/donapp_text_primary"
             android:textSize="15sp"
             android:textStyle="bold"/>
@@ -162,6 +166,53 @@
                 android:text="›"
                 android:textColor="@color/donapp_text_secondary"
                 android:textSize="20sp"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/miActividad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="24dp"
+            android:text="Mi Actividad"
+            android:textColor="@color/donapp_text_primary"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/btnValorarApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/donapp_surface"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Valorar nuestra App!"
+                android:textColor="@color/donapp_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <ImageView
+                android:id="@+id/imgQrValoracion"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/qr_image"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toca el código para abrir el formulario"
+                android:textSize="11sp"
+                android:textColor="@color/donapp_text_secondary"
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <!-- Configuración -->

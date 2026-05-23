@@ -45,4 +45,11 @@
     <color name="donapp_text_muted">#8A8A8A</color>
     <color name="donapp_blue">#2196F3</color>
     <color name="donapp_orange">#FF9800</color>
+
+
+    <color name="contrast_bg">#000000</color>
+    <color name="contrast_surface">#121212</color>
+    <color name="contrast_primary">#FFFFFF</color>
+    <color name="contrast_secondary">#FFFF00</color>
+
 </resources>

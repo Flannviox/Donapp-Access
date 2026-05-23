@@ -27,7 +27,6 @@ class InventarioAdapter(
 
     inner class LoteViewHolder(private val binding: ItemLoteCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(lote: Lote) {
-            // Nombre del producto o ID acortado
             binding.tvNombreProducto.text = if (lote.productos_id.length > 20) {
                 "Producto: ${lote.productos_id.take(8)}..."
             } else {

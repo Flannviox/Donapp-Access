@@ -39,12 +39,18 @@ class MainActivity : AppCompatActivity() {
     private var rolActual : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         val prefs = getSharedPreferences("donapp_prefs", MODE_PRIVATE)
-        val fontScale = prefs.getFloat("font_scale", 1.0f)
-        val config = resources.configuration
-        config.fontScale = fontScale
-        resources.updateConfiguration(config, resources.displayMetrics)
+        val altoContrasteActivo = prefs.getBoolean("alto_contraste", false)
+        if (altoContrasteActivo) {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+            )
+        } else {
+            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,9 +59,14 @@ class MainActivity : AppCompatActivity() {
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.visibility = View.GONE
 
-        if(savedInstanceState == null){
-            verificarSesionActiva()
-
+        if (savedInstanceState == null) {
+            if (intent?.data?.scheme == "donapp") {
+                findViewById<View>(R.id.fragmentContainer).post {
+                    manejarDeepLink()
+                }
+            } else {
+                verificarSesionActiva()
+            }
         }
         iniciarWorkerDeAlertas()
     }
@@ -103,6 +114,30 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+
+    private fun manejarDeepLink() {
+        findViewById<View>(R.id.fragmentContainer).post {
+            lifecycleScope.launch {
+                try {
+                    // Supabase necesita un momento para procesar el token
+                    kotlinx.coroutines.delay(1500)
+                    mostrarSinNav(
+                        com.grupo3.donapp_access.features.auth.ui.LoginFragment()
+                    )
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        "✅ Correo verificado. Ya puedes iniciar sesión.",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                } catch (e: Exception) {
+                    android.util.Log.e("DEEPLINK", "Error: ${e.message}")
+                    mostrarSinNav(
+                        com.grupo3.donapp_access.features.auth.ui.WelcomeFragment()
+                    )
+                }
+            }
+        }
+    }
 
     fun configurarNavbar(rol: String){
         rolActual = rol
@@ -193,12 +228,22 @@ class MainActivity : AppCompatActivity() {
             .setConstraints(constraints)
             .build()
 
-        // Lo encolamos de forma única
         WorkManager.getInstance(this).enqueueUniqueWork(
             "DonappAlertaInmediata",
             ExistingWorkPolicy.REPLACE,
             workRequest
         )
+    }
+
+    override fun attachBaseContext(newBase: android.content.Context) {
+        val prefs = newBase.getSharedPreferences("donapp_prefs", MODE_PRIVATE)
+        val fontScale = prefs.getFloat("font_scale", 1.0f)
+
+        val config = android.content.res.Configuration(newBase.resources.configuration)
+        config.fontScale = fontScale
+
+        val context = newBase.createConfigurationContext(config)
+        super.attachBaseContext(context)
     }
 
 

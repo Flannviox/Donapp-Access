@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 //Android -> supabaseRPC -> Postgresql-> PostGIS -> ST_DWithin
 
-//funciona como un repositorio remoto
+//funciona como un repositorio remorto
 
 @Singleton
 class TiendaDao @Inject constructor() {

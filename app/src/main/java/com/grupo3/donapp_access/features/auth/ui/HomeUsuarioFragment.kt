@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeUsuarioFragment : Fragment() {
 
-    // Hilt inyecta el ViewModel automáticamente
     private val viewModel: HomeUsuarioViewModel by viewModels()
 
     override fun onCreateView(
@@ -30,8 +29,6 @@ class HomeUsuarioFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Disparamos la consulta a Supabase al abrir la pantalla
-// 2. Escuchamos la respuesta de la base de datos
         viewModel.fetchLotesVencenHoy()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.lotes.collect { listaOfertas ->

@@ -1,5 +1,6 @@
 package com.grupo3.donapp_access.features.auth
 
+import androidx.browser.trusted.Token
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Message
@@ -7,13 +8,13 @@ import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.core.network.SupabaseClient.client
 import com.grupo3.donapp_access.features.auth.dto.TiendaDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.UUID
 import javax.inject.Inject
-
+import io.github.jan.supabase.auth.providers.builtin.OTP
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     //recibimos el repositorio auth mediante inyeccion de dependencias
@@ -28,27 +29,41 @@ class AuthViewModel @Inject constructor(
     val registerState: StateFlow<AuthState> =_registerState
 
 
-    fun login(email: String, pass: String){
+    fun login(email: String, pass: String, captchaToken: String){
         //viewModelScope.Launch: inicia una corrutina que se cancela si el usuario sale de la pantalla
 
         viewModelScope.launch {
             _loginState.value = AuthState.Loading
 
             try {
-                //llamamos a la funcion suspendia del repositorio
-                repository.signIn(email, pass)
+                repository.signIn(email, pass, captchaToken)
 
-                // Obtenemos el ID del usuario que acaba de entrar
+
+                //obtenemos el ID del usuario que acaba de entrar
                 val currentUser = SupabaseClient.client.auth.currentUserOrNull()
                 val userId = currentUser?.id
 
-                if (userId != null) {
-                    // Consultamos el rol usando la función que agregamos al repositorio
-                    val rolUsuario = repository.obtenerRolUsuario(userId)
-                    _loginState.value = AuthState.Success(rolUsuario)
-                } else {
-                    _loginState.value = AuthState.Error("No se encontró el ID del usuario")
+                if (userId == null) {
+                    _loginState.value = AuthState.Error("No se encontro el ID del usuario")
+                    return@launch//preguntar que hace el return launch
                 }
+
+
+                val verificado = repository.correoEstaVerificado()
+                if(!verificado){
+                    //cierra la sesion para que no quede logueado sin verificar
+                    SupabaseClient.client.auth.signOut()
+                    _loginState.value = AuthState.Error(
+                        "Debes verificar tu correo antes de ingresar .\n" +
+                        "Revisa tu bandeja de entrada (Y EL SPAM)"
+                    )
+                    return@launch
+
+                }
+
+                val rolUsuario = repository.obtenerRolUsuario(userId)
+                _loginState.value = AuthState.Success(rolUsuario)
+
             }catch (e: Exception){
                 //si hay un error como datos incorrectos, se captura
                 e.printStackTrace()
@@ -62,23 +77,24 @@ class AuthViewModel @Inject constructor(
     fun crearCuentaCompleta(
         email: String,
         pass: String,
+        captchaToken: String,
         nombres: String,
         apellidos: String,
         dni: String,
         discapacidad: String?,
         rol: String,
+
         correoApoderado: String?,
         telefono: String
     ){
         viewModelScope.launch {
             _registerState.value = AuthState.Loading
             try {
-                //el signup de la libreria devuelve la info del usuario creado
-                repository.signUp(email, pass)
+                //id desde el resultado del signUp
+                val resultado = repository.signUp(email, pass, captchaToken)
+                val userId = resultado?.id
+                    ?: throw Exception("No se pudo obtener el ID de usuario")
 
-                val currentUser = SupabaseClient.client.auth.currentUserOrNull()
-
-                val userId = currentUser?.id
 
                 android.util.Log.d("SUPABASE_DEBUG", "CURRENT USER ID: $userId")
                 if(userId != null){
@@ -113,6 +129,7 @@ class AuthViewModel @Inject constructor(
     fun crearCuentaComerciante(
         email: String,
         pass: String,
+        captchaToken: String,
         nombres: String,
         apellidos: String,
         dni: String,
@@ -126,10 +143,12 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _registerState.value = AuthState.Loading
             try {
-                // Auth en Supabase
-                repository.signUp(email, pass)
-                val userId = client.auth.currentUserOrNull()?.id
+
+                val resultado = repository.signUp(email, pass, captchaToken)
+                val userId = resultado?.id
                     ?: throw Exception("No se pudo obtener el ID de usuario")
+
+
 
                 // registra en la tablita de usuarios
                 repository.registrarEnTablaUsuarios(
@@ -162,11 +181,33 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+
+
     sealed class AuthState{
         object Idle : AuthState() //sin accion
         object Loading : AuthState() //cargando
         data class Success(val rol: String) : AuthState() // Ahora recibe el rol
         data class Error (val message: String) : AuthState()
+        data class VerificacionPendiente(val email: String): AuthState()
 
     }
+
+
+    fun reenviarCorreoVerificacion(email: String) {
+        viewModelScope.launch {
+            _registerState.value = AuthState.Loading
+            try {
+                SupabaseClient.client.auth.resendEmail(
+                    type = OtpType.Email.SIGNUP,
+                    email = email
+                )
+                _registerState.value = AuthState.VerificacionPendiente(email)
+            } catch (e: Exception) {
+                _registerState.value = AuthState.Error("No se pudo reenviar: ${e.message}")
+            }
+        }
+    }
+
+
+
 }

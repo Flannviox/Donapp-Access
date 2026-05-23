@@ -37,10 +37,8 @@ import java.util.TimeZone
 @AndroidEntryPoint
 class PublicarLoteFragment : Fragment() {
 
-    //ViewModel inyectado por Hilt, scope del Fragment
     private val viewModel: PublicarViewModel by viewModels()
 
-    //Referencias a widgets del layout
     private lateinit var btnBack: ImageButton
     private lateinit var layoutPaso1: View
     private lateinit var layoutPaso2: View
@@ -70,8 +68,7 @@ class PublicarLoteFragment : Fragment() {
     private var fechaSeleccionada: String? = null
 
     //Launcher para seleccionar imagen de galería. Se registra en property initializer
-    //(patrón canónico) para que la suscripción al ActivityResultRegistry sobreviva
-    //rotaciones y re-attachment del Fragment sin lanzar IllegalStateException.
+
     private val imagenLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
@@ -156,7 +153,6 @@ class PublicarLoteFragment : Fragment() {
     }
 
     private fun observarViewModel() {
-        //Tres StateFlows colectados en paralelo bajo el mismo repeatOnLifecycle(STARTED)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -185,7 +181,6 @@ class PublicarLoteFragment : Fragment() {
                 btnUsarProductoExistente.isEnabled = false
             }
             is PublicarViewModel.PublicarState.ProductoCreado -> {
-                // AQUÍ AGREGAMOS EL TOAST DE CONFIRMACIÓN
                 mostrarToast("Tu producto ha sido creado con éxito, ya puedes crear un lote", long = true)
                 layoutPaso1.visibility = View.GONE
                 layoutPaso2.visibility = View.VISIBLE
@@ -209,7 +204,6 @@ class PublicarLoteFragment : Fragment() {
         spinnerProductosExistentes.adapter = adapterDeNombres(lista) { it.nombre }
     }
 
-    //Adapter genérico que muestra `label(item)` como texto del Spinner
     private fun <T> adapterDeNombres(
         items: List<T>,
         label: (T) -> String
@@ -263,7 +257,6 @@ class PublicarLoteFragment : Fragment() {
 
         if (bytes == null) { mostrarToast("No se pudo leer la imagen"); return }
 
-        // AQUÍ CONVERTIMOS LA IMAGEN A BASE 64 (¡No lo borres!)
         val imagenBase64 = android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
 
         val mime = requireContext().contentResolver.getType(uri)
@@ -274,7 +267,6 @@ class PublicarLoteFragment : Fragment() {
             else -> "jpg"
         }
 
-        // Enviamos el STRING en Base64 al ViewModel
         viewModel.crearProductoNuevo(nombre, catId, imagenBase64, ext)
     }
     private fun mostrarDatePicker() {
@@ -284,7 +276,6 @@ class PublicarLoteFragment : Fragment() {
             .build()
 
         picker.addOnPositiveButtonClickListener { millis ->
-            //La fecha viene en UTC; la formateamos en UTC para evitar saltos por zona horaria
             val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             sdf.timeZone = TimeZone.getTimeZone("UTC")
             val fechaStr = sdf.format(Date(millis))
@@ -296,7 +287,6 @@ class PublicarLoteFragment : Fragment() {
     }
 
     private fun publicarLote() {
-        //Validación: cantidad
         val cantidad = etCantidad.text?.toString()?.toIntOrNull()
         if (cantidad == null || cantidad <= 0) {
             tilCantidad.error = "Ingresá una cantidad válida"
@@ -304,14 +294,12 @@ class PublicarLoteFragment : Fragment() {
         }
         tilCantidad.error = null
 
-        //Validación: fecha
         val fecha = fechaSeleccionada
         if (fecha == null) {
             mostrarToast("Seleccioná una fecha de vencimiento")
             return
         }
 
-        //Validación: precio normal
         val precioNormal = etPrecioNormal.text?.toString()?.toDoubleOrNull()
         if (precioNormal == null || precioNormal <= 0) {
             tilPrecioNormal.error = "Ingresá un precio válido"
@@ -319,7 +307,6 @@ class PublicarLoteFragment : Fragment() {
         }
         tilPrecioNormal.error = null
 
-        //Validación: precio oferta (opcional)
         val precioOfertaStr = etPrecioOferta.text?.toString()?.trim().orEmpty()
         val precioOferta = if (precioOfertaStr.isEmpty()) null else precioOfertaStr.toDoubleOrNull()
 

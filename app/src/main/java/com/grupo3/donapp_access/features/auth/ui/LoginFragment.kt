@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
 
         val btnVolver = view.findViewById<ImageView>(R.id.btnBack)
 
-        // 1. Vinculamos los elementos de tu XML
+        // Vinculamos los elementos de tu XML
         val etEmail = view.findViewById<TextInputEditText>(R.id.etEmail)
         val etPassword = view.findViewById<TextInputEditText>(R.id.etPassword)
         val btnLogin = view.findViewById<MaterialButton>(R.id.btnLogin)
@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        // 2. Navegación hacia la selección de rol si no tiene cuenta
+        // Navegación hacia la selección de rol si no tiene cuenta
         tvRegister.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
@@ -65,19 +65,24 @@ class LoginFragment : Fragment() {
                 .commit()
         }
 
-        // 3. Acción de enviar el formulario a Supabase
+        // Acción de enviar el formulario a Supabase
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val pass = etPassword.text.toString().trim()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
-                authViewModel.login(email, pass)
+                //antes de loguear, levantamos el validador visual
+                val captchaDialog = CaptchaDialogFragment { captchaToken ->
+                    // est bloque se ejecuta solo cuando el token generado
+                    authViewModel.login(email, pass, captchaToken)
+                }
+                captchaDialog.show(parentFragmentManager, "captcha_login")
             } else {
                 Toast.makeText(requireContext(), "Llene todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // 4. Escuchamos las respuestas del ViewModel (Cargando, Éxito, Error)
+        // Escuchamos las respuestas del ViewModel (Cargando, Éxito, Error)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.loginState.collect { state ->
@@ -124,6 +129,8 @@ class LoginFragment : Fragment() {
                         Toast.makeText(requireContext(), state.message, Toast.LENGTH_LONG).show()
 
                     }
+
+                        is AuthViewModel.AuthState.VerificacionPendiente -> Unit
 
                     }
                 }

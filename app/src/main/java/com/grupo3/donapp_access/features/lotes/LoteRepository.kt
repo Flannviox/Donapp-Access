@@ -27,10 +27,12 @@ class LoteRepository @Inject constructor() {
         }
     }
 
-    suspend fun fetchProductos(): List<ProductoDTO> {
+    suspend fun fetchProductos(tiendaId: String): List<ProductoDTO> {
         return try {
             supabase.from("productos")
-                .select()
+                .select{
+                    filter { eq("tiendas_id", tiendaId) }
+                }
                 .decodeList<ProductoDTO>()
         } catch (e: Exception) {
             android.util.Log.e("LOTE_REPO", "Error al obtener productos: ${e.message}", e)

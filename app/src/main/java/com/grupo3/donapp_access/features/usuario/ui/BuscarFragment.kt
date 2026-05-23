@@ -47,20 +47,20 @@ class BuscarFragment : Fragment() {
         viewModel = ViewModelProvider(this)[BuscarViewModel::class.java]
 
         configurarCategorias()
-        configurarOfertas() // NUEVA CONFIGURACIÓN
+        configurarOfertas()
 
         observarCategorias()
-        observarOfertas() // NUEVO OBSERVADOR
+        observarOfertas()
         cargarNombreUsuario()
 
         binding.inputBuscar.doAfterTextChanged { editable ->
             val texto = editable?.toString().orEmpty()
             viewModel.filtrarCategorias(texto)
-            viewModel.buscarOfertas(texto) // Disparamos la búsqueda real
+            viewModel.buscarOfertas(texto)
 
-            // Lógica de visibilidad: si hay texto, ocultamos categorías
+            // si hay texto, ocultamos categorías
             binding.recyclerCategorias.isVisible = texto.isEmpty()
-            // Asumiendo que agregaste recyclerOfertas en tu XML
+
             binding.recyclerOfertas.isVisible = texto.isNotEmpty()
         }
 
@@ -82,7 +82,6 @@ class BuscarFragment : Fragment() {
     }
     private fun configurarOfertas() {
         ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
-            // Aquí luego haremos la navegación al detalle de la tienda/oferta
             Toast.makeText(requireContext(), "Seleccionaste: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
         }
 
@@ -93,7 +92,6 @@ class BuscarFragment : Fragment() {
 
     }
 
-    // NUEVO OBSERVADOR
     private fun observarOfertas() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

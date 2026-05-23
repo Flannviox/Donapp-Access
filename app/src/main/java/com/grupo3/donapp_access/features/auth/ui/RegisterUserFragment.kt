@@ -1,9 +1,11 @@
 package com.grupo3.donapp_access.features.auth.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -12,11 +14,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.databinding.FragmentRegisterUserBinding
 import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
-import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
+import com.grupo3.donapp_access.features.auth.VerificacionCorreoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,8 @@ class RegisterUserFragment : Fragment() {
     private val sharedViewModel: RegisterViewModel by activityViewModels()
 
     private val authViewModel: AuthViewModel by viewModels()
+
+    private var tokenTurnstile: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +59,10 @@ class RegisterUserFragment : Fragment() {
 
         configurarSelectorDiscapacidad()
 
+        configurarWebViewCaptcha()
+
+
+
         binding.btnCrearCuenta.setOnClickListener {
             ejecutarRegistro()
         }
@@ -63,6 +70,46 @@ class RegisterUserFragment : Fragment() {
         observarRegistro()
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun configurarWebViewCaptcha() {
+        val webView = binding.webViewCaptcha
+
+        //configuración exhaustiva para permitir la carga de scripts externos
+        val settings = webView.settings
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        settings.allowContentAccess = true
+        settings.allowFileAccess = true
+        // Permite que scripts cargados desde HTTPS accedan a contenido en tu HTML
+        settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+
+        webView.addJavascriptInterface(WebAppInterface(), "AndroidInterface")
+
+        try {
+            val htmlContent = requireContext().assets.open("turnstile.html").bufferedReader().use { it.readText() }
+
+            // El BASE_URL debe ser el mismo que agregaste en Cloudflare (uomlyvsrlkvsroowlhqh.supabase.co)
+            val baseUrl = "https://uomlyvsrlkvsroowlhqh.supabase.co"
+
+            webView.loadDataWithBaseURL(baseUrl, htmlContent, "text/html", "UTF-8", null)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    inner class WebAppInterface {
+        @JavascriptInterface
+        fun onCaptchaSuccess(token: String) {
+            //necesario para que el fragmento pueda actualizar el token
+            //cuando el usuario resuelve el captcha, esta función se ejecuta
+            requireActivity().runOnUiThread {
+                // Asumiendo que tokenTurnstile es una propiedad de tu Fragment
+                this@RegisterUserFragment.tokenTurnstile = token
+                Toast.makeText(requireContext(), "Captcha resuelto correctamente", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun configurarSelectorDiscapacidad(){
         val opciones = arrayOf("NINGUNA", "MOTRIZ","VISUAL")
@@ -91,6 +138,7 @@ class RegisterUserFragment : Fragment() {
             authViewModel.crearCuentaCompleta(
                 email = correo,
                 pass = pass,
+                captchaToken = tokenTurnstile,
                 nombres = nombres,
                 apellidos = apellidos,
                 dni = dni,
@@ -162,27 +210,22 @@ class RegisterUserFragment : Fragment() {
                     }
 
                     is AuthViewModel.AuthState.Success -> {
-
                         binding.btnCrearCuenta.isEnabled = true
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Cuenta creada correctamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        val destino: Fragment = when(state.rol.lowercase()) {
-
-                            "cliente" -> HomeFragment()
-
-                            "comerciante" -> DashboardFragment()
-
-                            else -> WelcomeFragment()
-                        }
                         parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, destino)
+                            .replace(
+                                R.id.fragmentContainer,
+                                VerificacionCorreoFragment.newInstance(
+                                    binding.etCorreo.text.toString().trim()
+                                )
+                            )
                             .commit()
                     }
+
+                    is AuthViewModel.AuthState.VerificacionPendiente ->{
+                        binding.btnCrearCuenta.isEnabled = true
+
+                    }
+
 
                     is AuthViewModel.AuthState.Error -> {
 
@@ -193,6 +236,8 @@ class RegisterUserFragment : Fragment() {
                             state.message,
                             Toast.LENGTH_LONG
                         ).show()
+                        configurarWebViewCaptcha()
+                        tokenTurnstile = ""
                     }
 
                     else -> Unit

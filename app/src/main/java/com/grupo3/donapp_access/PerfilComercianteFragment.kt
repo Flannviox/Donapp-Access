@@ -30,7 +30,6 @@ class PerfilComercianteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentPerfilComercianteBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,6 +39,47 @@ class PerfilComercianteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cargarDatos()
         configurarBotones()
+        val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+
+        fun actualizarVisibilidad() {
+            val yaValoro = prefs.getBoolean("valoracion_realizada", false)
+
+            // si valoró ocultamos el contenedor completo y el título
+            // si no valoró
+            binding.btnValorarApp.visibility = if (yaValoro) View.GONE else View.VISIBLE
+            binding.miActividad.visibility = if (yaValoro) View.GONE else View.VISIBLE
+        }
+
+        // ejecutamos la visibilidad al iniciar
+        actualizarVisibilidad()
+
+        binding.imgQrValoracion.setOnClickListener {
+            abrirFormularioValoracion()
+        }
+
+        //Truco de reset
+        binding.tvNombreTiendaPerfil.setOnLongClickListener {
+            prefs.edit().remove("valoracion_realizada").apply()
+            actualizarVisibilidad()
+            android.widget.Toast.makeText(requireContext(), "Modo Test: Valoración reseteada", android.widget.Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    private fun abrirFormularioValoracion(){
+        val url = "https://docs.google.com/forms/d/1ppX-ON1dRDirio34-YJm22gd7cVsYJSFzAEwnRjS8pE/viewform"
+        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+        startActivity(intent)
+
+        // Marcamos como realizada para que la próxima vez no aparezca
+        requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("valoracion_realizada", true)
+            .apply()
+
+        // Ocultamos el botón inmediatamente
+        binding.btnValorarApp.visibility = View.GONE
+
     }
 
     private fun cargarDatos(){
@@ -91,7 +131,6 @@ class PerfilComercianteFragment : Fragment() {
             }
         }
 
-        binding.btnInformacionPersonal.setOnClickListener { }
         binding.btnMisOfertas.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer,

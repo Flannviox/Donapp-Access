@@ -40,10 +40,50 @@ class PerfilFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cargarDatosUsuario()
         configurarBotones()
-//Conectar con historial de notificaciones
+
+        val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+
+        //función definitiva de control de visibilidad
+        fun actualizarVisibilidad() {
+            val yaValoro = prefs.getBoolean("valoracion_realizada", false)
+
+            binding.btnValorarApp.visibility = if (yaValoro) View.GONE else View.VISIBLE
+            binding.miActividad.visibility = if (yaValoro) View.GONE else View.VISIBLE
+        }
+
+        actualizarVisibilidad()
+
+        binding.imgQrValoracion.setOnClickListener {
+            abrirFormularioValoracion()
+        }
+
+        // 3. Truco de reset (Mantener presionado el nombre de usuario)
+        binding.tvNombrePerfil.setOnLongClickListener {
+            prefs.edit().remove("valoracion_realizada").apply()
+            actualizarVisibilidad()
+            android.widget.Toast.makeText(requireContext(), "Modo Test: Valoración reseteada", android.widget.Toast.LENGTH_SHORT).show()
+            true
+        }
+
         binding.btnNotificaciones.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(NotificacionesHistorialFragment())
         }
+    }
+
+
+    private fun abrirFormularioValoracion(){
+        val url = "https://docs.google.com/forms/d/1ppX-ON1dRDirio34-YJm22gd7cVsYJSFzAEwnRjS8pE/viewform"
+        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+        startActivity(intent)
+
+        // marcar como realizada para que la próxima vez no aparezca
+        requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("valoracion_realizada", true)
+            .apply()
+
+        // Ocultamos el botón inmediatamente
+        binding.btnValorarApp.visibility = View.GONE
 
     }
 
@@ -86,9 +126,7 @@ class PerfilFragment : Fragment() {
                 }
             }
         }
-        binding.btnInformacionPersonal.setOnClickListener { }
         binding.btnNotificaciones.setOnClickListener { }
-        binding.btnMisValoraciones.setOnClickListener { }
 
 
     }

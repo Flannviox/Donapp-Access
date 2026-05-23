@@ -50,7 +50,7 @@
             android:background="@drawable/bg_chip_selected"
             android:text="Todas"
             android:textColor="@color/black" />
-
+<!--
         <TextView
             style="@style/Widget.Donapp.Chip"
             android:layout_marginStart="8dp"
@@ -60,6 +60,7 @@
             style="@style/Widget.Donapp.Chip"
             android:layout_marginStart="8dp"
             android:text="Mejor precio" />
+  -->
     </LinearLayout>
 
     <ProgressBar

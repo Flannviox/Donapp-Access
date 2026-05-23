@@ -85,7 +85,6 @@ class MapFragment : Fragment() {
         }
     }
 
-    //preguntar a que se refiere con que la view se destruye pero el fragment sigue vivo
 
     //MAPA
     private fun inicializarMapa(){
@@ -130,7 +129,7 @@ class MapFragment : Fragment() {
         //lifecyclescop es una coroutinescop ligado al lifecycle,
         //"esta courutine vive mientras el lifecycle viva, osea, mientras la UI exista
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){//ejecuta este bloque solo cuando este al menos en started(visible y listo)
+            repeatOnLifecycle(Lifecycle.State.STARTED){//ejecuta este bloque solo cuando este al menos en started(visible ylisto)
 
                 //ESTADO DE UBICACION
                 launch {

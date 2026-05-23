@@ -36,17 +36,20 @@ class PublicarViewModel @Inject constructor(
             _state.value = PublicarState.Loading
             try {
                 _categorias.value = repository.fetchCategorias()
-                _productos.value = repository.fetchProductos()
 
                 val uid = SupabaseClient.client.auth.currentUserOrNull()?.id
                 if (uid == null) {
                     _state.value = PublicarState.Error("No hay sesión activa.")
                     return@launch
                 }
-                idTiendaCache = repository.getIdTiendaDelUsuario(uid)
+
+                val tiendaId = repository.getIdTiendaDelUsuario(uid)
+                idTiendaCache = tiendaId
+
+                _productos.value = repository.fetchProductos(tiendaId)
 
                 _state.value = PublicarState.Idle
-                android.util.Log.d("PUBLICAR_VM", "Datos iniciales cargados. id_tienda=$idTiendaCache")
+
             } catch (e: Exception) {
                 android.util.Log.e("PUBLICAR_VM", "Error cargando datos iniciales: ${e.message}", e)
                 _state.value = PublicarState.Error(e.message ?: "Error cargando datos iniciales.")
@@ -80,6 +83,7 @@ class PublicarViewModel @Inject constructor(
 
                 val dto = ProductoDTO(
                     categoriaId = categoriaId,
+                    tiendas_Id = idTienda,
                     nombre = nombre,
                     descripcion = null,
                     presentacion = null,

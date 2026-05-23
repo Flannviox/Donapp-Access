@@ -98,28 +98,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="6dp">
 
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@android:drawable/ic_dialog_map"
-                android:contentDescription="Ícono Ubicacion"
-                app:tint="@color/donapp_text_secondary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ubicación"
-                android:textColor="@color/donapp_text_secondary"
-                android:textSize="13sp"
-                android:layout_marginStart="6dp"/>
-
         </LinearLayout>
 
         <!--MAPA INTERACTIVO-->
 
 
 
-        <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -364,7 +348,14 @@
                 android:clickable="false"/>
 
         </com.google.android.material.textfield.TextInputLayout>
-
+        <WebView
+            android:id="@+id/webViewCaptcha"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layerType="hardware"
+            tools:ignore="WebViewLayout" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUsarUbicacion"
             style="@style/Widget.Material3.Button.OutlinedButton"

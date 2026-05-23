@@ -18,11 +18,10 @@ class LocationRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    //fusedlocationprovider combina varias fuentes
+    //fusedlocationprovider combna varias fuentes
     //GPS
     //WIFI
     //Antenas
-    //Todo esto para darte una ubicaciones rapida y eficiente
     private val fusedClient = LocationServices.getFusedLocationProviderClient(context)
 
 

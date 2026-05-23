@@ -45,7 +45,6 @@ class ValoracionesFragment : Fragment() {
         binding.rvValoraciones.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ValoracionesFragment.adapter
-            // Deshabilitar scroll propio para que el NestedScrollView superior gestione el scroll
             isNestedScrollingEnabled = false
         }
     }
@@ -85,7 +84,7 @@ class ValoracionesFragment : Fragment() {
     }
 
     private fun actualizarEstiloFiltro(selectedView: View) {
-        // Resetear todos los botones de filtro al estilo secundario
+        // resetea todos los botones de filtro al estilo secundario
         val filtros = listOf(
             binding.btnFilterAll, binding.btnFilter5, binding.btnFilter4,
             binding.btnFilter3, binding.btnFilter2, binding.btnFilter1

@@ -42,7 +42,7 @@ class DashboardFragment : Fragment() {
     private val CHANNEL_ID = "donapp_alertas"
     private var mensajePendiente: String? = null
 
-    // Launcher para pedir permiso de notificaciones en Android 13+
+    //launcher para pedir permiso de notificaciones
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -66,7 +66,7 @@ class DashboardFragment : Fragment() {
 
         setupRecyclerView()
 
-        // Observar datos del ViewModel
+        //observar datos del ViewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.nombreTienda.collect { nombre ->
                 binding.tvNombreTienda.text = nombre
@@ -91,7 +91,7 @@ class DashboardFragment : Fragment() {
             }
         }
 
-        // AGREGADO: Observar la alerta y disparar notificación real del sistema
+        // observar la alerta y disparar notificación real del sistema
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mensajeAlerta.collect { mensaje ->
                 if (mensaje != null) {
@@ -100,18 +100,15 @@ class DashboardFragment : Fragment() {
             }
         }
 
-        // Obtener el ID del usuario actual de Supabase Auth para cargar estadísticas
         val userId = supabase.auth.currentUserOrNull()?.id
         if (userId != null) {
             viewModel.cargarDatosDashboard(userId)
         }
 
-        // NAVEGACIÓN AL INVENTARIO
         binding.tvVerTodas.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(InventarioFragment())
         }
 
-        // Botón para publicar nuevo lote
         binding.btnNuevaOferta.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(PublicarLoteFragment())
         }

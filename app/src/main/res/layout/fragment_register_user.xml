@@ -410,6 +410,14 @@
                 android:imeOptions="actionDone"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <WebView
+            android:id="@+id/webViewCaptcha"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="16dp"
+            tools:ignore="WebViewLayout" />
+
+
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
         <!-- Botón Crear Cuenta -->

@@ -1,38 +1,52 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Theme.DonappAccess" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
-        <!-- Colores base -->
         <item name="colorPrimary">@color/donapp_primary</item>
         <item name="colorPrimaryDark">@color/donapp_primary_dark</item>
         <item name="colorAccent">@color/donapp_secondary</item>
 
-        <!-- Fondo -->
         <item name="android:windowBackground">@color/donapp_bg</item>
         <item name="android:colorBackground">@color/donapp_bg</item>
         <item name="colorSurface">@color/donapp_surface</item>
 
-        <!-- Texto -->
         <item name="android:textColorPrimary">@color/donapp_text_primary</item>
         <item name="android:textColorSecondary">@color/donapp_text_secondary</item>
         <item name="android:textColorHint">@color/donapp_text_hint</item>
 
-        <!-- Status bar oscura -->
         <item name="android:statusBarColor">@color/donapp_bg</item>
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Navigation bar -->
         <item name="android:navigationBarColor">@color/donapp_bg</item>
 
-        <!-- TextInputLayout tema -->
-        <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout</item>
+        <item name="colorControlActivated">@color/donapp_primary</item>
+        <item name="colorControlNormal">@color/donapp_text_secondary</item>
 
-        <!-- Button tema -->
+        <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout</item>
         <item name="materialButtonStyle">@style/Widget.DonappAccess.Button</item>
 
     </style>
 
-    <!-- Input fields estilo Donapp -->
+    <style name="Theme.DonappAccess.HighContrast" parent="Theme.DonappAccess">
+        <item name="android:windowBackground">@color/contrast_bg</item>
+        <item name="android:colorBackground">@color/contrast_bg</item>
+        <item name="colorSurface">@color/contrast_surface</item>
+
+        <item name="android:textColorPrimary">@color/contrast_primary</item>
+        <item name="android:textColorSecondary">@color/contrast_secondary</item>
+        <item name="android:textColorHint">@color/contrast_primary</item>
+
+        <item name="colorControlActivated">@color/contrast_secondary</item> <item name="colorControlNormal">@color/contrast_primary</item> <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout.HighContrast</item>
+    </style>
+
+    <style name="Widget.DonappAccess.TextInputLayout.HighContrast"
+        parent="Widget.DonappAccess.TextInputLayout">
+        <item name="boxBackgroundColor">@color/contrast_bg</item>
+        <item name="boxStrokeColor">@color/contrast_secondary</item>
+        <item name="hintTextColor">@color/contrast_secondary</item>
+        <item name="android:textColorHint">@color/contrast_primary</item>
+    </style>
+
     <style name="Widget.DonappAccess.TextInputLayout"
         parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/donapp_input_bg</item>
@@ -46,7 +60,6 @@
         <item name="android:textColorHint">@color/donapp_text_hint</item>
     </style>
 
-    <!-- Botón primario amarillo -->
     <style name="Widget.DonappAccess.Button"
         parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/donapp_primary</item>
@@ -58,7 +71,6 @@
         <item name="android:paddingBottom">14dp</item>
     </style>
 
-    <!-- Botón outline (Iniciar Sesión en Home) -->
     <style name="Widget.DonappAccess.Button.Outline"
         parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/donapp_primary</item>
@@ -73,23 +85,20 @@
     </style>
 
     <style name="TextAppearance.DonappAccess" parent="TextAppearance.MaterialComponents.Body1">
-        <item name="android:textColor">@color/donapp_text_primary</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <!-- Texto título grande -->
     <style name="TextAppearance.DonappAccess.Title">
         <item name="android:textSize">28sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/donapp_text_primary</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <!-- Texto subtítulo -->
     <style name="TextAppearance.DonappAccess.Subtitle">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/donapp_text_secondary</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <!-- Card superficie -->
     <style name="Widget.DonappAccess.Card"
         parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/donapp_surface</item>
