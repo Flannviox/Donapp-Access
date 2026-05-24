@@ -91,6 +91,7 @@ class AuthViewModel @Inject constructor(
             _registerState.value = AuthState.Loading
             try {
                 //id desde el resultado del signUp
+                repository.verificarDniYTelefono(dni, telefono)
                 val resultado = repository.signUp(email, pass, captchaToken)
                 val userId = resultado?.id
                     ?: throw Exception("No se pudo obtener el ID de usuario")
@@ -143,7 +144,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _registerState.value = AuthState.Loading
             try {
-
+                repository.verificarDniYTelefono(dni, telefono)
                 val resultado = repository.signUp(email, pass, captchaToken)
                 val userId = resultado?.id
                     ?: throw Exception("No se pudo obtener el ID de usuario")

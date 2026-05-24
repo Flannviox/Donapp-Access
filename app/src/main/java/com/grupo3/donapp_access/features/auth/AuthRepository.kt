@@ -110,6 +110,25 @@ class AuthRepository @Inject constructor(
             false
         }
     }
+    suspend fun verificarDniYTelefono(dni: String, telefono: String) {
+        // 1. Verificar si el DNI ya existe
+        val usuariosConDni = SupabaseClient.client.from("usuarios")
+            .select { filter { eq("dni", dni) } }
+            .decodeList<UsuarioDTO>()
+
+        if (usuariosConDni.isNotEmpty()) {
+            throw Exception("El DNI ingresado ya se encuentra registrado en otra cuenta.")
+        }
+
+        // 2. Verificar si el Teléfono ya existe
+        val usuariosConTelefono = SupabaseClient.client.from("usuarios")
+            .select { filter { eq("telefono", telefono) } }
+            .decodeList<UsuarioDTO>()
+
+        if (usuariosConTelefono.isNotEmpty()) {
+            throw Exception("El número de teléfono ya se encuentra vinculado a otra cuenta.")
+        }
+    }
 
 
 

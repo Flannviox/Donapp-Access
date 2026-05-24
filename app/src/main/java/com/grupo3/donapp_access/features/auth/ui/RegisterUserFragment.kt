@@ -154,41 +154,44 @@ class RegisterUserFragment : Fragment() {
 
     private fun validarCampos(nom: String, ape: String, mail: String, pw: String, dni: String, tel: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-        return when {
 
-            nom.isEmpty() -> {
-                mostrarToast("Por favor, ingresa tu nombre")
-                false
-            }
-            ape.isEmpty() -> {
-                mostrarToast("Por favor, ingresa tu apellido")
-                false
-            }
-            dni.length != 8 -> {
-                mostrarToast("El DNI debe tener exactamente 8 dígitos")
-                false
-            }
-            tel.length != 9 -> {
-                mostrarToast("El teléfono debe tener 9 dígitos")
-                false
-            }
-            mail.isEmpty() || !mail.matches(emailPattern.toRegex()) -> {
-                mostrarToast("Ingresa un correo electrónico válido")
-                false
-            }
-            pw.length < 6 -> {
-                mostrarToast("La contraseña debe tener al menos 6 caracteres")
-                false
-            }
-            !binding.cbTerminos.isChecked -> {
-                mostrarToast("Debes aceptar los términos y condiciones")
-                false
-            }
-            else -> true
+        // Evaluamos estrictamente en orden de aparición en el formulario
+        if (nom.isEmpty()) {
+            mostrarToast("Por favor, ingresa tu nombre")
+            binding.etNombres.requestFocus() // Opcional: lleva el cursor al campo con error
+            return false
+        }
+        if (ape.isEmpty()) {
+            mostrarToast("Por favor, ingresa tu apellido")
+            binding.etApellidos.requestFocus()
+            return false
+        }
+        if (dni.length != 8) {
+            mostrarToast("El DNI debe tener exactamente 8 dígitos")
+            binding.etDni.requestFocus()
+            return false
+        }
+        if (tel.length != 9) {
+            mostrarToast("El teléfono debe tener 9 dígitos")
+            binding.etTelefono.requestFocus()
+            return false
+        }
+        if (mail.isEmpty() || !mail.matches(emailPattern.toRegex())) {
+            mostrarToast("Ingresa un correo electrónico válido")
+            binding.etCorreo.requestFocus()
+            return false
+        }
+        if (pw.length < 6) {
+            mostrarToast("La contraseña debe tener al menos 6 caracteres")
+            binding.etPassword.requestFocus()
+            return false
+        }
+        if (!binding.cbTerminos.isChecked) {
+            mostrarToast("Debes aceptar los términos y condiciones")
+            return false
         }
 
-
-
+        return true
     }
 
 

@@ -14,6 +14,7 @@ import com.grupo3.donapp_access.features.usuario.ui.BuscarFragment
 import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
 import com.grupo3.donapp_access.features.usuario.ui.OfertasFragment
 import com.grupo3.donapp_access.features.usuario.ui.PerfilFragment
+import com.grupo3.donapp_access.features.usuario.ui.MisReservasFragment
 import com.mapbox.common.MapboxOptions
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.auth
@@ -26,6 +27,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.grupo3.donapp_access.features.comerciante.ui.ReservasComercianteFragment
 import com.grupo3.donapp_access.worker.AlertasWorker
 import java.util.concurrent.TimeUnit
 import io.github.jan.supabase.postgrest.from
@@ -196,6 +198,7 @@ class MainActivity : AppCompatActivity() {
                     R.id.nav_inicio -> mostrarFragment(HomeFragment())
                     R.id.nav_buscar -> mostrarFragment(BuscarFragment())
                     R.id.nav_ofertas -> mostrarFragment(OfertasFragment())
+                    R.id.nav_reservas -> mostrarFragment(MisReservasFragment())
                     R.id.nav_perfil -> mostrarFragment(PerfilFragment())
                 }
                 true
@@ -210,6 +213,8 @@ class MainActivity : AppCompatActivity() {
             bottomNav.setOnItemSelectedListener { item->
                 when(item.itemId){
                     R.id.nav_negocio -> mostrarFragment(DashboardFragment())
+                    // NUEVO: Enlace para las reservas del comerciante
+                    R.id.nav_reservas_com -> mostrarFragment(ReservasComercianteFragment())
                     R.id.nav_perfil_com -> mostrarFragment(com.grupo3.donapp_access.PerfilComercianteFragment())
                 }
                 true
