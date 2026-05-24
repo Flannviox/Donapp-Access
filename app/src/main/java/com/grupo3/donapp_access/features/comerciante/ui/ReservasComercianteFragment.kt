@@ -75,17 +75,35 @@ class ReservasComercianteFragment : Fragment() {
     }
 
     private fun mostrarDialogoConfirmacion(reserva: ReservaComercianteDetalle) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Confirmar Entrega")
-            .setMessage("¿Estás seguro de que deseas marcar los ${reserva.cantidad}x '${reserva.nombreProducto}' como entregados a ${reserva.nombreCliente}?")
-            .setPositiveButton("Sí, entregar") { dialog, _ ->
-                viewModel.marcarReservaComoEntregada(reserva.id_reservas)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancelar") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+        // Inflamos nuestro diseño personalizado
+        val dialogView = layoutInflater.inflate(com.grupo3.donapp_access.R.layout.dialog_confirmar_entrega, null)
+
+        val dialog = android.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        // Hacemos el fondo transparente para que se vea el radio de nuestra tarjeta (MaterialCardView)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Buscamos los elementos dentro de nuestro diseño
+        val tvMensaje = dialogView.findViewById<android.widget.TextView>(com.grupo3.donapp_access.R.id.tvMensajeDialog)
+        val btnCancelar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(com.grupo3.donapp_access.R.id.btnCancelarDialog)
+        val btnEntregar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(com.grupo3.donapp_access.R.id.btnEntregarDialog)
+
+        // Asignamos el texto personalizado
+        tvMensaje.text = "¿Estás seguro de que deseas marcar los ${reserva.cantidad}x '${reserva.nombreProducto}' como entregados a ${reserva.nombreCliente}?"
+
+        // Programamos los botones
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnEntregar.setOnClickListener {
+            viewModel.marcarReservaComoEntregada(reserva.id_reservas)
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onDestroyView() {
