@@ -17,7 +17,7 @@ import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentReservasComercianteBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+//Holaaaa aqui esta el fragment
 @AndroidEntryPoint
 class ReservasComercianteFragment : Fragment() {
 
