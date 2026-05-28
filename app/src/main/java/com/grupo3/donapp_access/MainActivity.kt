@@ -213,7 +213,6 @@ class MainActivity : AppCompatActivity() {
             bottomNav.setOnItemSelectedListener { item->
                 when(item.itemId){
                     R.id.nav_negocio -> mostrarFragment(DashboardFragment())
-                    // NUEVO: Enlace para las reservas del comerciante
                     R.id.nav_reservas_com -> mostrarFragment(ReservasComercianteFragment())
                     R.id.nav_perfil_com -> mostrarFragment(com.grupo3.donapp_access.PerfilComercianteFragment())
                 }
