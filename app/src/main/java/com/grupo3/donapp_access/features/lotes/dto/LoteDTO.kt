@@ -34,9 +34,6 @@ data class LoteDTO(
 
     val estado: String = "disponible",
 
-    // AGREGADO: Este campo recibirá los datos anidados de la tabla 'productos'
-    // cuando hagamos el select con "*, productos(*)" en Supabase.
-    // (Asegúrate de que la clase ProductoDTO esté importada si está en otro paquete)
     @SerialName("productos")
     val productos: ProductoDTO? = null
 )

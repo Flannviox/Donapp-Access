@@ -65,14 +65,12 @@ class DetalleLoteFragment : Fragment() {
                     binding.etPrecioNormal.setText(it.precio_normal.toString())
                     binding.etPrecioOferta.setText(it.precio_oferta?.toString() ?: "")
 
-                    // Ajuste visual del estado en vivo
                     binding.tvEstadoActual.text = it.estado.uppercase()
                     when(it.estado) {
                         "en_oferta" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F5C518"))
                         "disponible" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
                         "agotado" -> {
                             binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
-                            // Si está agotado, bloqueamos el botón de venta
                             binding.btnRegistrarVenta.isEnabled = false
                             binding.etCantidadVenta.isEnabled = false
                         }
@@ -83,7 +81,6 @@ class DetalleLoteFragment : Fragment() {
     }
 
     private fun configurarBotones() {
-        // Botón clásico de Guardar cambios generales (Edición manual)
         binding.btnGuardar.setOnClickListener {
             val cantidad = binding.etCantidad.text.toString().toIntOrNull() ?: 0
             val pNormal = binding.etPrecioNormal.text.toString().toDoubleOrNull() ?: 0.0
@@ -96,12 +93,10 @@ class DetalleLoteFragment : Fragment() {
             }
         }
 
-        // NUEVO: Botón para Registrar Venta restando del stock actual
         binding.btnRegistrarVenta.setOnClickListener {
             val stockActual = viewModel.loteActual.value?.cantidad ?: 0
             val cantidadVendida = binding.etCantidadVenta.text.toString().toIntOrNull() ?: 0
 
-            // Validaciones
             if (cantidadVendida <= 0) {
                 Toast.makeText(context, "Ingresa una cantidad mayor a 0", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -113,12 +108,10 @@ class DetalleLoteFragment : Fragment() {
 
             val nuevoStock = stockActual - cantidadVendida
 
-            // Mantenemos los precios actuales
             val pNormal = binding.etPrecioNormal.text.toString().toDoubleOrNull() ?: 0.0
             val pOferta = binding.etPrecioOferta.text.toString().toDoubleOrNull()
 
             if (tiendaId.isNotEmpty()) {
-                // Actualizamos Supabase. El ViewModel calculará el estado "agotado" automáticamente si llega a 0.
                 viewModel.actualizarDatosLote(loteIdActual, tiendaId, nuevoStock, pNormal, pOferta)
 
                 Toast.makeText(context, "Venta registrada. Nuevo stock: $nuevoStock", Toast.LENGTH_SHORT).show()

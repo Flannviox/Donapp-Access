@@ -66,7 +66,7 @@ class PublicarViewModel @Inject constructor(
     fun crearProductoNuevo(
         nombre: String,
         categoriaId: String,
-        imagenBase64: String, // Se cambió a String para recibir Base64
+        imagenBase64: String, 
         extension: String
     ) {
         val idTienda = idTiendaCache

@@ -42,7 +42,6 @@ class DashboardFragment : Fragment() {
     private val CHANNEL_ID = "donapp_alertas"
     private var mensajePendiente: String? = null
 
-    //launcher para pedir permiso de notificaciones
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -66,7 +65,6 @@ class DashboardFragment : Fragment() {
 
         setupRecyclerView()
 
-        //observar datos del ViewModel
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.nombreTienda.collect { nombre ->
                 binding.tvNombreTienda.text = nombre

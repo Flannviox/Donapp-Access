@@ -47,7 +47,6 @@ class InventarioFragment : Fragment() {
         setupRecyclerView()
         observarEstado()
 
-        //configurar el botón flotante para agregar lotes
         binding.fabAgregarLote.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, PublicarLoteFragment())
@@ -55,8 +54,6 @@ class InventarioFragment : Fragment() {
                 .commit()
         }
 
-        //obtener el ID del usuario actual de Supabase Auth
-        // Si es null (Acceso Rápido), usamos uno genérico para que no salga vacío si hay datos globales
         val userId = supabase.auth.currentUserOrNull()?.id
         if (userId != null) {
             viewLifecycleOwner.lifecycleScope.launch {
@@ -73,7 +70,6 @@ class InventarioFragment : Fragment() {
             }
 
         } else {
-            // Intentar cargar algo aunque no haya login (Modo Dev)
             viewModel.obtenerInventario("test_seller_id")
             Toast.makeText(requireContext(), "Modo Vista Previa: Usando ID de prueba", Toast.LENGTH_SHORT).show()
         }

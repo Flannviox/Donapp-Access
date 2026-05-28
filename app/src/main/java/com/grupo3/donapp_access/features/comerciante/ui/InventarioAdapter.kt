@@ -31,7 +31,6 @@ class InventarioAdapter(
 
     inner class LoteViewHolder(private val binding: ItemLoteCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(lote: Lote) {
-            // LLAMADA SEGURA: Validamos el nombre del producto si viene nulo
             val nombreProducto = lote.productos_id ?: "Producto sin nombre"
 
             binding.tvNombreProducto.text = if (nombreProducto.length > 20) {
@@ -43,17 +42,13 @@ class InventarioAdapter(
             binding.tvStockCantidad.text = "Stock: ${lote.cantidad} uds."
             binding.tvExpiracion.text = "Vence: ${lote.fecha_vencimiento ?: "---"}"
 
-            // Mostrar el precio normal y formatearlo
             binding.tvPrecioNormal.text = "S/ %.2f".format(Locale.US, lote.precio_normal)
 
-            // Ajustar el ancho del tachado sobre el precio normal
             binding.viewTachado.post {
                 binding.viewTachado.layoutParams.width = binding.tvPrecioNormal.width
                 binding.viewTachado.requestLayout()
             }
 
-            // LLAMADA SEGURA: Evitamos el error en la validación de la URL de la imagen
-            // AHORA LEEMOS LA IMAGEN DIRECTAMENTE DESDE LA BASE DE DATOS
             val urlImagen = lote.imagenUrl
 
             Glide.with(itemView.context)
@@ -62,7 +57,6 @@ class InventarioAdapter(
                 .error(R.drawable.ic_bread_product)
                 .into(binding.ivProductoImagen)
 
-            // LLAMADA SEGURA: Agregamos ?. y un valor por defecto para el estado
             val estadoLote = lote.estado?.lowercase() ?: "disponible"
 
             when (estadoLote) {

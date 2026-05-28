@@ -43,7 +43,6 @@ class PublicarLoteFragment : Fragment() {
     private lateinit var layoutPaso1: View
     private lateinit var layoutPaso2: View
 
-    //Paso 1
     private lateinit var spinnerProductosExistentes: Spinner
     private lateinit var btnUsarProductoExistente: Button
     private lateinit var tilNombreProducto: TextInputLayout
@@ -63,18 +62,15 @@ class PublicarLoteFragment : Fragment() {
     private lateinit var etPrecioOferta: TextInputEditText
     private lateinit var btnPublicarLote: Button
 
-    //Estado local del Fragment
     private var imagenUri: Uri? = null
     private var fechaSeleccionada: String? = null
 
-    //Launcher para seleccionar imagen de galería. Se registra en property initializer
 
     private val imagenLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
         if (uri == null) return@registerForActivityResult
 
-        //Rechazar archivos > 5MB
         val size = obtenerTamanoUri(uri)
         if (size > MAX_IMAGEN_BYTES) {
             mostrarToast("La imagen no debe superar 5MB", long = true)
@@ -124,7 +120,6 @@ class PublicarLoteFragment : Fragment() {
 
         observarViewModel()
 
-        //Disparar la carga inicial (categorías + productos + id_tienda)
         viewModel.cargarDatosIniciales()
     }
 
