@@ -38,6 +38,8 @@ class DashboardViewModel @Inject constructor(
     // Estado para la notificación de alerta en el teléfono
     private val _mensajeAlerta = MutableStateFlow<String?>(null)
     val mensajeAlerta: StateFlow<String?> = _mensajeAlerta
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    val hoy = sdf.format(Date())
 
     fun cargarDatosDashboard(tiendaId: String) {
         viewModelScope.launch {
@@ -49,18 +51,22 @@ class DashboardViewModel @Inject constructor(
 
                 _nombreTienda.value = tienda?.nombre ?: "Mi Bodega"
 
-                // 2. Obtener los lotes activos (sin simulaciones, puro Supabase)
+
+
                 val idTiendaReal = tienda?.idTienda ?: return@launch
                 val lotes = SupabaseClient.client.from("lote")
+
                     .select (
                         Columns.raw(
                             "id_lote,productos_id,tiendas_id,numero_lote,cantidad," +
                                     "fecha_vencimiento,precio_normal,precio_oferta,estado," +
-                                    "productos(nombre, imagen)" // <--- AHORA SÍ PIDE LA IMAGEN
+                                    "productos(nombre, imagen)"
                         )){
                         filter {
                             eq("tiendas_id", idTiendaReal)
                             neq("estado", "agotado")
+                            neq("estado", "vencido")
+                            gte("fecha_vencimiento", hoy)
                         }
                     }.decodeList<LoteConProducto>()
 
