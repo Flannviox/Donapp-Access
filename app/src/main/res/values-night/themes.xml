@@ -1,7 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.DonappAccess" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/donapp_orange</item>
-        <item name="android:windowBackground">@color/donapp_text_secondary</item>
-        <item name="colorSurface">@color/donapp_yellow</item>
-    </style>
+    <color name="donapp_bg">#000000</color>
+    <color name="donapp_surface">#121212</color>
+    <color name="donapp_surface_high">#1A1A1A</color>
+    <color name="donapp_surface_muted">#222222</color>
+    <color name="donapp_surface_variant">#111111</color>
+    <color name="donapp_background">#000000</color>
+    <color name="donapp_background_bottom">#0A0A0A</color>
+    <color name="donapp_primary">#FFFF00</color>
+    <color name="donapp_yellow">#FFFF00</color>
+    <color name="donapp_text_primary">#FFFFFF</color>
+    <color name="donapp_text_secondary">#FFFFFF</color>
+    <color name="donapp_text_hint">#FFFF00</color>
+    <color name="donapp_text_muted">#FFFFFF</color>
+    <color name="donapp_input_bg">#000000</color>
+    <color name="donapp_input_stroke">#FFFF00</color>
 </resources>

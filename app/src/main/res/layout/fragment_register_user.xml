@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/donapp_bg"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/windowBackground"
     android:fitsSystemWindows="true"
     android:clipToPadding="false"
-    android:overScrollMode="never"
-    >
-
+    android:overScrollMode="never">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,12 +20,12 @@
             android:id="@+id/btnBack"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Volver atrás"
             android:padding="10dp"
             android:src="@android:drawable/ic_media_previous"
+            app:tint="?android:attr/textColorPrimary"
             tools:ignore="TouchTargetSizeCheck" />
-
 
         <Space
             android:layout_width="match_parent"
@@ -37,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Registrar cuenta"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold"/>
 
@@ -52,22 +50,20 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="6dp">
 
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/ic_menu_user"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono persona"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombres y Apellidos"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,15 +76,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombres"
-                android:textColor="@color/donapp_text_primary"
-                android:textColorHint="@color/donapp_text_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textPersonName"
                 android:imeOptions="actionNext"/>
-
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,23 +91,22 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="6dp">
 
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@drawable/ic_menu_user"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono persona"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apellidos"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilApellidos"
             android:layout_width="match_parent"
@@ -123,12 +117,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Apellidos"
-                android:textColor="@color/donapp_text_primary"
-                android:textColorHint="@color/donapp_text_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textPersonName"
                 android:imeOptions="actionNext"/>
-
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
@@ -145,41 +137,33 @@
                 android:layout_height="18dp"
                 android:src="@drawable/ic_accessibility"
                 android:contentDescription="Ícono discapacidad"
-                app:tint="@color/donapp_text_secondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Discapacidad (opcional)"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
-        
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilDiscapacidad"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:boxBackgroundColor="@color/donapp_input_bg"
-            app:boxStrokeColor="@color/donapp_input_stroke"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp">
+            android:layout_height="wrap_content">
 
             <AutoCompleteTextView
                 android:id="@+id/actvDiscapacidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tipo de discapcidad"
-                android:textColor="@color/donapp_text_primary"
-                android:textColorHint="@color/donapp_text_hint"
+                android:hint="Tipo de discapacidad"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="none"
                 android:focusable="false"
                 tools:ignore="SpeakableTextPresentCheck"/>
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
@@ -196,22 +180,19 @@
                 android:layout_height="18dp"
                 android:src="@android:drawable/ic_dialog_email"
                 android:contentDescription="Ícono correo"
-                app:tint="@color/donapp_text_secondary" />
+                app:tint="?android:attr/textColorSecondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Correo electrónico"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilCorreo"
-            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -219,16 +200,14 @@
                 android:id="@+id/etCorreo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="gmail.com"
-                android:textColor="@color/donapp_text_primary"
+                android:hint="ejemplo@correo.com"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
-
-
-        <!-- Correo Apoderado (opcional) -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -237,45 +216,38 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="6dp">
 
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@android:drawable/ic_dialog_email"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono correo apoderado"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Correo eletrónico (APODERADO) opcional"
-                android:textColor="@color/donapp_text_secondary"
+                android:text="Correo electrónico (APODERADO) opcional"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilCorreoApoderado"
-            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etCorreoApoderado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="gmail.com"
-                android:textColorHint="@color/donapp_text_hint"
+                android:hint="ejemplo@correo.com"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"/>
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
-
-
-        <!--telefono-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -283,27 +255,24 @@
             android:orientation="horizontal"
             android:layout_marginBottom="6dp">
 
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@android:drawable/ic_menu_call"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono teléfono"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Teléfono"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilTelefono"
-            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -312,40 +281,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="+51 123456789"
-                android:textColor="@color/donapp_text_primary"
-                android:textColorHint="@color/donapp_text_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="phone"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="6dp">
 
-
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@android:drawable/ic_menu_agenda"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono DNI"/>
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="DNI"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilDni"
-            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -354,18 +321,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="12345678"
-                android:textColor="@color/donapp_text_primary"
-                android:textColorHint="@color/donapp_text_hint"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="number"
                 android:maxLength="8"
                 android:imeOptions="actionNext"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-
-
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
-
-        <!--Contraseña-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -378,17 +341,16 @@
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:src="@android:drawable/ic_lock_lock"
-                app:tint="@color/donapp_text_secondary"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Ícono contraseña"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contraseña"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp"
                 android:layout_marginStart="6dp"/>
-
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -396,16 +358,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:endIconMode="password_toggle"
-            app:endIconTint="@color/donapp_primary">
-
+            app:endIconTint="?attr/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="*****************"
-                android:textColor="@color/donapp_primary"
-                android:textColorHint="@color/donapp_text_secondary"
+                android:hint="••••••••"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="?android:attr/textColorSecondary"
                 android:inputType="textPassword"
                 android:imeOptions="actionDone"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -414,47 +375,42 @@
             android:id="@+id/webViewCaptcha"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             tools:ignore="WebViewLayout" />
 
-
         <Space android:layout_height="16dp" android:layout_width="match_parent"/>
 
-        <!-- Botón Crear Cuenta -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCrearCuenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="56dp"
-            android:paddingVertical="12dp"
             android:text="Crear Cuenta"
-            android:textColor="@color/donapp_bg"
+            android:textColor="?android:attr/windowBackground"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/donapp_primary"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="12dp"/>
-
-        <!-- Términos -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/cbTerminos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/donapp_primary"/>
-
+                android:buttonTint="?attr/colorPrimary"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Aceptas nuestros"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="11sp"/>
-
 
             <TextView
                 android:id="@+id/tvTerminosLink"
@@ -463,18 +419,11 @@
                 android:layout_marginStart="5dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:minHeight="48dp"
                 android:text="Términos de servicio / Política de privacidad"
-                android:textColor="@color/donapp_primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="11sp" />
-
-
         </LinearLayout>
 
-
-
         <Space android:layout_height="24dp" android:layout_width="match_parent"/>
-
     </LinearLayout>
-
 </ScrollView>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="?android:attr/windowBackground"
     android:padding="32dp">
 
     <TextView
@@ -17,17 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Verifica tu correo"
-        android:textColor="@color/donapp_primary"
+        android:textColor="?attr/colorPrimary"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
-    <!-- Aquí se muestra el email dinámicamente -->
     <TextView
         android:id="@+id/tvCorreoEnviado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/donapp_text_secondary"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="15sp"
         android:gravity="center"
         android:layout_marginBottom="8dp" />
@@ -36,31 +37,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Abre el enlace del correo y luego\nvuelve aquí para iniciar sesión."
-        android:textColor="@color/donapp_text_primary"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="14sp"
         android:gravity="center"
         android:layout_marginBottom="40dp" />
 
-    <!-- Botón principal: ya verifiqué -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnYaVerifique"
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:text="Ya verifiqué, ir al login"
-        android:backgroundTint="@color/donapp_primary"
-        android:textColor="@color/donapp_bg"
+        app:backgroundTint="?attr/colorPrimary"
+        android:textColor="?android:attr/windowBackground"
         android:textStyle="bold"
         android:layout_marginBottom="12dp" />
 
-    <!-- Botón secundario: reenviar -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnReenviarCorreo"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:text="Reenviar correo"
-        android:textColor="@color/donapp_primary"
-        app:strokeColor="@color/donapp_primary"
-        xmlns:app="http://schemas.android.com/apk/res-auto" />
+        android:textColor="?attr/colorPrimary"
+        app:strokeColor="?attr/colorPrimary" />
 
 </LinearLayout>

@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/donapp_surface"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="16dp"
-    app:strokeColor="#33FFFFFF"
+    app:strokeColor="?android:attr/textColorSecondary"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -44,7 +44,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="¡Nueva oferta cerca de ti!"
-                android:textColor="@color/white"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="La tienda San José tiene productos con 50% de descuento. ¡Solo por hoy!"
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp" />
 
         <LinearLayout
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hace 5 min"
-                android:textColor="@color/donapp_text_hint"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp" />
 
             <View
@@ -78,7 +78,8 @@
                 android:layout_height="4dp"
                 android:layout_marginHorizontal="8dp"
                 android:background="@drawable/bg_circle_yellow"
-                android:backgroundTint="@color/donapp_text_hint" />
+                android:backgroundTint="?android:attr/textColorSecondary"
+                />
 
             <TextView
                 android:id="@+id/tvDistancia"

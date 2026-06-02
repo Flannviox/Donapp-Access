@@ -45,15 +45,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val prefs = getSharedPreferences("donapp_prefs", MODE_PRIVATE)
-        val altoContrasteActivo = prefs.getBoolean("alto_contraste", false)
-        if (altoContrasteActivo) {
-            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
-                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-            )
-        } else {
-            androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
-                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-            )
+        when (prefs.getString("tema_actual", "normal")) {
+            "high_contrast" -> setTheme(R.style.Theme_DonappAccess_HighContrast)
+            "black_white" -> setTheme(R.style.Theme_DonappAccess_BlackWhite)
+
+            else -> setTheme(R.style.Theme_DonappAccess)
         }
 
 
@@ -64,7 +60,10 @@ class MainActivity : AppCompatActivity() {
         bottomNav = findViewById(R.id.bottomNav)
         bottomNav.visibility = View.GONE
 
-        if (savedInstanceState == null) {
+        val rolRestaurado = savedInstanceState?.getString("rol_actual")
+        if (rolRestaurado != null) {
+            configurarNavbar(rolRestaurado)
+        } else if (savedInstanceState == null) {
             if (intent?.data?.scheme == "donapp") {
                 findViewById<View>(R.id.fragmentContainer).post {
                     manejarDeepLink()
@@ -73,8 +72,17 @@ class MainActivity : AppCompatActivity() {
                 verificarSesionActiva()
             }
         }
+
         iniciarWorkerDeAlertas()
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (rolActual.isNotEmpty()) {
+            outState.putString("rol_actual", rolActual)
+        }
+    }
+
 
     private fun iniciarWorkerDeAlertas() {
         val constraints = Constraints.Builder()
@@ -92,39 +100,35 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun verificarSesionActiva() {
 
+    fun obtenerRol(): String = rolActual
+
+    private fun verificarSesionActiva() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, androidx.fragment.app.Fragment())
             .commit()
 
-            lifecycleScope.launch {
-                kotlinx.coroutines.delay(500)
+        lifecycleScope.launch {
+            kotlinx.coroutines.delay(500)
+            val usuarioActual = SupabaseClient.client.auth.currentUserOrNull()
 
-                val usuarioActual = SupabaseClient.client.auth.currentUserOrNull()
-
-                if(usuarioActual!=null){
-                    try {
-                        val rol = authRepository.obtenerRolUsuario(usuarioActual.id)
-                        configurarNavbar(rol)
-                    }catch (e: Exception){
-                        mostrarSinNav(WelcomeFragment())
-
-                    }
-
-                }else{
+            if (usuarioActual != null) {
+                try {
+                    val rol = authRepository.obtenerRolUsuario(usuarioActual.id)
+                    configurarNavbar(rol)
+                } catch (e: Exception) {
                     mostrarSinNav(WelcomeFragment())
                 }
+            } else {
+                mostrarSinNav(WelcomeFragment())
             }
-
-
         }
+    }
 
     private fun manejarDeepLink() {
         findViewById<View>(R.id.fragmentContainer).post {
             lifecycleScope.launch {
                 try {
-                    // Supabase necesita un momento para procesar el token
                     kotlinx.coroutines.delay(1500)
                     mostrarSinNav(
                         com.grupo3.donapp_access.features.auth.ui.LoginFragment()

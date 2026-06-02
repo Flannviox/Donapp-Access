@@ -28,8 +28,7 @@
         android:ellipsize="end"
         android:gravity="start"
         android:maxLines="2"
-        android:textColor="@color/donapp_text_primary"
-        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"        android:textSize="18sp"
         tools:text="Panaderia" />
 
     <TextView
@@ -37,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:textColor="@color/donapp_text_muted"
-        android:textSize="16sp"
+        android:textColor="?android:attr/textColorSecondary"        android:textSize="16sp"
         tools:text="12 ofertas" />
 </LinearLayout>

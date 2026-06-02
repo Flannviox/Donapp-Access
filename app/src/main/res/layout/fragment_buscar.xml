@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_gradient"
+    android:background="?android:attr/windowBackground"
     android:fillViewport="true">
 
     <LinearLayout
@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bienvenido!!"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp" />
 
                 <TextView
@@ -39,16 +39,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="Cargando..."
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="26sp"
                     android:textStyle="bold" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Que haremos hoy?"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -59,7 +58,7 @@
                 android:background="@drawable/bg_circle_yellow"
                 android:gravity="center"
                 tools:text="?"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/windowBackground"
                 android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -67,20 +66,20 @@
         <EditText
             android:id="@+id/inputBuscar"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_input"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="10dp"
-            android:drawableTint="@color/donapp_text_muted"
+            android:drawableTint="?android:attr/textColorSecondary"
             android:hint="Busca productos u ofertas"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="28dp"
             android:paddingEnd="16dp"
-            android:textColor="@color/donapp_text_primary"
-            android:textColorHint="@color/donapp_text_muted"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -89,7 +88,7 @@
             android:layout_height="32dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="18dp"
-            android:indeterminateTint="@color/donapp_yellow"
+            android:indeterminateTint="?attr/colorPrimary"
             android:visibility="gone" />
 
         <TextView
@@ -98,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:gravity="center"
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             android:visibility="gone"
             tools:text="Sin categorias" />
@@ -113,7 +112,7 @@
             android:gravity="center"
             android:minWidth="120dp"
             android:text="Reintentar"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/windowBackground"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />

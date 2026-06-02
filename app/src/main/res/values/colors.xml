@@ -52,4 +52,13 @@
     <color name="contrast_primary">#FFFFFF</color>
     <color name="contrast_secondary">#FFFF00</color>
 
+
+    <!--BLANCO Y NEGRO-->
+    <color name="bw_bg">#FFFFFF</color>
+    <color name="bw_surface">#F0F0F0</color>
+    <color name="bw_surface_variant">#E0E0E0</color>
+    <color name="bw_primary">#000000</color>
+    <color name="bw_text_primary">#000000</color>
+    <color name="bw_text_secondary">#444444</color>
+
 </resources>

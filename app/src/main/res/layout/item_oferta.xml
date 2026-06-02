@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="Pan blanco Bimbo" />
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Bodega el chamo" />
             </LinearLayout>
@@ -94,7 +94,7 @@
             android:layout_marginTop="3dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/donapp_text_muted"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="11sp"
             tools:text="Pan integral | 500g" />
 
@@ -109,7 +109,7 @@
                 android:id="@+id/textPrecioNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/donapp_text_muted"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp"
                 tools:text="S/ 5.00" />
 
@@ -136,7 +136,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/donapp_text_muted"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="11sp"
                 tools:text="Stock: 15 unidades" />
 

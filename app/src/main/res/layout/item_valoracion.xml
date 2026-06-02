@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/donapp_surface"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="12dp"
     app:strokeWidth="0dp">
 
@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre Usuario"
-                android:textColor="@color/donapp_text_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="25 Oct 2023"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp" />
         </RelativeLayout>
 
@@ -44,7 +44,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:numStars="5"
-            android:progressTint="@color/donapp_primary" />
+            android:progressTint="?attr/colorPrimary"
+            />
 
         <TextView
             android:id="@+id/tvComentario"
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Comentario de ejemplo..."
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp" />
 
     </LinearLayout>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A"
+    android:background="?android:attr/windowBackground"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
             android:id="@+id/cvStoreIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:cardBackgroundColor="#F5C518"
+            app:cardBackgroundColor="?attr/colorPrimary"
             app:cardCornerRadius="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -26,7 +26,7 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_agenda"
-                app:tint="#1A1A1A" />
+                app:tint="?android:attr/windowBackground" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:text="Panel de comerciante"
-            android:textColor="#9E9E9E"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/cvStoreIcon"
             app:layout_constraintStart_toEndOf="@id/cvStoreIcon"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#2A2A2A"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Clientes alcanzados"
-                        android:textColor="#9E9E9E"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp" />
                     <TextView
                         android:id="@+id/tvClientesAlcanzados"
@@ -88,14 +88,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="0"
-                        android:textColor="#F5C518"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="28sp"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Notificados hoy"
-                        android:textColor="#4285F4"
+                        android:textColor="?attr/colorAccent"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#2A2A2A"
+                app:cardBackgroundColor="?attr/colorSurface"
                 app:cardCornerRadius="12dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="% Ofertas activas"
-                        android:textColor="#9E9E9E"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="14sp" />
                     <TextView
                         android:id="@+id/tvOfertasActivas"
@@ -124,14 +124,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="0"
-                        android:textColor="#F5C518"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="28sp"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="En este momento"
-                        android:textColor="#9E9E9E"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -143,7 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="ACCIONES RÁPIDAS"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -156,10 +156,10 @@
             android:minHeight="60dp"
             android:paddingVertical="12dp"
             android:layout_marginTop="12dp"
-            android:backgroundTint="#F5C518"
+            android:backgroundTint="?attr/colorPrimary"
             android:text="+ Nueva Oferta"
             android:textAllCaps="false"
-            android:textColor="#1A1A1A"
+            android:textColor="?android:attr/windowBackground"
             android:textSize="16sp"
             android:textStyle="bold"
             app:cornerRadius="12dp"
@@ -171,7 +171,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:text="OFERTAS ACTIVAS"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -182,7 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ver todas"
-            android:textColor="#F5C518"
+            android:textColor="?attr/colorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tvTituloLista"

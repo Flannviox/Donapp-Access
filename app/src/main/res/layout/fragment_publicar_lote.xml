@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/donapp_bg"
+    android:background="?android:attr/windowBackground"
     android:fitsSystemWindows="true"
     android:clipToPadding="false"
     android:overScrollMode="never">
@@ -16,16 +16,15 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- ════════════ HEADER ════════════ -->
-
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Volver atrás"
             android:padding="10dp"
             android:src="@android:drawable/ic_media_previous"
+            app:tint="?android:attr/textColorPrimary"
             tools:ignore="TouchTargetSizeCheck" />
 
         <Space
@@ -36,15 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Publicar lote"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="28sp"
             android:textStyle="bold" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="24dp" />
-
-        <!-- ════════════ PASO 1 ════════════ -->
 
         <LinearLayout
             android:id="@+id/layoutPaso1"
@@ -57,15 +54,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Paso 1 de 2 · Producto"
-                android:textColor="@color/donapp_secondary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
-
-            <!-- ─── CARD A: producto existente del catálogo ─── -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -78,14 +73,14 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@android:drawable/ic_menu_view"
-                    app:tint="@color/donapp_text_secondary"
+                    app:tint="?android:attr/textColorSecondary"
                     android:contentDescription="Ícono catálogo" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¿Tu producto ya está en el catálogo?"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"
                     android:layout_marginStart="6dp" />
 
@@ -95,8 +90,8 @@
                 android:id="@+id/spinnerProductosExistentes"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@color/donapp_input_bg"
-                android:popupBackground="@color/donapp_surface"
+                android:background="@drawable/bg_spinner_contrast"
+                android:popupBackground="?attr/colorSurface"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp" />
 
@@ -111,12 +106,12 @@
                 android:minHeight="48dp"
                 android:paddingVertical="12dp"
                 android:text="Usar este producto"
-                android:textColor="@color/donapp_primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/donapp_surface"
+                app:backgroundTint="?attr/colorSurface"
                 app:cornerRadius="12dp"
-                app:strokeColor="@color/donapp_primary"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp" />
 
             <Space
@@ -128,28 +123,24 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="—  o  —"
-                android:textColor="@color/donapp_text_secondary"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="13sp" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="24dp" />
 
-            <!-- ─── CARD B: nuevo producto ─── -->
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Registrar producto nuevo"
-                android:textColor="@color/donapp_text_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
-
-            <!-- nombre del producto -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -162,14 +153,14 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@android:drawable/ic_menu_edit"
-                    app:tint="@color/donapp_text_secondary"
+                    app:tint="?android:attr/textColorSecondary"
                     android:contentDescription="Ícono nombre" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre del producto"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"
                     android:layout_marginStart="6dp" />
 
@@ -185,8 +176,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nombre del producto"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textColorHint="@color/donapp_text_hint"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColorHint="?android:attr/textColorSecondary"
                     android:inputType="textCapSentences"
                     android:imeOptions="actionNext" />
 
@@ -195,8 +186,6 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
-
-            <!-- categoría -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -209,14 +198,14 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@android:drawable/ic_menu_agenda"
-                    app:tint="@color/donapp_text_secondary"
+                    app:tint="?android:attr/textColorSecondary"
                     android:contentDescription="Ícono categoría" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Categoría"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"
                     android:layout_marginStart="6dp" />
 
@@ -226,16 +215,14 @@
                 android:id="@+id/spinnerCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@color/donapp_input_bg"
-                android:popupBackground="@color/donapp_surface"
+                android:background="@drawable/bg_spinner_contrast"
+                android:popupBackground="?attr/colorSurface"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
-
-            <!-- foto del producto -->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -248,14 +235,14 @@
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/donapp_text_secondary"
+                    app:tint="?android:attr/textColorSecondary"
                     android:contentDescription="Ícono cámara" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Foto del producto"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"
                     android:layout_marginStart="6dp" />
 
@@ -266,10 +253,10 @@
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/donapp_surface"
+                android:background="?attr/colorSurface"
                 android:scaleType="centerCrop"
                 android:src="@android:drawable/ic_menu_gallery"
-                app:tint="@color/donapp_text_hint"
+                app:tint="?android:attr/textColorSecondary"
                 android:contentDescription="Vista previa de imagen del producto" />
 
             <Space
@@ -283,15 +270,15 @@
                 android:minHeight="48dp"
                 android:paddingVertical="12dp"
                 android:text="Seleccionar foto"
-                android:textColor="@color/donapp_primary"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/donapp_surface"
+                app:backgroundTint="?attr/colorSurface"
                 app:cornerRadius="12dp"
-                app:strokeColor="@color/donapp_primary"
+                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="1dp"
                 app:icon="@android:drawable/ic_menu_camera"
-                app:iconTint="@color/donapp_primary" />
+                app:iconTint="?attr/colorPrimary" />
 
             <Space
                 android:layout_width="match_parent"
@@ -304,10 +291,10 @@
                 android:minHeight="56dp"
                 android:paddingVertical="12dp"
                 android:text="Crear producto y continuar"
-                android:textColor="@color/donapp_bg"
+                android:textColor="?android:attr/windowBackground"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/donapp_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="12dp" />
 
             <Space
@@ -316,242 +303,7 @@
 
         </LinearLayout>
 
-        <!-- ════════════ PASO 2 ════════════ -->
 
-        <LinearLayout
-            android:id="@+id/layoutPaso2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Paso 2 de 2 · Datos del lote"
-                android:textColor="@color/donapp_secondary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
-            <!-- cantidad -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="6dp">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@android:drawable/ic_menu_sort_by_size"
-                    app:tint="@color/donapp_text_secondary"
-                    android:contentDescription="Ícono cantidad" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cantidad"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="13sp"
-                    android:layout_marginStart="6dp" />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilCantidad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCantidad"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Cantidad"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textColorHint="@color/donapp_text_hint"
-                    android:inputType="number"
-                    android:imeOptions="actionNext" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- fecha de vencimiento -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="6dp">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@android:drawable/ic_menu_today"
-                    app:tint="@color/donapp_text_secondary"
-                    android:contentDescription="Ícono fecha" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fecha de vencimiento"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="13sp"
-                    android:layout_marginStart="6dp" />
-
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSeleccionarFecha"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:paddingVertical="12dp"
-                android:text="Seleccionar fecha"
-                android:textColor="@color/donapp_primary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/donapp_surface"
-                app:cornerRadius="12dp"
-                app:strokeColor="@color/donapp_primary"
-                app:strokeWidth="1dp"
-                app:icon="@android:drawable/ic_menu_my_calendar"
-                app:iconTint="@color/donapp_primary" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- precio normal -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="6dp">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@android:drawable/ic_menu_info_details"
-                    app:tint="@color/donapp_text_secondary"
-                    android:contentDescription="Ícono precio" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio normal (S/.)"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="13sp"
-                    android:layout_marginStart="6dp" />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPrecioNormal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPrecioNormal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="0.00"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textColorHint="@color/donapp_text_hint"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionNext" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- precio oferta (opcional) -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="6dp">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@android:drawable/ic_menu_info_details"
-                    app:tint="@color/donapp_text_secondary"
-                    android:contentDescription="Ícono precio oferta" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Precio oferta (opcional)"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="13sp"
-                    android:layout_marginStart="6dp" />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPrecioOferta"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPrecioOferta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="0.00"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textColorHint="@color/donapp_text_hint"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionDone" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Si lo dejás vacío, el lote queda como disponible"
-                android:textColor="@color/donapp_text_hint"
-                android:textSize="12sp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="32dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnPublicarLote"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="56dp"
-                android:paddingVertical="12dp"
-                android:text="Publicar lote"
-                android:textColor="@color/donapp_bg"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/donapp_primary"
-                app:cornerRadius="12dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

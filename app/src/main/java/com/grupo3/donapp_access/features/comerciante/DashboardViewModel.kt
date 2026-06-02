@@ -32,10 +32,9 @@ class DashboardViewModel @Inject constructor(
     private val _totalLotes = MutableStateFlow(0)
     val totalLotes: StateFlow<Int> = _totalLotes
 
-    private val _clientesAlcanzados = MutableStateFlow(142) // Nota: Esta métrica sigue siendo un número estático, puedes conectarla luego
+    private val _clientesAlcanzados = MutableStateFlow(0) // Nota: Esta métrica sigue siendo un número estático, puedes conectarla luego
     val clientesAlcanzados: StateFlow<Int> = _clientesAlcanzados
 
-    // Estado para la notificación de alerta en el teléfono
     private val _mensajeAlerta = MutableStateFlow<String?>(null)
     val mensajeAlerta: StateFlow<String?> = _mensajeAlerta
     val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
@@ -44,7 +43,6 @@ class DashboardViewModel @Inject constructor(
     fun cargarDatosDashboard(tiendaId: String) {
         viewModelScope.launch {
             try {
-                // 1. Obtener el nombre de la tienda
                 val tienda = supabase.client.from("tiendas")
                     .select { filter { eq("usuarios_id", tiendaId) } }
                     .decodeSingleOrNull<TiendaSimple>()
@@ -73,7 +71,6 @@ class DashboardViewModel @Inject constructor(
                 _lotesActivos.value = lotes.map { it.toLote() }
                 _totalLotes.value = lotes.size
 
-                // 3. Calcular fechas para saber si hay lotes por vencer y disparar la notificación
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val hoy = Date()
                 var lotesPorVencer = 0
@@ -91,7 +88,6 @@ class DashboardViewModel @Inject constructor(
                             }
                         }
                     } catch (e: Exception) {
-                        // Ignorar lotes con fechas mal formateadas
                     }
                 }
 

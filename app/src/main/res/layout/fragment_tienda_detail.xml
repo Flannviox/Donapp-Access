@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A"
+    android:background="?android:attr/windowBackground"
     android:orientation="vertical">
 
-    <!-- CABECERA (Flecha atrás) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,12 +19,12 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Volver"
             android:src="@drawable/ic_back"
-            app:tint="@color/donapp_text_primary" />
+            app:tint="?android:attr/textColorPrimary" />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginHorizontal="16dp"
-            android:background="@color/donapp_input_stroke" />
+            android:background="?android:attr/listDivider" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -40,7 +39,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- PERFIL: LOGO Y TEXTO -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +50,7 @@
                     android:id="@+id/ivStoreLogo"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:background="@color/donapp_primary"
+                    android:background="?attr/colorPrimary"
                     android:padding="12dp"
                     android:src="@drawable/logo"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
@@ -69,7 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bodega La Esquina"
-                        android:textColor="@color/donapp_text_primary"
+                        android:textColor="?android:attr/textColorPrimary"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
@@ -84,7 +82,7 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@android:drawable/btn_star_big_on"
-                            app:tint="@color/donapp_primary" />
+                            app:tint="?attr/colorPrimary" />
 
                         <TextView
                             android:id="@+id/tvRatingValue"
@@ -92,7 +90,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:text="5.0"
-                            android:textColor="@color/donapp_primary"
+                            android:textColor="?attr/colorPrimary"
                             android:textSize="14sp" />
 
                         <ImageView
@@ -100,7 +98,7 @@
                             android:layout_height="14dp"
                             android:layout_marginStart="16dp"
                             android:src="@android:drawable/ic_menu_mylocation"
-                            app:tint="#448AFF" />
+                            app:tint="?attr/colorSecondary" />
 
                         <TextView
                             android:id="@+id/tvDistance"
@@ -108,13 +106,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:text="0.3 km"
-                            android:textColor="#448AFF"
+                            android:textColor="?attr/colorSecondary"
                             android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- INFO CARDS (Horario y Ofertas) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +122,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/ic_launcher_background"
-                    android:backgroundTint="@color/donapp_surface"
+                    android:backgroundTint="?attr/colorSurface"
                     android:orientation="vertical"
                     android:padding="16dp">
                     <TextView
@@ -133,17 +130,17 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="8dp"
                         android:text="Horario"
-                        android:textColor="@color/donapp_text_secondary"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="13sp"
                         app:drawableStartCompat="@android:drawable/ic_menu_recent_history"
-                        app:drawableTint="@color/donapp_text_secondary" />
+                        app:drawableTint="?android:attr/textColorSecondary" />
                     <TextView
                         android:id="@+id/tvSchedule"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Abierto Ahora"
-                        android:textColor="@color/donapp_success"
+                        android:textColor="?attr/colorTertiary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -154,7 +151,7 @@
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:background="@drawable/ic_launcher_background"
-                    android:backgroundTint="@color/donapp_surface"
+                    android:backgroundTint="?attr/colorSurface"
                     android:orientation="vertical"
                     android:padding="16dp">
                     <TextView
@@ -162,29 +159,28 @@
                         android:layout_height="wrap_content"
                         android:drawablePadding="8dp"
                         android:text="Ofertas"
-                        android:textColor="@color/donapp_text_secondary"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="13sp"
                         app:drawableStartCompat="@android:drawable/ic_menu_agenda"
-                        app:drawableTint="@color/donapp_primary" />
+                        app:drawableTint="?attr/colorPrimary" />
                     <TextView
                         android:id="@+id/tvActiveOffersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="3 activas"
-                        android:textColor="@color/donapp_primary"
+                        android:textColor="?attr/colorPrimary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Disponibles hoy"
-                        android:textColor="@color/donapp_text_secondary"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- BOTONES DE ACCIÓN (Estilo Amarillo) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -199,12 +195,12 @@
                     android:minHeight="56dp"
                     android:paddingVertical="12dp"
                     android:text="LLEGAR"
-                    android:textColor="@color/donapp_bg"
+                    android:textColor="?android:attr/windowBackground"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/donapp_primary"
+                    app:backgroundTint="?attr/colorPrimary"
                     app:cornerRadius="12dp"
                     app:icon="@android:drawable/ic_menu_send"
-                    app:iconTint="@color/donapp_bg" />
+                    app:iconTint="?android:attr/windowBackground" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
                     android:layout_width="0dp"
@@ -214,38 +210,36 @@
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:text="Llamar"
-                    android:textColor="@color/donapp_bg"
+                    android:textColor="?android:attr/windowBackground"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/donapp_primary"
+                    app:backgroundTint="?attr/colorPrimary"
                     app:cornerRadius="12dp"
                     app:icon="@android:drawable/stat_sys_phone_call"
-                    app:iconTint="@color/donapp_bg" />
+                    app:iconTint="?android:attr/windowBackground" />
             </LinearLayout>
 
-            <!-- DIRECCIÓN -->
             <TextView
                 android:id="@+id/tvAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:backgroundTint="@color/donapp_surface"
+                android:backgroundTint="?attr/colorSurface"
                 android:drawablePadding="12dp"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp"
                 android:text="Cargando dirección..."
-                android:textColor="@color/donapp_text_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="14sp"
                 app:drawableStartCompat="@android:drawable/ic_menu_mylocation"
-                app:drawableTint="@color/donapp_primary" />
+                app:drawableTint="?attr/colorPrimary" />
 
-            <!-- SECCIÓN: PRODUCTOS/OFERTAS -->
             <TextView
                 android:id="@+id/tvOffersLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Ofertas Disponibles"
-                android:textColor="@color/donapp_text_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -259,24 +253,22 @@
                 tools:itemCount="2"
                 tools:listitem="@android:layout/simple_list_item_1" />
 
-            <!-- SECCIÓN: RESEÑAS -->
             <TextView
                 android:id="@+id/tvReviewsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Reseñas ()"
-                android:textColor="@color/donapp_text_primary"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <!-- GRÁFICO DE RESEÑAS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:background="@drawable/ic_launcher_background"
-                android:backgroundTint="@color/donapp_surface"
+                android:backgroundTint="?attr/colorSurface"
                 android:orientation="horizontal"
                 android:padding="20dp">
 
@@ -292,7 +284,7 @@
                         style="?android:attr/ratingBarStyleIndicator"
                         android:numStars="5"
                         android:rating="5"
-                        android:progressTint="@color/donapp_primary"
+                        android:progressTint="?attr/colorPrimary"
                         android:scaleX="0.6"
                         android:scaleY="0.6" />
                     <TextView
@@ -300,7 +292,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="reseñas"
-                        android:textColor="@color/donapp_text_secondary"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -309,41 +301,39 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:orientation="vertical">
-                    <!-- Filas 5-1 Estrellas -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="2dp">
-                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="5" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
-                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp"/>
-                        <ProgressBar android:id="@+id/pb5Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="85" android:progressTint="@color/donapp_primary"/>
-                        <TextView android:id="@+id/tv5StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="85%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="5" android:textColor="?android:attr/textColorPrimary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="?android:attr/textColorSecondary" android:layout_marginStart="4dp"/>
+                        <ProgressBar android:id="@+id/pb5Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="85" android:progressTint="?attr/colorPrimary"/>
+                        <TextView android:id="@+id/tv5StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="85%" android:textColor="?android:attr/textColorSecondary" android:textSize="11sp" android:gravity="end"/>
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="2dp">
-                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="4" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
-                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp"/>
-                        <ProgressBar android:id="@+id/pb4Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="10" android:progressTint="@color/donapp_primary"/>
-                        <TextView android:id="@+id/tv4StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="10%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="4" android:textColor="?android:attr/textColorPrimary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="?android:attr/textColorSecondary" android:layout_marginStart="4dp"/>
+                        <ProgressBar android:id="@+id/pb4Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="10" android:progressTint="?attr/colorPrimary"/>
+                        <TextView android:id="@+id/tv4StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="10%" android:textColor="?android:attr/textColorSecondary" android:textSize="11sp" android:gravity="end"/>
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="2dp">
-                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="3" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
-                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp"/>
-                        <ProgressBar android:id="@+id/pb3Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="@color/donapp_primary"/>
-                        <TextView android:id="@+id/tv3StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="3" android:textColor="?android:attr/textColorPrimary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="?android:attr/textColorSecondary" android:layout_marginStart="4dp"/>
+                        <ProgressBar android:id="@+id/pb3Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="?attr/colorPrimary"/>
+                        <TextView android:id="@+id/tv3StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="?android:attr/textColorSecondary" android:textSize="11sp" android:gravity="end"/>
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginBottom="2dp">
-                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="2" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
-                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp"/>
-                        <ProgressBar android:id="@+id/pb2Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="@color/donapp_primary"/>
-                        <TextView android:id="@+id/tv2StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="2" android:textColor="?android:attr/textColorPrimary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="?android:attr/textColorSecondary" android:layout_marginStart="4dp"/>
+                        <ProgressBar android:id="@+id/pb2Stars" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="?attr/colorPrimary"/>
+                        <TextView android:id="@+id/tv2StarsPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="?android:attr/textColorSecondary" android:textSize="11sp" android:gravity="end"/>
                     </LinearLayout>
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
-                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="1" android:textColor="@color/donapp_text_primary" android:textSize="12sp"/>
-                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/donapp_text_secondary" android:layout_marginStart="4dp"/>
-                        <ProgressBar android:id="@+id/pb1Star" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="@color/donapp_primary"/>
-                        <TextView android:id="@+id/tv1StarPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="@color/donapp_text_secondary" android:textSize="11sp" android:gravity="end"/>
+                        <TextView android:layout_width="12dp" android:layout_height="wrap_content" android:text="1" android:textColor="?android:attr/textColorPrimary" android:textSize="12sp"/>
+                        <ImageView android:layout_width="10dp" android:layout_height="10dp" android:src="@android:drawable/btn_star_big_on" app:tint="?android:attr/textColorSecondary" android:layout_marginStart="4dp"/>
+                        <ProgressBar android:id="@+id/pb1Star" android:layout_width="0dp" android:layout_height="8dp" android:layout_weight="1" android:layout_marginHorizontal="8dp" style="?android:attr/progressBarStyleHorizontal" android:progress="5" android:progressTint="?attr/colorPrimary"/>
+                        <TextView android:id="@+id/tv1StarPct" android:layout_width="30dp" android:layout_height="wrap_content" android:text="5%" android:textColor="?android:attr/textColorSecondary" android:textSize="11sp" android:gravity="end"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- RECYCLERVIEW DE RESEÑAS INDIVIDUALES -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvReviews"
                 android:layout_width="match_parent"
@@ -354,7 +344,6 @@
                 tools:itemCount="2"
                 tools:listitem="@android:layout/simple_list_item_1" />
 
-            <!-- BOTÓN AÑADIR RESEÑA -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddReview"
                 android:layout_width="match_parent"
@@ -364,14 +353,12 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="32dp"
                 android:text="Añadir reseña"
-                android:textColor="@color/donapp_bg"
+                android:textColor="?android:attr/windowBackground"
                 android:textStyle="bold"
-                app:backgroundTint="@color/donapp_primary"
+                app:backgroundTint="?attr/colorPrimary"
                 app:cornerRadius="12dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-   
 
 </LinearLayout>

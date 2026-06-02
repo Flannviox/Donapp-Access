@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="164dp"
     android:layout_height="120dp"
     android:layout_marginEnd="12dp"
@@ -28,7 +29,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Bodega San Jose"
-        android:textColor="@color/donapp_text_primary"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="12sp"
         android:textStyle="bold" />
 
@@ -43,7 +44,8 @@
             android:layout_height="12dp"
             android:contentDescription="Distancia"
             android:src="@drawable/ic_location_pin"
-            android:tint="@color/donapp_text_secondary" />
+            app:tint="?android:attr/textColorSecondary"
+            />
 
         <TextView
             android:id="@+id/textDistancia"
@@ -51,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="0.3 km"
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="12sp" />
     </LinearLayout>
 

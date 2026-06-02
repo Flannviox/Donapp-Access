@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentAccesibilidadBinding
@@ -20,7 +22,6 @@ class AccesibilidadFragment : Fragment() {
 
     private var _binding: FragmentAccesibilidadBinding? = null
     private val binding get() = _binding!!
-
     private var soundPool: android.media.SoundPool? = null
     private var soundId: Int = 0
 
@@ -57,37 +58,10 @@ class AccesibilidadFragment : Fragment() {
 
     private fun cargarPreferencias() {
         val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+        val temaActual = prefs.getString("tema_actual", "normal")
 
-        //Asignamos el valor inicial SIN disparar el listener de cambios estéticos inmediatos
-        binding.switchHighContrast.isChecked = prefs.getBoolean("alto_contraste", false)
-
-        //configurar el listener detectando si el cambio viene del usuario o del código
-        binding.switchHighContrast.setOnClickListener {
-            val isChecked = binding.switchHighContrast.isChecked
-            prefs.edit().putBoolean("alto_contraste", isChecked).apply()
-
-            if (isChecked) {
-                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
-                    androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-                )
-            } else {
-                androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
-                    androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-                )
-            }
-
-            //speramos secuencialmente a que termine de guardar antes de matar la Activity
-            viewLifecycleOwner.lifecycleScope.launch {
-                guardarPreferenciasSuspend()
-
-                activity?.let { activity ->
-                    val intent = activity.intent
-                    activity.finish()
-                    activity.startActivity(intent)
-                    activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                }
-            }
-        }
+        binding.switchHighContrast.isChecked = temaActual == "high_contrast"
+        binding.switchBlackWhite.isChecked = temaActual == "black_white"
 
         val fontScale = prefs.getFloat("font_scale", 1f)
         binding.sliderFontSize.value = fontScale * 18f
@@ -99,12 +73,9 @@ class AccesibilidadFragment : Fragment() {
 
                 val usuario = SupabaseClient.client
                     .from("usuarios")
-                    .select {
-                        filter { eq("id_usuarios", userId) }
-                    }
+                    .select { filter { eq("id_usuarios", userId) } }
                     .decodeSingle<AccesibilidadDTO>()
 
-                // preactivar según lo que venga de la BD
                 when (usuario.tipoDiscapacidad?.uppercase()) {
                     "VISUAL" -> {
                         binding.switchTalkback.isChecked = true
@@ -125,16 +96,51 @@ class AccesibilidadFragment : Fragment() {
                         actualizarEstadoTalkback(false)
                     }
                 }
-
             } catch (e: Exception) {
                 android.util.Log.e("ACCESIBILIDAD", "Error al cargar: ${e.message}", e)
             }
         }
     }
 
+    private fun aplicarTema(tema: String) {
+        val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+        prefs.edit()
+            .putString("tema_actual", tema)
+            .putBoolean("alto_contraste", tema == "high_contrast")
+            .putString("rol_guardado", (requireActivity() as MainActivity).obtenerRol())
+            .apply()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            guardarPreferenciasSuspend()
+            activity?.recreate()
+        }
+    }
+
     private fun setupListeners() {
         binding.btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
+        }
+
+        binding.switchHighContrast.setOnClickListener {
+            val isChecked = binding.switchHighContrast.isChecked
+            if (isChecked) {
+                // desactivar blanco y negro si se activa alto contraste
+                binding.switchBlackWhite.isChecked = false
+                aplicarTema("high_contrast")
+            } else {
+                aplicarTema("normal")
+            }
+        }
+
+        binding.switchBlackWhite.setOnClickListener {
+            val isChecked = binding.switchBlackWhite.isChecked
+            if (isChecked) {
+                // desactivar alto contraste si se activa blanco y negro
+                binding.switchHighContrast.isChecked = false
+                aplicarTema("black_white")
+            } else {
+                aplicarTema("normal")
+            }
         }
 
         binding.switchTalkback.setOnCheckedChangeListener { _, isChecked ->

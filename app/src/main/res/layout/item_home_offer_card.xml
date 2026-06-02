@@ -38,7 +38,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Pan blanco Bimbo"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Bodega el chamo"
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/ 5.00"
-                    android:textColor="@color/donapp_text_muted"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="13sp" />
 
                 <View
@@ -154,7 +154,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Escuchar oferta"
                 android:src="@android:drawable/ic_btn_speak_now"
-                android:tint="@color/donapp_primary"
+                android:tint="?attr/colorPrimary"
                 tools:ignore="UseAppTint" />
 
         </LinearLayout>

@@ -28,23 +28,50 @@
     </style>
 
     <style name="Theme.DonappAccess.HighContrast" parent="Theme.DonappAccess">
+        <!-- Fondo negro puro -->
         <item name="android:windowBackground">@color/contrast_bg</item>
         <item name="android:colorBackground">@color/contrast_bg</item>
         <item name="colorSurface">@color/contrast_surface</item>
 
+        <!-- Texto blanco puro -->
         <item name="android:textColorPrimary">@color/contrast_primary</item>
-        <item name="android:textColorSecondary">@color/contrast_secondary</item>
-        <item name="android:textColorHint">@color/contrast_primary</item>
+        <item name="android:textColorSecondary">@color/contrast_primary</item>
+        <item name="android:textColorHint">@color/contrast_secondary</item>
 
-        <item name="colorControlActivated">@color/contrast_secondary</item> <item name="colorControlNormal">@color/contrast_primary</item> <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout.HighContrast</item>
+        <!-- Controles en amarillo neón -->
+        <item name="colorPrimary">@color/contrast_secondary</item>
+        <item name="colorPrimaryDark">@color/contrast_secondary</item>
+        <item name="colorAccent">@color/contrast_secondary</item>
+        <item name="colorControlActivated">@color/contrast_secondary</item>
+        <item name="colorControlNormal">@color/contrast_primary</item>
+
+        <!-- Status y navigation bar negros -->
+        <item name="android:statusBarColor">@color/contrast_bg</item>
+        <item name="android:navigationBarColor">@color/contrast_bg</item>
+
+        <!-- Botones en amarillo neón con texto negro -->
+        <item name="materialButtonStyle">@style/Widget.DonappAccess.Button.HighContrast</item>
+
+        <!-- Inputs con borde amarillo -->
+        <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout.HighContrast</item>
+
+        <!-- Hace que los bordes de TextInputLayout sean amarillo neón -->
+        <item name="boxStrokeColor">@color/contrast_secondary</item>
+        <item name="colorOnSurface">@color/contrast_primary</item>
+        <item name="colorOnSurfaceVariant">@color/contrast_secondary</item>
+
+        <item name="materialCardViewStyle">@style/Widget.DonappAccess.Card.HighContrast</item>
+
     </style>
 
     <style name="Widget.DonappAccess.TextInputLayout.HighContrast"
         parent="Widget.DonappAccess.TextInputLayout">
-        <item name="boxBackgroundColor">@color/contrast_bg</item>
+        <item name="boxBackgroundColor">@color/donapp_background_bottom</item>
         <item name="boxStrokeColor">@color/contrast_secondary</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
         <item name="hintTextColor">@color/contrast_secondary</item>
-        <item name="android:textColorHint">@color/contrast_primary</item>
+        <item name="android:textColorHint">@color/contrast_secondary</item>
     </style>
 
     <style name="Widget.DonappAccess.TextInputLayout"
@@ -64,6 +91,17 @@
         parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/donapp_primary</item>
         <item name="android:textColor">@color/donapp_bg</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <style name="Widget.DonappAccess.Button.HighContrast"
+        parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/contrast_secondary</item>
+        <item name="android:textColor">@color/contrast_bg</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">16sp</item>
         <item name="cornerRadius">12dp</item>
@@ -99,10 +137,66 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Widget.DonappAccess.Card"
+    <style name="Widget.DonappAccess.Card.HighContrast"
         parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/donapp_surface</item>
+        <item name="cardBackgroundColor">@color/contrast_surface</item>
+        <item name="strokeColor">@color/contrast_secondary</item>
+        <item name="strokeWidth">1dp</item>
         <item name="cardCornerRadius">16dp</item>
         <item name="cardElevation">0dp</item>
     </style>
+
+
+    <style name="Theme.DonappAccess.BlackWhite" parent="Theme.DonappAccess">
+        <item name="android:windowBackground">@color/bw_bg</item>
+        <item name="android:colorBackground">@color/bw_bg</item>
+        <item name="colorSurface">@color/bw_surface</item>
+        <item name="colorPrimary">@color/bw_primary</item>
+        <item name="colorPrimaryDark">@color/bw_primary</item>
+        <item name="android:textColorPrimary">@color/bw_text_primary</item>
+        <item name="android:textColorSecondary">@color/bw_text_secondary</item>
+        <item name="colorControlActivated">@color/bw_primary</item>
+        <item name="colorControlNormal">@color/bw_text_secondary</item>
+        <item name="android:statusBarColor">@color/bw_bg</item>
+        <item name="android:navigationBarColor">@color/bw_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="materialButtonStyle">@style/Widget.DonappAccess.Button.BlackWhite</item>
+        <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout.BlackWhite</item>
+        <item name="materialCardViewStyle">@style/Widget.DonappAccess.Card.BlackWhite</item>
+    </style>
+
+
+    <!--COLORES PARA BLANCO Y NEGRO-->
+    <style name="Widget.DonappAccess.Button.BlackWhite"
+        parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/bw_primary</item>
+        <item name="android:textColor">@color/bw_bg</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <style name="Widget.DonappAccess.TextInputLayout.BlackWhite"
+        parent="Widget.DonappAccess.TextInputLayout">
+        <item name="boxBackgroundColor">@color/bw_bg</item>
+        <item name="boxStrokeColor">@color/bw_primary</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/bw_text_secondary</item>
+        <item name="android:textColorHint">@color/bw_text_secondary</item>
+    </style>
+
+    <style name="Widget.DonappAccess.Card.BlackWhite"
+        parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/bw_surface</item>
+        <item name="strokeColor">@color/bw_primary</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+
+
 </resources>

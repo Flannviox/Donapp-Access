@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/donapp_bg"
+    android:background="?android:attr/windowBackground"
     android:fillViewport="true">
 
     <LinearLayout
@@ -13,26 +13,24 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Botón Volver -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Volver atrás"
             android:padding="10dp"
             android:src="@android:drawable/ic_media_previous"
-            app:cornerRadius="12dp"
+            app:tint="?android:attr/textColorPrimary"
             tools:ignore="TouchTargetSizeCheck" />
 
         <Space android:layout_height="32dp" android:layout_width="match_parent"/>
 
-        <!-- Títulos Principales -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Crear cuenta"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="32sp"
             android:textStyle="bold"/>
 
@@ -40,13 +38,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿Cómo vas a usar la app?"
-            android:textColor="@color/donapp_text_secondary"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="16sp"
             android:layout_marginTop="8dp"/>
 
         <Space android:layout_height="32dp" android:layout_width="match_parent"/>
 
-        <!-- CARD 1: USUARIO (Estado Seleccionado) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardUsuario"
             android:layout_width="match_parent"
@@ -55,7 +52,7 @@
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
             app:strokeWidth="2dp"
-            app:strokeColor="@color/donapp_primary"
+            app:strokeColor="?attr/colorPrimary"
             android:layout_marginBottom="16dp"
             android:clickable="true"
             android:focusable="true">
@@ -70,13 +67,13 @@
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:src="@drawable/ic_menu_user"
-                    app:tint="@color/donapp_primary"/>
+                    app:tint="?attr/colorPrimary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Usuario"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:layout_marginTop="12dp"/>
@@ -85,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Busca ofertas cercanas y ahorra en productos próximos a vencer"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"/>
 
@@ -95,14 +92,12 @@
                     android:layout_height="wrap_content"
                     android:text="✓ Seleccionado"
                     android:textSize="11sp"
-                    app:chipBackgroundColor="@color/donapp_primary"
+                    app:chipBackgroundColor="?attr/colorPrimary"
                     android:layout_marginTop="12dp"
-                    android:visibility="visible"
-                    />
+                    android:visibility="visible"/>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- CARD 2: COMERCIANTE (Estado No Seleccionado) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardComerciante"
             android:layout_width="match_parent"
@@ -125,13 +120,13 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_menu_seller"
-                    app:tint="#00E676"/>
+                    app:tint="?attr/colorSecondary"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Comerciante"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:paddingBottom="6dp"/>
@@ -140,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Conecta tus productos con quienes más los necesitan"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="14sp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="10dp"/>
@@ -150,9 +145,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="✓ Seleccionado"
-                    android:textColor="@color/donapp_bg"
+                    android:textColor="?android:attr/windowBackground"
                     android:textSize="11sp"
-                    app:chipBackgroundColor="@color/donapp_primary"
+                    app:chipBackgroundColor="?attr/colorPrimary"
                     android:layout_marginTop="12dp"
                     android:visibility="gone"/>
             </LinearLayout>
@@ -163,7 +158,6 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Botón Continuar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinuar"
             android:layout_width="match_parent"
@@ -171,10 +165,10 @@
             android:minHeight="60dp"
             android:paddingVertical="12dp"
             android:text="Continuar"
-            android:textColor="@color/donapp_bg"
+            android:textColor="?android:attr/windowBackground"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:backgroundTint="@color/donapp_primary"
+            app:backgroundTint="?attr/colorPrimary"
             app:cornerRadius="16dp"
             android:layout_marginBottom="16dp"/>
 
