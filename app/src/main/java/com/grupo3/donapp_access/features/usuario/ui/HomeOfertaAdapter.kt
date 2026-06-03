@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 import android.speech.tts.TextToSpeech
 import android.content.Context
+import com.grupo3.donapp_access.R
 
 
 class HomeOfertaAdapter(
@@ -45,6 +46,17 @@ class HomeOfertaAdapter(
             parent,
             false
         )
+
+        val temaActual = context.getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+            .getString("tema_actual", "normal")
+
+        val bgDrawable = when(temaActual){
+            "black_white" -> R.drawable.bg_surface_bw
+            "high_contraste" -> R.drawable.bg_surface_contrast
+            else -> R.drawable.bg_surface
+        }
+        binding.root.setBackgroundResource(bgDrawable)
+
         return OfertaViewHolder(binding)
     }
 

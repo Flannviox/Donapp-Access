@@ -39,6 +39,18 @@ class OfertaAdapter(
         val binding = ItemOfertaBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
+
+
+        val temaActual = context.getSharedPreferences("donapp_prefs", Context.MODE_PRIVATE)
+            .getString("tema_actual", "normal")
+
+        val bgDrawable = when(temaActual){
+            "black_white" -> R.drawable.bg_surface_bw
+            "high_contrast" -> R.drawable.bg_surface_contrast
+            else ->  R.drawable.bg_surface
+        }
+        binding.root.setBackgroundResource(bgDrawable)
+
         return OfertaViewHolder(binding)
     }
 

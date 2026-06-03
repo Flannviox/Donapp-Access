@@ -109,7 +109,7 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="?android:attr/divider"/>
+                android:background="?android:attr/textColorSecondary"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -341,7 +341,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
-                android:background="?android:attr/divider"/>
+                android:background="?android:attr/windowBackground"/>
 
             <LinearLayout
                 android:id="@+id/btnCerrarSesion"

@@ -50,15 +50,21 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private val tiendaAdapter = HomeTiendaAdapter { tienda ->
-        val id = tienda.idTienda
-        if (id != null && id.isNotBlank()) {
-            (requireActivity() as MainActivity).navegarA(
-                TiendaDetailFragment.newInstance(id, tienda.nombre)
-            )
-        } else {
-            android.widget.Toast.makeText(requireContext(), "Error: La tienda no tiene ID", android.widget.Toast.LENGTH_SHORT).show()
-            android.util.Log.e("HomeFragment", "El ID de la tienda es nulo para: ${tienda.nombre}")
+    private val tiendaAdapter by lazy {
+        HomeTiendaAdapter(requireContext()) { tienda ->
+            val id = tienda.idTienda
+            if (id != null && id.isNotBlank()) {
+                (requireActivity() as MainActivity).navegarA(
+                    TiendaDetailFragment.newInstance(id, tienda.nombre)
+                )
+            } else {
+                android.widget.Toast.makeText(
+                    requireContext(),
+                    "Error: La tienda no tiene ID",
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+                android.util.Log.e("HomeFragment", "El ID de la tienda es nulo para: ${tienda.nombre}")
+            }
         }
     }
 

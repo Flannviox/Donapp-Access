@@ -99,9 +99,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilEmail"
-            style="@style/Widget.DonappAccess.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:endIconTint="?android:attr/textColorSecondary"
             app:startIconTint="?android:attr/textColorSecondary">
 
             <com.google.android.material.textfield.TextInputEditText

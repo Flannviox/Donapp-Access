@@ -2,12 +2,14 @@ package com.grupo3.donapp_access.features.usuario.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.grupo3.donapp_access.R
 import androidx.recyclerview.widget.RecyclerView
 import com.grupo3.donapp_access.databinding.ItemHomeStoreCardBinding
 import com.grupo3.donapp_access.model.TiendaHome
 import java.util.Locale
 
 class HomeTiendaAdapter(
+    private val context : android.content.Context,
     private val onItemClick: (TiendaHome) -> Unit = {}
 ) : RecyclerView.Adapter<HomeTiendaAdapter.TiendaViewHolder>() {
     private val items = mutableListOf<TiendaHome>()
@@ -19,12 +21,26 @@ class HomeTiendaAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TiendaViewHolder {
-        val binding = ItemHomeStoreCardBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
+        val binding = ItemHomeStoreCardBinding.inflate(LayoutInflater.from(parent.context),
+            parent, false)
+
+        val temaActual = context.getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+            .getString("tema_actual", "normal")
+
+
+        val bgDrawable = when (temaActual) {
+            "black_white" -> R.drawable.bg_store_card_bw
+            "high_contrast" -> R.drawable.bg_store_card_contrast
+            else -> R.drawable.bg_store_card
+        }
+
+        binding.root.setBackgroundResource(bgDrawable)
+
+
         return TiendaViewHolder(binding)
+
+
+
     }
 
     override fun onBindViewHolder(holder: TiendaViewHolder, position: Int) {
