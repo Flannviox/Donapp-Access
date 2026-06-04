@@ -51,7 +51,6 @@ class LoginFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        // Navegación hacia la selección de rol si no tiene cuenta
         tvRegister.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
@@ -82,7 +81,7 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // Escuchamos las respuestas del ViewModel (Cargando, Éxito, Error)
+        // escuchamos las respuestas del ViewModel (Cargando, Éxito, Error)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.loginState.collect { state ->

@@ -15,4 +15,6 @@
     <color name="donapp_text_muted">#FFFFFF</color>
     <color name="donapp_input_bg">#000000</color>
     <color name="donapp_input_stroke">#FFFF00</color>
+
+
 </resources>

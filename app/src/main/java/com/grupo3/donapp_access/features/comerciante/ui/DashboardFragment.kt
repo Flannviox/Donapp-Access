@@ -39,18 +39,6 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: DashboardViewModel by viewModels()
 
-    private val CHANNEL_ID = "donapp_alertas"
-    private var mensajePendiente: String? = null
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            mensajePendiente?.let { mostrarNotificacionSistema(it) }
-        } else {
-            Toast.makeText(requireContext(), "Permiso de notificaciones denegado", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,15 +76,18 @@ class DashboardFragment : Fragment() {
                 (binding.rvOfertasDashboard.adapter as? InventarioAdapter)?.submitList(lotes)
             }
         }
-
-        // observar la alerta y disparar notificación real del sistema
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mensajeAlerta.collect { mensaje ->
                 if (mensaje != null) {
-                    gestionarPermisoYNotificar(mensaje)
+                    binding.tvAlertaVencimiento.visibility = View.VISIBLE
+                    binding.tvAlertaVencimiento.text = mensaje
+                } else {
+                    binding.tvAlertaVencimiento.visibility = View.GONE
                 }
             }
         }
+
+
 
         val userId = supabase.auth.currentUserOrNull()?.id
         if (userId != null) {
@@ -112,48 +103,7 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun gestionarPermisoYNotificar(mensaje: String) {
-        mensajePendiente = mensaje
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                return
-            }
-        }
-        mostrarNotificacionSistema(mensaje)
-    }
 
-    private fun crearCanalNotificacion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Alertas de Vencimiento"
-            val descriptionText = "Notificaciones sobre lotes próximos a vencer"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
-        }
-    }
-
-    private fun mostrarNotificacionSistema(mensaje: String) {
-        crearCanalNotificacion()
-
-        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-            .setSmallIcon(R.mipmap.logo) // Asegúrate de que el icono logo.png funciona bien aquí
-            .setContentTitle("Donapp: ¡Atención Comerciante!")
-            .setContentText(mensaje)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(mensaje))
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(requireContext())) {
-            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                notify(1001, builder.build())
-            }
-        }
-    }
 
     private fun setupRecyclerView() {
         binding.rvOfertasDashboard.layoutManager = LinearLayoutManager(requireContext())

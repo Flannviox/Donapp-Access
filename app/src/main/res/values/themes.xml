@@ -25,6 +25,8 @@
         <item name="textInputStyle">@style/Widget.DonappAccess.TextInputLayout</item>
         <item name="materialButtonStyle">@style/Widget.DonappAccess.Button</item>
 
+
+
     </style>
 
     <style name="Theme.DonappAccess.HighContrast" parent="Theme.DonappAccess">

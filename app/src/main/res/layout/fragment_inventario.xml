@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="20dp"
     android:background="?android:attr/windowBackground">
 
     <TextView
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp"
         android:src="@android:drawable/ic_input_add"
+        app:tint="?android:attr/windowBackground"
         app:backgroundTint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

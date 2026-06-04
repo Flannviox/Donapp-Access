@@ -122,11 +122,20 @@ class PerfilComercianteFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 try {
                     SupabaseClient.client.auth.signOut()
+
+                    requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+                        .edit()
+                        .remove("rol_guardado")
+                        .remove("check_accesiblidad_inicial")
+                        .remove("valoracion_realizada")
+                        .apply()
+
+                    androidx.work.WorkManager.getInstance(requireContext()).cancelAllWork()
+
                     (requireActivity() as MainActivity).mostrarSinNav(WelcomeFragment())
 
-
-                }catch (e: Exception){
-                    android.util.Log.e("PERFIL_COM", "Error al cerrar sesión: ${e.message}")
+                } catch (e: Exception) {
+                    android.util.Log.e("PERFIL", "Error al cerrar sesión: ${e.message}")
                 }
             }
         }

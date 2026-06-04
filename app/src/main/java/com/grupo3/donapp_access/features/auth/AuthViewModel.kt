@@ -65,9 +65,12 @@ class AuthViewModel @Inject constructor(
                 _loginState.value = AuthState.Success(rolUsuario)
 
             }catch (e: Exception){
-                //si hay un error como datos incorrectos, se captura
-                e.printStackTrace()
-                _loginState.value = AuthState.Error(e.message ?: "Error al iniciar sesión")
+                val mensajeUsuario = if(e.message?.contains("Invalid login credential", ignoreCase = true)== true)
+                    "Correo o contraseña incorrectos"
+                else{
+                    e.message ?: "Error al iniciar sesión"
+                }
+                _loginState.value = AuthState.Error(mensajeUsuario)
 
             }
         }

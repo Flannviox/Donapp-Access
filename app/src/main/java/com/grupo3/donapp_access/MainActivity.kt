@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         MapboxOptions.accessToken = BuildConfig.MAPBOX_TOKEN
 
         bottomNav = findViewById(R.id.bottomNav)
@@ -62,12 +63,10 @@ class MainActivity : AppCompatActivity() {
 
         val rolRestaurado = savedInstanceState?.getString("rol_actual")
         if (rolRestaurado != null) {
-            configurarNavbar(rolRestaurado)
+            configurarNavbar(rolRestaurado, navegarAlInicio = false)
         } else if (savedInstanceState == null) {
             if (intent?.data?.scheme == "donapp") {
-                findViewById<View>(R.id.fragmentContainer).post {
                     manejarDeepLink()
-                }
             } else {
                 verificarSesionActiva()
             }
@@ -78,7 +77,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (rolActual.isNotEmpty()) {
+
+        if (rolActual.isNotEmpty() && bottomNav.visibility == View.VISIBLE){
             outState.putString("rol_actual", rolActual)
         }
     }
@@ -148,10 +148,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun configurarNavbar(rol: String){
+    fun configurarNavbar(rol: String, navegarAlInicio: Boolean = true){
         rolActual = rol
+        bottomNav.visibility = View.VISIBLE
 
-        // NUEVO: Validar si el usuario tiene discapacidad visual en su primer inicio de sesión
         lifecycleScope.launch {
             try {
                 val userId = SupabaseClient.client.auth.currentUserOrNull()?.id
@@ -161,25 +161,22 @@ class MainActivity : AppCompatActivity() {
                     val currentScale = prefs.getFloat("font_scale", 1f)
 
                     if (!checkHecho) {
-                        // Usamos un DTO privado para evitar crashes de serialización
                         val usuario = SupabaseClient.client.from("usuarios")
                             .select { filter { eq("id_usuarios", userId) } }
                             .decodeSingle<CheckDiscapacidadDTO>()
 
                         if (usuario.tipoDiscapacidad?.uppercase() == "VISUAL" && currentScale == 1f) {
                             prefs.edit()
-                                .putFloat("font_scale", 1.5f) // Aplica la letra grande
-                                .putBoolean("check_accesibilidad_inicial", true) // Marca que ya se revisó
+                                .putFloat("font_scale", 1.5f)
+                                .putBoolean("check_accesibilidad_inicial", true)
                                 .apply()
 
-                            // Reiniciamos la MainActivity para que el attachBaseContext aplique la fuente al instante
                             val currentIntent = intent
                             finish()
                             startActivity(currentIntent)
                             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                            return@launch // Evitamos cargar fragmentos porque la actividad se reiniciará
+                            return@launch
                         } else {
-                            // Si no es visual o ya cambió la letra, igual marcamos como revisado
                             prefs.edit().putBoolean("check_accesibilidad_inicial", true).apply()
                         }
                     }
@@ -189,14 +186,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        bottomNav.visibility = View.VISIBLE
-
         if(rol.lowercase()=="cliente"){
             bottomNav.menu.clear()
             bottomNav.inflateMenu(R.menu.bottom_nav_usuario)
-            mostrarFragment(HomeFragment())
-            bottomNav.selectedItemId = R.id.nav_inicio
-
+            if (navegarAlInicio) {
+                mostrarFragment(HomeFragment())
+                bottomNav.selectedItemId = R.id.nav_inicio
+            }
             bottomNav.setOnItemSelectedListener { item->
                 when (item.itemId) {
                     R.id.nav_inicio -> mostrarFragment(HomeFragment())
@@ -211,14 +207,16 @@ class MainActivity : AppCompatActivity() {
         }else{
             bottomNav.menu.clear()
             bottomNav.inflateMenu(R.menu.bottom_nav_comerciante)
-            mostrarFragment(DashboardFragment())
-            bottomNav.selectedItemId = R.id.nav_negocio
+            if (navegarAlInicio) {
+                mostrarFragment(DashboardFragment())
+                bottomNav.selectedItemId = R.id.nav_negocio
+            }
 
             bottomNav.setOnItemSelectedListener { item->
                 when(item.itemId){
                     R.id.nav_negocio -> mostrarFragment(DashboardFragment())
                     R.id.nav_reservas_com -> mostrarFragment(ReservasComercianteFragment())
-                    R.id.nav_perfil_com -> mostrarFragment(com.grupo3.donapp_access.PerfilComercianteFragment())
+                    R.id.nav_perfil_com -> mostrarFragment(PerfilComercianteFragment())
                 }
                 true
             }
@@ -226,6 +224,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun mostrarSinNav (fragment: Fragment){
+        rolActual= ""
         bottomNav.visibility = View.GONE
         mostrarFragment(fragment)
     }
