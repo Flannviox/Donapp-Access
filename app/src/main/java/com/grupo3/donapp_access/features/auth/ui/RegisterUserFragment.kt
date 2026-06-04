@@ -87,8 +87,6 @@ class RegisterUserFragment : Fragment() {
 
         try {
             val htmlContent = requireContext().assets.open("turnstile.html").bufferedReader().use { it.readText() }
-
-            // El BASE_URL debe ser el mismo que agregaste en Cloudflare (uomlyvsrlkvsroowlhqh.supabase.co)
             val baseUrl = "https://uomlyvsrlkvsroowlhqh.supabase.co"
 
             webView.loadDataWithBaseURL(baseUrl, htmlContent, "text/html", "UTF-8", null)

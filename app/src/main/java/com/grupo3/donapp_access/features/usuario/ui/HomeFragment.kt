@@ -66,6 +66,8 @@ class HomeFragment : Fragment() {
                 android.util.Log.e("HomeFragment", "El ID de la tienda es nulo para: ${tienda.nombre}")
             }
         }
+
+
     }
 
     override fun onCreateView(
@@ -125,6 +127,10 @@ class HomeFragment : Fragment() {
 
         binding.btnVerMapa.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(MapFragment())
+        }
+        binding.btnVerTodasTiendas.setOnClickListener {
+            // Usamos la función de navegación del  MainActivity
+            (requireActivity() as MainActivity).navegarA(TodasTiendasFragment())
         }
 
         // 👇 AQUÍ LLAMAMOS A LA VENTANITA DE PERMISOS PRIMERO 👇

@@ -20,7 +20,6 @@ class CaptchaDialogFragment(
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
 
-    // TODO: REEMPLAZA ESTO con tu Site Key pública de Cloudflare Turnstile
     private val SITE_KEY = "0x4AAAAAADUakTYpLPM9cxyl"
 
     override fun onStart() {
