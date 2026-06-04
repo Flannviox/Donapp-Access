@@ -133,6 +133,10 @@ class HomeFragment : Fragment() {
             (requireActivity() as MainActivity).navegarA(TodasTiendasFragment())
         }
 
+        binding.btnVerTodasOfertas.setOnClickListener {
+            (requireActivity() as MainActivity).navegarA(TodasOfertasFragment())
+        }
+
         // 👇 AQUÍ LLAMAMOS A LA VENTANITA DE PERMISOS PRIMERO 👇
         solicitarPermisosYArrancar()
     }
