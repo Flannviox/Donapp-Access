@@ -97,11 +97,22 @@ class InventarioFragment : Fragment() {
                     is UiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.rvInventario.visibility = View.GONE
+
+                        binding.layoutInventarioVacio.visibility = View.GONE
                     }
                     is UiState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        binding.rvInventario.visibility = View.VISIBLE
                         adapter.submitList(state.data)
+
+                        if (state.data.isEmpty()) {
+                            // Si no hay productos: mostramos el mensaje, ocultamos la lista
+                            binding.rvInventario.visibility = View.GONE
+                            binding.layoutInventarioVacio.visibility = View.VISIBLE
+                        } else {
+                            // Si hay productos: mostramos la lista, ocultamos el mensaje
+                            binding.rvInventario.visibility = View.VISIBLE
+                            binding.layoutInventarioVacio.visibility = View.GONE
+                        }
                     }
                     is UiState.Error -> {
                         binding.progressBar.visibility = View.GONE

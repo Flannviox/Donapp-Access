@@ -65,6 +65,7 @@
                     android:id="@+id/btnSeleccionarImagen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="60dp"
                     android:layout_gravity="center"
                     android:text="Subir Foto" />
             </FrameLayout>
@@ -78,7 +79,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNombreTienda"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +92,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etHorario"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -102,7 +105,8 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDireccion"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -114,13 +118,13 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etReferencia"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:minHeight="60dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="60dp"
                 android:layout_marginTop="8dp"
                 android:text="Ubicación GPS"
                 android:textColor="?android:attr/textColorPrimary"
@@ -186,7 +190,8 @@
                 android:id="@+id/btnUsarUbicacionActual"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="24dp"
                 android:text="Usar mi ubicación actual"
@@ -196,7 +201,8 @@
             <Button
                 android:id="@+id/btnGuardarCambios"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
+                android:minHeight="60dp"
                 android:layout_marginBottom="32dp"
                 android:backgroundTint="@color/donapp_yellow"
                 android:text="GUARDAR CAMBIOS"

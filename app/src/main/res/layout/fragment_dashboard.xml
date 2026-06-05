@@ -228,5 +228,18 @@
             app:layout_constraintTop_toBottomOf="@id/tvTituloLista"
             tools:listitem="@layout/item_lote_card" />
 
+        <TextView
+            android:id="@+id/tvSinOfertasDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="Aún no tienes ofertas activas.\n¡Anímate a publicar tu primer producto!"
+            android:textAlignment="center"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tvTituloLista" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
