@@ -142,7 +142,6 @@ class RegisterSellerFragment : Fragment() {
             tvTituloRegistro.text = "Paso 1: Datos Personales"
         }
 
-        // --- LÓGICA DE GUARDADO FINAL ---
         btnCrearCuenta.setOnClickListener {
             val nombreNegocio = view.findViewById<TextInputEditText>(R.id.etNombreNegocio).text.toString().trim()
             val direccion = etUbicacion.text.toString().trim()
@@ -163,7 +162,6 @@ class RegisterSellerFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Recopilamos
             val nombres = view.findViewById<TextInputEditText>(R.id.etNombres).text.toString().trim()
             val apellidos = view.findViewById<TextInputEditText>(R.id.etApellidos).text.toString().trim()
             val dni = view.findViewById<TextInputEditText>(R.id.etDni).text.toString().trim()
@@ -171,23 +169,13 @@ class RegisterSellerFragment : Fragment() {
             val telefono = view.findViewById<TextInputEditText>(R.id.etTelefono).text.toString().trim()
             val pass = view.findViewById<TextInputEditText>(R.id.etPassword).text.toString().trim()
 
-            // Enviamos todo al ViewModel
             authViewModel.crearCuentaComerciante(
-<<<<<<< HEAD
-                email = email,
-                pass = password,
-                nombres = "Nombre_Pendiente",
-                apellidos = "Apellido_Pendiente",
-                captchaToken = tokenTurnstile,
-                dni = "00000000",
-=======
                 email = correo,
                 pass = pass,
                 nombres = nombres,
                 apellidos = apellidos,
                 captchaToken = tokenTurnstile,
                 dni = dni,
->>>>>>> origin/Flavio
                 telefono = telefono,
                 nombreTienda = nombreNegocio,
                 direccion = direccion,
