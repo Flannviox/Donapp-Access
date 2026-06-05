@@ -136,7 +136,7 @@ class RegisterSellerFragment : Fragment() {
                 pass = password,
                 nombres = "Nombre_Pendiente",
                 apellidos = "Apellido_Pendiente",
-                captchaToken = tokenTurnstile, // Enviamos el Token
+                captchaToken = tokenTurnstile,
                 dni = "00000000",
                 telefono = telefono,
                 nombreTienda = nombreTienda,

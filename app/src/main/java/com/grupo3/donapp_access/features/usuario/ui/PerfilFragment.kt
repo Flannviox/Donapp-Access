@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.grupo3.donapp_access.EditarPerfilUsuarioFragment
 import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.core.network.SupabaseClient
@@ -87,6 +88,8 @@ class PerfilFragment : Fragment() {
 
     }
 
+
+
     private fun cargarDatosUsuario(){
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -138,6 +141,10 @@ class PerfilFragment : Fragment() {
             }
         }
         binding.btnNotificaciones.setOnClickListener { }
+
+        binding.btnEditarPerfil.setOnClickListener {
+            (requireActivity() as MainActivity).navegarA(EditarPerfilUsuarioFragment())
+        }
 
 
     }
