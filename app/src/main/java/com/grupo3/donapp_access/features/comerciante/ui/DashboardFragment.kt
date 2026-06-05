@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentDashboardBinding
@@ -56,6 +57,31 @@ class DashboardFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.nombreTienda.collect { nombre ->
                 binding.tvNombreTienda.text = nombre
+
+                // Actualizamos la letra del círculo con la inicial real de la tienda
+                if (nombre.isNotBlank() && nombre != "Cargando..." && nombre != "Error al cargar") {
+                    binding.tvAvatarDashboard.text = nombre.first().uppercase()
+                }
+            }
+        }
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.imagenTienda.collect { url ->
+                if (!url.isNullOrBlank() && url.startsWith("http")) {
+                    // Si hay foto: Ocultamos la inicial y mostramos la imagen
+                    binding.tvAvatarDashboard.visibility = View.GONE
+                    binding.ivAvatarDashboard.visibility = View.VISIBLE
+
+                    Glide.with(requireContext())
+                        .load(url)
+                        .centerCrop()
+                        .into(binding.ivAvatarDashboard)
+                } else {
+                    // Si no hay foto: Dejamos todo como estaba (la inicial amarilla)
+                    binding.tvAvatarDashboard.visibility = View.VISIBLE
+                    binding.ivAvatarDashboard.visibility = View.GONE
+                }
             }
         }
 
@@ -76,6 +102,7 @@ class DashboardFragment : Fragment() {
                 (binding.rvOfertasDashboard.adapter as? InventarioAdapter)?.submitList(lotes)
             }
         }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.mensajeAlerta.collect { mensaje ->
                 if (mensaje != null) {
@@ -86,8 +113,6 @@ class DashboardFragment : Fragment() {
                 }
             }
         }
-
-
 
         val userId = supabase.auth.currentUserOrNull()?.id
         if (userId != null) {
@@ -102,8 +127,6 @@ class DashboardFragment : Fragment() {
             (requireActivity() as MainActivity).navegarA(PublicarLoteFragment())
         }
     }
-
-
 
     private fun setupRecyclerView() {
         binding.rvOfertasDashboard.layoutManager = LinearLayoutManager(requireContext())
