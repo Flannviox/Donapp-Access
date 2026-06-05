@@ -100,6 +100,13 @@ class DashboardFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.lotesActivos.collect { lotes ->
                 (binding.rvOfertasDashboard.adapter as? InventarioAdapter)?.submitList(lotes)
+                if (lotes.isEmpty()) {
+                    binding.rvOfertasDashboard.visibility = View.GONE
+                    binding.tvSinOfertasDashboard.visibility = View.VISIBLE
+                } else {
+                    binding.rvOfertasDashboard.visibility = View.VISIBLE
+                    binding.tvSinOfertasDashboard.visibility = View.GONE
+                }
             }
         }
 

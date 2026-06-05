@@ -37,9 +37,9 @@ class AccesibilidadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        inicilizarSonidos()
         cargarPreferencias()
         setupListeners()
-        inicilizarSonidos()
     }
 
     private fun inicilizarSonidos() {
@@ -58,48 +58,21 @@ class AccesibilidadFragment : Fragment() {
 
     private fun cargarPreferencias() {
         val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
-        val temaActual = prefs.getString("tema_actual", "normal")
 
+        // 1. Cargar temas
+        val temaActual = prefs.getString("tema_actual", "normal")
         binding.switchHighContrast.isChecked = temaActual == "high_contrast"
         binding.switchBlackWhite.isChecked = temaActual == "black_white"
 
         val fontScale = prefs.getFloat("font_scale", 1f)
         binding.sliderFontSize.value = fontScale * 18f
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val userId = SupabaseClient.client.auth.currentUserOrNull()?.id
-                    ?: return@launch
+        // 2. Cargar estados de interruptores INDEPENDIENTES
+        binding.switchTalkback.isChecked = prefs.getBoolean("talkback_activo", false)
+        binding.switchSounds.isChecked = prefs.getBoolean("sonidos_activos", false)
+        binding.switchVibration.isChecked = prefs.getBoolean("vibracion_activa", false)
 
-                val usuario = SupabaseClient.client
-                    .from("usuarios")
-                    .select { filter { eq("id_usuarios", userId) } }
-                    .decodeSingle<AccesibilidadDTO>()
-
-                when (usuario.tipoDiscapacidad?.uppercase()) {
-                    "VISUAL" -> {
-                        binding.switchTalkback.isChecked = true
-                        binding.switchSounds.isChecked = true
-                        binding.switchVibration.isChecked = true
-                        actualizarEstadoTalkback(true)
-                    }
-                    "MOTRIZ" -> {
-                        binding.switchTalkback.isChecked = false
-                        binding.switchSounds.isChecked = true
-                        binding.switchVibration.isChecked = true
-                        actualizarEstadoTalkback(false)
-                    }
-                    else -> {
-                        binding.switchTalkback.isChecked = false
-                        binding.switchSounds.isChecked = false
-                        binding.switchVibration.isChecked = false
-                        actualizarEstadoTalkback(false)
-                    }
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("ACCESIBILIDAD", "Error al cargar: ${e.message}", e)
-            }
-        }
+        actualizarEstadoTalkback(binding.switchTalkback.isChecked)
     }
 
     private fun aplicarTema(tema: String) {
@@ -124,7 +97,6 @@ class AccesibilidadFragment : Fragment() {
         binding.switchHighContrast.setOnClickListener {
             val isChecked = binding.switchHighContrast.isChecked
             if (isChecked) {
-                // desactivar blanco y negro si se activa alto contraste
                 binding.switchBlackWhite.isChecked = false
                 aplicarTema("high_contrast")
             } else {
@@ -135,7 +107,6 @@ class AccesibilidadFragment : Fragment() {
         binding.switchBlackWhite.setOnClickListener {
             val isChecked = binding.switchBlackWhite.isChecked
             if (isChecked) {
-                // desactivar alto contraste si se activa blanco y negro
                 binding.switchHighContrast.isChecked = false
                 aplicarTema("black_white")
             } else {
@@ -144,6 +115,10 @@ class AccesibilidadFragment : Fragment() {
         }
 
         binding.switchTalkback.setOnCheckedChangeListener { _, isChecked ->
+            // Guardamos localmente para que sea independiente
+            requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("talkback_activo", isChecked).apply()
+
             actualizarEstadoTalkback(isChecked)
             if (isChecked) {
                 val intent = android.content.Intent(
@@ -151,11 +126,13 @@ class AccesibilidadFragment : Fragment() {
                 )
                 startActivity(intent)
             }
-            //lanzamos corrutina porque la función ahora sí suspende el hilo
             viewLifecycleOwner.lifecycleScope.launch { guardarPreferenciasSuspend() }
         }
 
         binding.switchSounds.setOnCheckedChangeListener { _, isChecked ->
+            requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("sonidos_activos", isChecked).apply()
+
             if (isChecked) {
                 android.media.RingtoneManager.getRingtone(
                     requireContext(),
@@ -167,7 +144,10 @@ class AccesibilidadFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch { guardarPreferenciasSuspend() }
         }
 
-        binding.switchVibration.setOnCheckedChangeListener { _, _ ->
+        binding.switchVibration.setOnCheckedChangeListener { _, isChecked ->
+            requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("vibracion_activa", isChecked).apply()
+
             viewLifecycleOwner.lifecycleScope.launch { guardarPreferenciasSuspend() }
         }
 
@@ -178,15 +158,11 @@ class AccesibilidadFragment : Fragment() {
                     .putFloat("font_scale", value / 18f)
                     .apply()
                 viewLifecycleOwner.lifecycleScope.launch {
-                    //guardamos en la base de datos
                     guardarPreferenciasSuspend()
-
-                    // Reiniciamos la actividad para aplicar el nuevo tema/escala
                     activity?.let { activity ->
                         val intent = activity.intent
                         activity.finish()
                         activity.startActivity(intent)
-                        //añadir una pequeña transición para que no sea tan brusco
                         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     }
                 }
@@ -208,28 +184,21 @@ class AccesibilidadFragment : Fragment() {
         }
     }
 
-    //función de suspensión real que bloquea secuencialmente su propio ámbito
     private suspend fun guardarPreferenciasSuspend() {
         try {
-            val userId = SupabaseClient.client.auth.currentUserOrNull()?.id
-                ?: return
+            val userId = SupabaseClient.client.auth.currentUserOrNull()?.id ?: return
 
             val nuevoTipo = when {
-                binding.switchTalkback.isChecked -> "VISUAL"
-                binding.switchHighContrast.isChecked -> "VISUAL"
+                binding.switchTalkback.isChecked || binding.switchHighContrast.isChecked -> "VISUAL"
                 binding.switchSounds.isChecked || binding.switchVibration.isChecked -> "MOTRIZ"
                 else -> "NINGUNA"
             }
 
             SupabaseClient.client.from("usuarios").update(
-                {
-                    set("tipo_discapacidad", nuevoTipo)
-                }
+                { set("tipo_discapacidad", nuevoTipo) }
             ) {
                 filter { eq("id_usuarios", userId) }
             }
-            android.util.Log.d("ACCESIBILIDAD", "PREFERENCIAS GUARDADAS EN BD: $nuevoTipo")
-
         } catch (e: Exception) {
             android.util.Log.e("ACCESIBILIDAD", "ERROR AL GUARDAR EN BD: ${e.message}", e)
         }
