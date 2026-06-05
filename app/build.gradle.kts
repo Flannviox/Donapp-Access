@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
 
-        applicationId = "com.grupo3.donapp_access"
+        applicationId = "com.donapp_access"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
@@ -69,7 +69,9 @@ android {
             keepDebugSymbols.add("*/libmapbox-common.so")
             keepDebugSymbols.add("*/libmapbox-maps.so")
         }
+
     }
+
 }
 
 dependencies {
