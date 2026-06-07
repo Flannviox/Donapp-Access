@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <!-- Botón volver -->
         <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="48dp"
@@ -21,292 +22,302 @@
             android:contentDescription="Volver atrás"
             android:padding="10dp"
             android:src="@android:drawable/ic_media_previous"
-            app:tint="?android:attr/textColorPrimary" />
+            app:tint="?android:attr/textColorPrimary"/>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="16dp"/>
+        <Space android:layout_width="match_parent" android:layout_height="16dp"/>
 
         <TextView
-            android:id="@+id/tvTituloRegistro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paso 1: Datos Personales"
+            android:text="Registrar Negocio"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="24sp"
             android:textStyle="bold"/>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp"/>
+        <Space android:layout_width="match_parent" android:layout_height="8dp"/>
 
-        <LinearLayout
-            android:id="@+id/layoutPaso1"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datos Personales"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Nombres -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginBottom="12dp"
+            android:hint="Nombres"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNombres"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Nombres"
-                    android:inputType="textPersonName"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApellidos"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Apellidos"
-                    android:inputType="textPersonName"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDni"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:maxLength="8"
-                    android:hint="DNI"
-                    android:inputType="number"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCorreo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Correo electrónico"
-                    android:inputType="textEmailAddress"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTelefono"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Teléfono"
-                    android:inputType="phone"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:endIconMode="password_toggle">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Contraseña"
-                    android:inputType="textPassword"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:endIconMode="password_toggle">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etConfirmPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Confirmar Contraseña"
-                    android:inputType="textPassword"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSiguiente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp"
-                android:text="Siguiente"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:backgroundTint="?attr/colorPrimary"
-                app:cornerRadius="12dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutPaso2"
+        <!-- Apellidos -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginBottom="12dp"
+            android:hint="Apellidos"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etApellidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNombreNegocio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Nombre del negocio"
-                    android:inputType="textPersonName"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginBottom="8dp">
-
-                <com.mapbox.maps.MapView
-                    android:id="@+id/mapView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:mapbox_cameraZoom="15.0"/>
-
-                <ImageView
-                    android:id="@+id/ivPin"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@android:drawable/ic_menu_mylocation"
-                    android:layout_gravity="center"
-                    android:translationY="-18dp"
-                    app:tint="?attr/colorPrimary"
-                    android:contentDescription="PIN DE UBICACIÓN"/>
-
-                <TextView
-                    android:id="@+id/tvMapStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mueve el mapa para elegir la ubicación"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:background="#CC202020"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="12dp"/>
-            </FrameLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+        <!-- DNI -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="DNI"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDni"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etUbicacion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="60dp"
-                    android:hint="Tu dirección aparecerá aquí..."
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:clickable="false"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="number"
+                android:maxLength="8"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnUsarUbicacion"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:text="Usar mi ubicación actual"
+        <!-- Correo -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Correo electrónico"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Teléfono -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Teléfono"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTelefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:maxLength="9"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Contraseña -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Contraseña"
+            style="?attr/textInputStyle"
+            app:endIconMode="password_toggle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Confirmar Contraseña -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:hint="Confirmar Contraseña"
+            style="?attr/textInputStyle"
+            app:endIconMode="password_toggle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Separador datos negocio -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datos del Negocio"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Nombre del negocio -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Nombre del negocio"
+            style="?attr/textInputStyle">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombreNegocio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Búsqueda de dirección -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:hint="Buscar dirección o lugar..."
+            style="?attr/textInputStyle"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_search"
+            app:endIconTint="?attr/colorPrimary">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBuscarDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ListView
+            android:id="@+id/lvSugerencias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            android:elevation="6dp"
+            android:maxHeight="160dp"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Mapa -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginBottom="8dp">
+
+            <com.mapbox.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mapbox_cameraZoom="15.0"/>
+
+            <ImageView
+                android:id="@+id/ivPin"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_mylocation"
+                android:layout_gravity="center"
+                android:translationY="-18dp"
+                app:tint="?attr/colorPrimary"
+                android:contentDescription="Pin de ubicación"/>
+
+            <TextView
+                android:id="@+id/tvMapStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mueve el mapa para elegir la ubicación"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:background="#CC202020"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="12dp"/>
+        </FrameLayout>
+
+        <!-- Dirección detectada (solo lectura) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:hint="Dirección detectada"
+            style="?attr/textInputStyle"
+            android:alpha="0.7">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUbicacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botón GPS -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnUsarUbicacion"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Usar mi ubicación actual (GPS)"
+            android:textColor="?attr/colorPrimary"
+            app:strokeColor="?attr/colorPrimary"
+            app:cornerRadius="12dp"/>
+
+        <!-- Captcha -->
+        <WebView
+            android:id="@+id/webViewCaptcha"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"
+            android:layerType="hardware"
+            tools:ignore="WebViewLayout"/>
+
+        <!-- Términos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <CheckBox
+                android:id="@+id/cbTerminos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="?attr/colorPrimary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Acepto los "
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/tvTerminosLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Términos y Privacidad"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="14sp"
-                app:strokeColor="?attr/colorPrimary"
-                app:strokeWidth="1dp"
-                app:cornerRadius="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="60dp"
-                android:layout_marginBottom="16dp"/>
-
-            <WebView
-                android:id="@+id/webViewCaptcha"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginBottom="16dp"
-                android:layerType="hardware"
-                tools:ignore="WebViewLayout" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/cbTerminos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:buttonTint="?attr/colorPrimary"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Acepto los "
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:textSize="12sp"/>
-
-                <TextView
-                    android:id="@+id/tvTerminosLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Términos y Privacidad"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAtrasPaso1"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:minHeight="60dp"
-                    android:text="Atrás"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="?attr/colorPrimary"
-                    android:textColor="?attr/colorPrimary"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCrearCuenta"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:minHeight="60dp"
-                    android:text="Crear"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="?attr/colorPrimary"
-                    app:cornerRadius="12dp"/>
-            </LinearLayout>
-
+                android:textStyle="bold"
+                android:textSize="12sp"/>
         </LinearLayout>
+
+        <!-- Botón crear cuenta -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCrearCuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:minHeight="56dp"
+            android:text="Crear Cuenta"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="12dp"/>
+
     </LinearLayout>
 </ScrollView>

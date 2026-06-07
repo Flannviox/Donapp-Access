@@ -4,12 +4,18 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,6 +30,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.grupo3.donapp_access.BuildConfig
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.AuthViewModel
@@ -34,22 +41,25 @@ import com.mapbox.maps.MapView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
+import java.net.URLEncoder
 
 @AndroidEntryPoint
 class RegisterSellerFragment : Fragment() {
 
     private val authViewModel: AuthViewModel by viewModels()
-
     private var latitudSeleccionada: Double = -8.1116
     private var longitudSeleccionada: Double = -79.0287
     private var mapView: MapView? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private var tokenTurnstile: String = ""
+    private var busquedaJob: Job? = null
+    private var mapaActualizandose = false
 
     private val locationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -78,116 +88,60 @@ class RegisterSellerFragment : Fragment() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        val btnVolver = view.findViewById<ImageView>(R.id.btnBack)
-        val tvTituloRegistro = view.findViewById<TextView>(R.id.tvTituloRegistro)
-
-        // Elementos de los Pasos
-        val layoutPaso1 = view.findViewById<View>(R.id.layoutPaso1)
-        val layoutPaso2 = view.findViewById<View>(R.id.layoutPaso2)
-        val btnSiguiente = view.findViewById<MaterialButton>(R.id.btnSiguiente)
-        val btnAtrasPaso1 = view.findViewById<MaterialButton>(R.id.btnAtrasPaso1)
+        val btnVolver      = view.findViewById<ImageView>(R.id.btnBack)
         val btnCrearCuenta = view.findViewById<MaterialButton>(R.id.btnCrearCuenta)
-
-        // Elementos del Mapa
-        val btnUbicacion = view.findViewById<MaterialButton>(R.id.btnUsarUbicacion)
-        val etUbicacion = view.findViewById<TextInputEditText>(R.id.etUbicacion)
-        val tvStatus = view.findViewById<TextView>(R.id.tvMapStatus)
+        val btnUbicacion   = view.findViewById<MaterialButton>(R.id.btnUsarUbicacion)
+        val etUbicacion    = view.findViewById<TextInputEditText>(R.id.etUbicacion)
+        val tvStatus       = view.findViewById<TextView>(R.id.tvMapStatus)
+        val etBuscar       = view.findViewById<TextInputEditText>(R.id.etBuscarDireccion)
+        val lvSugerencias  = view.findViewById<ListView>(R.id.lvSugerencias)
         mapView = view.findViewById(R.id.mapView)
 
         mapView?.setOnTouchListener { v, event ->
             when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE -> {
-                    v.parent?.requestDisallowInterceptTouchEvent(true)
-                }
-                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL -> {
-                    v.parent?.requestDisallowInterceptTouchEvent(false)
-                }
+                android.view.MotionEvent.ACTION_DOWN,
+                android.view.MotionEvent.ACTION_MOVE -> { v.parent?.requestDisallowInterceptTouchEvent(true) }
+                android.view.MotionEvent.ACTION_UP,
+                android.view.MotionEvent.ACTION_CANCEL -> {v.parent?.requestDisallowInterceptTouchEvent(false) }
             }
             false
         }
 
         btnVolver.setOnClickListener { parentFragmentManager.popBackStack() }
-
-        // --- LÓGICA DE INTERCAMBIO DE PANTALLAS ---
-        btnSiguiente.setOnClickListener {
-            // Validaciones del Paso 1
-            val nombres = view.findViewById<TextInputEditText>(R.id.etNombres).text.toString().trim()
-            val apellidos = view.findViewById<TextInputEditText>(R.id.etApellidos).text.toString().trim()
-            val dni = view.findViewById<TextInputEditText>(R.id.etDni).text.toString().trim()
-            val correo = view.findViewById<TextInputEditText>(R.id.etCorreo).text.toString().trim()
-            val telefono = view.findViewById<TextInputEditText>(R.id.etTelefono).text.toString().trim()
-            val pass = view.findViewById<TextInputEditText>(R.id.etPassword).text.toString().trim()
-            val confirmPass = view.findViewById<TextInputEditText>(R.id.etConfirmPassword).text.toString().trim()
-
-            if (nombres.isEmpty() || apellidos.isEmpty() || dni.isEmpty() || correo.isEmpty() || telefono.isEmpty() || pass.isEmpty()) {
-                Toast.makeText(requireContext(), "Completa todos tus datos personales", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (pass != confirmPass) {
-                Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Ocultar Paso 1 y Mostrar Paso 2
-            layoutPaso1.visibility = View.GONE
-            layoutPaso2.visibility = View.VISIBLE
-            tvTituloRegistro.text = "Paso 2: Datos de tu Negocio"
-        }
-
-        btnAtrasPaso1.setOnClickListener {
-            // Volver al Paso 1
-            layoutPaso2.visibility = View.GONE
-            layoutPaso1.visibility = View.VISIBLE
-            tvTituloRegistro.text = "Paso 1: Datos Personales"
-        }
-
-        btnCrearCuenta.setOnClickListener {
-            val nombreNegocio = view.findViewById<TextInputEditText>(R.id.etNombreNegocio).text.toString().trim()
-            val direccion = etUbicacion.text.toString().trim()
-            val termsChecked = view.findViewById<android.widget.CheckBox>(R.id.cbTerminos).isChecked
-
-            if (nombreNegocio.isEmpty() || direccion.isEmpty()) {
-                Toast.makeText(requireContext(), "Por favor, completa los datos de tu negocio", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (!termsChecked) {
-                Toast.makeText(requireContext(), "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (tokenTurnstile.isEmpty()) {
-                Toast.makeText(requireContext(), "Por favor, completa el Captcha de seguridad", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val nombres = view.findViewById<TextInputEditText>(R.id.etNombres).text.toString().trim()
-            val apellidos = view.findViewById<TextInputEditText>(R.id.etApellidos).text.toString().trim()
-            val dni = view.findViewById<TextInputEditText>(R.id.etDni).text.toString().trim()
-            val correo = view.findViewById<TextInputEditText>(R.id.etCorreo).text.toString().trim()
-            val telefono = view.findViewById<TextInputEditText>(R.id.etTelefono).text.toString().trim()
-            val pass = view.findViewById<TextInputEditText>(R.id.etPassword).text.toString().trim()
-
-            authViewModel.crearCuentaComerciante(
-                email = correo,
-                pass = pass,
-                nombres = nombres,
-                apellidos = apellidos,
-                captchaToken = tokenTurnstile,
-                dni = dni,
-                telefono = telefono,
-                nombreTienda = nombreNegocio,
-                direccion = direccion,
-                lat = latitudSeleccionada,
-                lng = longitudSeleccionada,
-                horario = "08:00 - 18:00"
-            )
-        }
-
         btnUbicacion.setOnClickListener { verificarYPedirPermiso(etUbicacion, tvStatus) }
+
+        configurarBusqueda(etBuscar, lvSugerencias, etUbicacion, tvStatus)
         configurarMapa(etUbicacion, tvStatus)
         configurarWebViewCaptcha()
+
+
+        btnCrearCuenta.setOnClickListener {
+            if (!validarCampos()) return@setOnClickListener
+
+            val nombres       = view.findViewById<TextInputEditText>(R.id.etNombres).text.toString().trim()
+            val apellidos     = view.findViewById<TextInputEditText>(R.id.etApellidos).text.toString().trim()
+            val dni           = view.findViewById<TextInputEditText>(R.id.etDni).text.toString().trim()
+            val correo        = view.findViewById<TextInputEditText>(R.id.etCorreo).text.toString().trim()
+            val telefono      = view.findViewById<TextInputEditText>(R.id.etTelefono).text.toString().trim()
+            val pass          = view.findViewById<TextInputEditText>(R.id.etPassword).text.toString().trim()
+            val nombreNegocio = view.findViewById<TextInputEditText>(R.id.etNombreNegocio).text.toString().trim()
+            val direccion     = etUbicacion.text.toString().trim()
+
+            authViewModel.crearCuentaComerciante(
+                email        = correo,
+                pass         = pass,
+                nombres      = nombres,
+                apellidos    = apellidos,
+                captchaToken = tokenTurnstile,
+                dni          = dni,
+                telefono     = telefono,
+                nombreTienda = nombreNegocio,
+                direccion    = direccion,
+                lat          = latitudSeleccionada,
+                lng          = longitudSeleccionada,
+                horario      = "08:00 - 18:00"
+            )
+        }
 
         // Observar ViewModel
         viewLifecycleOwner.lifecycleScope.launch {
@@ -221,6 +175,216 @@ class RegisterSellerFragment : Fragment() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun validarCampos(): Boolean {
+        val nombres       = view?.findViewById<TextInputEditText>(R.id.etNombres)?.text.toString().trim()
+        val apellidos     = view?.findViewById<TextInputEditText>(R.id.etApellidos)?.text.toString().trim()
+        val dni           = view?.findViewById<TextInputEditText>(R.id.etDni)?.text.toString().trim()
+        val correo        = view?.findViewById<TextInputEditText>(R.id.etCorreo)?.text.toString().trim()
+        val telefono      = view?.findViewById<TextInputEditText>(R.id.etTelefono)?.text.toString().trim()
+        val pass          = view?.findViewById<TextInputEditText>(R.id.etPassword)?.text.toString().trim()
+        val confirmPass   = view?.findViewById<TextInputEditText>(R.id.etConfirmPassword)?.text.toString().trim()
+        val nombreNegocio = view?.findViewById<TextInputEditText>(R.id.etNombreNegocio)?.text.toString().trim()
+        val direccion     = view?.findViewById<TextInputEditText>(R.id.etUbicacion)?.text.toString().trim()
+        val terms         = view?.findViewById<android.widget.CheckBox>(R.id.cbTerminos)?.isChecked ?: false
+
+        if (nombres.isNullOrEmpty() || apellidos.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Ingresa tu nombre y apellidos", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (dni?.length != 8) {
+            Toast.makeText(requireContext(), "El DNI debe tener 8 dígitos", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (correo.isNullOrEmpty() || !correo.contains("@")) {
+            Toast.makeText(requireContext(), "Ingresa un correo válido", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (telefono?.length != 9) {
+            Toast.makeText(requireContext(), "El teléfono debe tener 9 dígitos", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (pass.isNullOrEmpty() || pass.length < 6) {
+            Toast.makeText(requireContext(), "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (pass != confirmPass) {
+            Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (nombreNegocio.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Ingresa el nombre de tu negocio", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (direccion.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Selecciona la ubicación de tu negocio", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (!terms) {
+            Toast.makeText(requireContext(), "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        if (tokenTurnstile.isEmpty()) {
+            Toast.makeText(requireContext(), "Completa el Captcha de seguridad", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    private fun configurarBusqueda(
+        etBuscar: TextInputEditText,
+        lvSugerencias: ListView,
+        etUbicacion: TextInputEditText,
+        tvStatus: TextView
+
+        ){
+
+        etBuscar.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val query = s.toString().trim()
+                busquedaJob?.cancel()
+                if (query.length < 3) { lvSugerencias.visibility = View.GONE; return }
+                busquedaJob = viewLifecycleOwner.lifecycleScope.launch {
+                    delay(500)
+                    buscarLugares(query, lvSugerencias, etBuscar, etUbicacion, tvStatus)
+                }
+            }
+        })
+
+        etBuscar.setOnEditorActionListener { _, _, _ ->
+            val query = etBuscar.text.toString().trim()
+            if (query.isNotEmpty()) {
+                busquedaJob?.cancel()
+                busquedaJob = viewLifecycleOwner.lifecycleScope.launch {
+                    buscarLugares(query, lvSugerencias, etBuscar, etUbicacion, tvStatus)
+                }
+            }
+            true
+        }
+    }
+    private suspend fun buscarLugares(
+        query: String,
+        lvSugerencias: ListView,
+        etBuscar: TextInputEditText,
+        etUbicacion: TextInputEditText,
+        tvStatus: TextView
+    ) {
+        withContext(Dispatchers.IO) {
+            try {
+                val token = BuildConfig.MAPBOX_TOKEN
+                val queryEncoded = URLEncoder.encode(query, "UTF-8")
+                val url = "https://api.mapbox.com/search/searchbox/v1/suggest" +
+                        "?q=$queryEncoded" +
+                        "&access_token=$token" +
+                        "&language=es" +
+                        "&country=PE" +
+                        "&limit=5" +
+                        "&proximity=$longitudSeleccionada,$latitudSeleccionada" +
+                        "&session_token=donapp-${System.currentTimeMillis()}"
+
+                val response = URL(url).readText()
+                val suggestions = JSONObject(response).getJSONArray("suggestions")
+
+                data class Sugerencia(
+                    val nombre: String,
+                    val direccion: String,
+                    val mapboxId: String
+                )
+                val lista = mutableListOf<Sugerencia>()
+
+                for (i in 0 until suggestions.length()) {
+                    val item      = suggestions.getJSONObject(i)
+                    val nombre    = item.optString("name", "")
+                    val direccion = item.optString("full_address",
+                        item.optString("place_formatted", ""))
+                    val mapboxId  = item.optString("mapbox_id", "")
+                    if (nombre.isNotEmpty() && mapboxId.isNotEmpty()) {
+                        lista.add(Sugerencia(nombre, direccion, mapboxId))
+                    }
+                }
+
+                withContext(Dispatchers.Main) {
+                    if (!isAdded) return@withContext
+                    if (lista.isEmpty()) { lvSugerencias.visibility = View.GONE; return@withContext }
+
+                    lvSugerencias.adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_list_item_2,
+                        android.R.id.text1,
+                        lista.map { it.nombre }
+                    ).also { adapter ->
+                        // Mostramos también la dirección en text2
+                        lvSugerencias.adapter = object : ArrayAdapter<String>(
+                            requireContext(),
+                            android.R.layout.simple_list_item_2,
+                            lista.map { it.nombre }
+                        ) {
+                            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                                val v = super.getView(position, convertView, parent)
+                                v.findViewById<TextView>(android.R.id.text1).text = lista[position].nombre
+                                v.findViewById<TextView>(android.R.id.text2).text = lista[position].direccion
+                                v.findViewById<TextView>(android.R.id.text2).textSize = 11f
+                                return v
+                            }
+                        }
+                    }
+                    lvSugerencias.visibility = View.VISIBLE
+
+                    lvSugerencias.setOnItemClickListener { _, _, position, _ ->
+                        val seleccionado = lista[position]
+
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            try {
+                                val retrieveUrl = "https://api.mapbox.com/search/searchbox/v1/retrieve/${seleccionado.mapboxId}" +
+                                        "?access_token=$token" +
+                                        "&session_token=donapp-${System.currentTimeMillis()}"
+
+                                val detalle   = JSONObject(URL(retrieveUrl).readText())
+                                val features  = detalle.getJSONArray("features")
+                                val coords    = features.getJSONObject(0)
+                                    .getJSONObject("geometry")
+                                    .getJSONArray("coordinates")
+                                val lng = coords.getDouble(0)
+                                val lat = coords.getDouble(1)
+                                val direccionCompleta = features.getJSONObject(0)
+                                    .getJSONObject("properties")
+                                    .optString("full_address", seleccionado.direccion)
+
+                                withContext(Dispatchers.Main) {
+                                    if (!isAdded) return@withContext
+                                    latitudSeleccionada  = lat
+                                    longitudSeleccionada = lng
+
+                                    mapaActualizandose = true
+                                    mapView?.getMapboxMap()?.setCamera(
+                                        CameraOptions.Builder()
+                                            .center(Point.fromLngLat(lng, lat))
+                                            .zoom(16.0).build()
+                                    )
+                                    etUbicacion.setText(direccionCompleta)
+                                    tvStatus.text = "Mueve el mapa para ajustar si es necesario"
+                                    etBuscar.setText("")
+                                    lvSugerencias.visibility = View.GONE
+
+                                    Handler(Looper.getMainLooper()).postDelayed(
+                                        { mapaActualizandose = false }, 1500
+                                    )
+                                }
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    if (isAdded) Toast.makeText(requireContext(), "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { if (isAdded) lvSugerencias.visibility = View.GONE }
             }
         }
     }
@@ -324,3 +488,7 @@ class RegisterSellerFragment : Fragment() {
     override fun onLowMemory() { super.onLowMemory(); mapView?.onLowMemory() }
     override fun onDestroyView() { super.onDestroyView(); mapView?.onDestroy(); mapView = null }
 }
+
+
+
+
