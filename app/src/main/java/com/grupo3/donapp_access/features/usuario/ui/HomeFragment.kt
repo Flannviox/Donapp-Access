@@ -25,6 +25,7 @@ import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 
 import android.content.Intent
@@ -139,6 +140,7 @@ class HomeFragment : Fragment() {
 
         // 👇 AQUÍ LLAMAMOS A LA VENTANITA DE PERMISOS PRIMERO 👇
         solicitarPermisosYArrancar()
+        VoiceAssistantManager.speak("Pantalla de inicio. Arriba tienes el botón para ir al mapa de ofertas, y deslizando hacia abajo encontrarás ofertas relámpago y bodegas populares.")
     }
     private fun solicitarPermisosYArrancar() {
         val permisosNecesarios = mutableListOf(

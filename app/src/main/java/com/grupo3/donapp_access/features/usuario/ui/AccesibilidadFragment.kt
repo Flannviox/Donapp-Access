@@ -17,7 +17,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager //////////
 class AccesibilidadFragment : Fragment() {
 
     private var _binding: FragmentAccesibilidadBinding? = null
@@ -73,6 +73,10 @@ class AccesibilidadFragment : Fragment() {
         binding.switchVibration.isChecked = prefs.getBoolean("vibracion_activa", false)
 
         actualizarEstadoTalkback(binding.switchTalkback.isChecked)
+        // 3. Cargar estado de nuestro Asistente de Voz
+        val voicePrefs = requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
+        binding.switchVoiceAssistant.isChecked = voicePrefs.getBoolean("voice_assistant_enabled", false)
+        binding.sliderVoiceVolume.value = voicePrefs.getFloat("voice_volume", 1.0f)
     }
 
     private fun aplicarTema(tema: String) {
@@ -166,6 +170,30 @@ class AccesibilidadFragment : Fragment() {
                         activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     }
                 }
+            }
+        }
+        // Listeners del Asistente de Voz
+        binding.switchVoiceAssistant.setOnCheckedChangeListener { _, isChecked ->
+            // Guardamos en sus preferencias exclusivas
+            requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
+                .edit().putBoolean("voice_assistant_enabled", isChecked).apply()
+
+            if (isChecked) {
+                // Pequeña prueba de sonido para que el usuario sepa que funciona
+                VoiceAssistantManager.speak("Asistente de voz activado")
+            } else {
+                VoiceAssistantManager.stop()
+            }
+        }
+
+        binding.sliderVoiceVolume.addOnChangeListener { _, value, fromUser ->
+            if (fromUser) {
+                requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
+                    .edit().putFloat("voice_volume", value).apply()
+
+                // Le leemos en voz alta el porcentaje para que pruebe el volumen
+                val porcentaje = (value * 100).toInt()
+                VoiceAssistantManager.speak("Volumen al $porcentaje por ciento")
             }
         }
     }

@@ -23,6 +23,7 @@ import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 
 class BuscarFragment : Fragment() {
@@ -70,7 +71,7 @@ class BuscarFragment : Fragment() {
         }
 
         viewModel.cargarCategorias()
-
+        VoiceAssistantManager.speak("Pantalla de búsqueda. Arriba tienes una barra para escribir el producto que buscas, y debajo puedes explorar por categorías como Lácteos, Panadería o Abarrotes.")
     }
 
     private fun configurarCategorias() {

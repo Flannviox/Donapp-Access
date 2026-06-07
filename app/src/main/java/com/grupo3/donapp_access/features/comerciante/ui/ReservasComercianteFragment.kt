@@ -17,6 +17,7 @@ import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentReservasComercianteBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 //Holaaaa aqui esta el fragment
 @AndroidEntryPoint
 class ReservasComercianteFragment : Fragment() {
@@ -26,6 +27,13 @@ class ReservasComercianteFragment : Fragment() {
 
     private val viewModel: ReservasComercianteViewModel by viewModels()
     private lateinit var adapter: ReservaComercianteAdapter
+
+    private var haHabladoReservas = false
+
+    override fun onResume() {
+        super.onResume()
+        haHabladoReservas = false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +72,18 @@ class ReservasComercianteFragment : Fragment() {
                             val reservas = state.data
                             binding.tvSinReservasComerciante.isVisible = reservas.isEmpty()
                             adapter.submitList(reservas)
+                            // --- NUEVO CÓDIGO DEL ASISTENTE DE VOZ ---
+                            if (!haHabladoReservas) {
+                                // Filtramos la lista para contar solo las que están activas
+                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
+
+                                when (cantidadActivas) {
+                                    0 -> VoiceAssistantManager.speak("No tienes reservas activas.")
+                                    1 -> VoiceAssistantManager.speak("Tienes una reserva activa.")
+                                    else -> VoiceAssistantManager.speak("Tienes $cantidadActivas reservas activas.")
+                                }
+                                haHabladoReservas = true
+                            }
                         }
                         is UiState.Error -> {
                             Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
@@ -92,6 +112,7 @@ class ReservasComercianteFragment : Fragment() {
 
         // Asignamos el texto personalizado
         tvMensaje.text = "¿Estás seguro de que deseas marcar los ${reserva.cantidad}x '${reserva.nombreProducto}' como entregados a ${reserva.nombreCliente}?"
+        VoiceAssistantManager.speak("Confirmar entrega de ${reserva.cantidad} ${reserva.nombreProducto} al cliente ${reserva.nombreCliente}")
 
         // Programamos los botones
         btnCancelar.setOnClickListener {

@@ -19,7 +19,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint
 class PerfilComercianteFragment : Fragment() {
@@ -69,6 +69,7 @@ class PerfilComercianteFragment : Fragment() {
         binding.btnEditarTienda.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(EditarTiendaFragment())
         }
+        VoiceAssistantManager.speak("Perfil de tu negocio. Desde aquí puedes gestionar tus ofertas, editar la información de tu tienda y entrar a la configuración de accesibilidad.")
     }
 
     private fun abrirFormularioValoracion(){

@@ -16,7 +16,7 @@ import com.grupo3.donapp_access.databinding.FragmentOfertasBinding
 import com.grupo3.donapp_access.features.usuario.OfertasViewModel
 import com.grupo3.donapp_access.model.OfertaLote
 import kotlinx.coroutines.launch
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 class OfertasFragment : Fragment() {
     private var _binding: FragmentOfertasBinding? = null
@@ -56,6 +56,7 @@ class OfertasFragment : Fragment() {
         }
 
         viewModel.cargarOfertas()
+        VoiceAssistantManager.speak("Pantalla de ofertas cercanas. Aquí se muestran las promociones a tu alrededor. Tienes un botón para actualizar la lista en la parte superior.")
     }
 
     private fun configurarLista() {

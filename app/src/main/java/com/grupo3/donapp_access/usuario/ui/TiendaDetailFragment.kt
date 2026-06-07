@@ -28,6 +28,7 @@ import java.util.Locale
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import io.github.jan.supabase.auth.auth
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 class TiendaDetailFragment : Fragment() {
 
@@ -309,15 +310,21 @@ class TiendaDetailFragment : Fragment() {
     }
 
     private fun mostrarDialogoReserva(oferta: com.grupo3.donapp_access.model.OfertaLote) {
-        // Inflamos el XML
+        // Inflamos el XML que tiene los botones integrados
         val dialogView = layoutInflater.inflate(R.layout.dialog_reserva, null)
 
+        // Buscamos los elementos del XML
         val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val btnMinus = dialogView.findViewById<android.widget.Button>(R.id.btnMinus)
         val btnPlus = dialogView.findViewById<android.widget.Button>(R.id.btnPlus)
         val tvQuantity = dialogView.findViewById<android.widget.TextView>(R.id.tvQuantity)
+        val btnCancelar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelarReserva)
+        val btnConfirmar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnConfirmarReserva)
 
         tvTitle.text = "Reservar ${oferta.productoNombre}"
+
+        // Audio de accesibilidad
+        VoiceAssistantManager.speak("Estás por reservar el producto ${oferta.productoNombre}. Presiona los botones de más o menos para ajustar la cantidad, y el botón confirmar para finalizar.")
 
         var cantidadSeleccionada = 1
         val stockDisponible = oferta.cantidad
@@ -338,30 +345,31 @@ class TiendaDetailFragment : Fragment() {
             }
         }
 
+        // Creamos el diálogo sin botones nativos
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("Confirmar") { dialogInterface, _ ->
-                val idUsuarioActual = SupabaseClient.client.auth.currentUserOrNull()?.id
-
-                if (idUsuarioActual != null) {
-                    // Si hay un usuario logueado, hacemos la reserva real
-                    detailViewModel.reservarLote(idUsuarioActual, oferta.idLote, cantidadSeleccionada)
-                } else {
-                    // Si la sesión no existe o expiró, mostramos un error para que no colapse la app
-                    Toast.makeText(requireContext(), "Tu sesión ha expirado. Vuelve a iniciar sesión.", Toast.LENGTH_SHORT).show()
-                }
-
-                dialogInterface.dismiss()
-            }
-            .setNegativeButton("Cancelar") { dialogInterface, _ ->
-                dialogInterface.dismiss()
-            }
             .create()
 
-        dialog.show()
-
-
+        // Configuración de accesibilidad y diseño
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setDimAmount(0.8f) // Oscurecimiento fuerte para enfoque visual
+
+        // Lógica de nuestros botones propios
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnConfirmar.setOnClickListener {
+            val idUsuarioActual = SupabaseClient.client.auth.currentUserOrNull()?.id
+            if (idUsuarioActual != null) {
+                detailViewModel.reservarLote(idUsuarioActual, oferta.idLote, cantidadSeleccionada)
+            } else {
+                Toast.makeText(requireContext(), "Tu sesión ha expirado.", Toast.LENGTH_SHORT).show()
+            }
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 }

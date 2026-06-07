@@ -26,7 +26,6 @@
         android:usesCleartextTraffic="true"
         >
 
-
         <meta-data
             android:name="com.mapbox.token"
             android:value="${MAPBOX_ACCESS_TOKEN}" />
@@ -56,6 +55,18 @@
             android:name=".core.services.GeofenceService"
             android:foregroundServiceType="location"
             android:exported="false" />
+
+        <!-- Proveedor agregado para solucionar el error de Lint con WorkManager -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
     </application>
 </manifest>
