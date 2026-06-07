@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.features.comerciante.ui.InventarioFragment
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentPerfilComercianteBinding
 import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
+import com.grupo3.donapp_access.features.comerciante.ui.EditarTiendaFragment
 import com.grupo3.donapp_access.features.usuario.ui.AccesibilidadFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.auth
@@ -64,6 +66,9 @@ class PerfilComercianteFragment : Fragment() {
             android.widget.Toast.makeText(requireContext(), "Modo Test: Valoración reseteada", android.widget.Toast.LENGTH_SHORT).show()
             true
         }
+        binding.btnEditarTienda.setOnClickListener {
+            (requireActivity() as MainActivity).navegarA(EditarTiendaFragment())
+        }
     }
 
     private fun abrirFormularioValoracion(){
@@ -100,11 +105,29 @@ class PerfilComercianteFragment : Fragment() {
                     .select { filter { eq("usuarios_id", userId) } }
                     .decodeSingle<TiendaComercianteDTO>()
 
+                // Tus datos de texto
                 binding.tvNombreTiendaPerfil.text = tienda.nombre
                 binding.tvCorreoPerfil.text = usuario.correo
-                binding.tvAvatarPerfil.text = tienda.nombre.first().uppercase()
                 binding.tvHorarioPerfil.text = tienda.horaAtencion ?: "08:00 - 18:00"
                 binding.tvDireccionPerfil.text = tienda.direccion
+
+                // foto de perfil
+                if (!tienda.imagenReferencia.isNullOrBlank()) {
+                    // Si tiene imagen: Ocultamos la letra y mostramos la foto
+                    binding.tvAvatarPerfil.visibility = View.GONE
+                    binding.ivAvatarPerfil.visibility = View.VISIBLE
+
+                    Glide.with(requireContext())
+                        .load(tienda.imagenReferencia)
+                        .centerCrop()
+                        .into(binding.ivAvatarPerfil)
+                } else {
+                    // Si no tiene imagen: Mostramos la letra y ocultamos la foto
+                    binding.tvAvatarPerfil.visibility = View.VISIBLE
+                    binding.ivAvatarPerfil.visibility = View.GONE
+
+                    binding.tvAvatarPerfil.text = tienda.nombre.first().uppercase()
+                }
             }catch (e : Exception){
                 android.util.Log.e("PERFIL_COM", "ERROR: ${e.message}", e)
             }
@@ -168,5 +191,7 @@ private data class UsuarioComercianteDTO(
 private data class TiendaComercianteDTO(
     @SerialName("nombre")        val nombre: String,
     @SerialName("direccion")     val direccion: String,
-    @SerialName("hora_atencion") val horaAtencion: String? = null
+    @SerialName("hora_atencion") val horaAtencion: String? = null,
+    // 👇 Añade esta línea nueva:
+    @SerialName("imagen_referencia") val imagenReferencia: String? = null
 )

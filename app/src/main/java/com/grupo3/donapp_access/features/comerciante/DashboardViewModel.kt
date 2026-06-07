@@ -26,6 +26,9 @@ class DashboardViewModel @Inject constructor(
     private val _nombreTienda = MutableStateFlow("Cargando...")
     val nombreTienda: StateFlow<String> = _nombreTienda
 
+    private val _imagenTienda = MutableStateFlow<String?>(null)
+    val imagenTienda: StateFlow<String?> = _imagenTienda
+
     private val _lotesActivos = MutableStateFlow<List<Lote>>(emptyList())
     val lotesActivos: StateFlow<List<Lote>> = _lotesActivos
 
@@ -48,6 +51,7 @@ class DashboardViewModel @Inject constructor(
                     .decodeSingleOrNull<TiendaSimple>()
 
                 _nombreTienda.value = tienda?.nombre ?: "Mi Bodega"
+                _imagenTienda.value = tienda?.imagenReferencia
 
 
 
@@ -107,5 +111,6 @@ class DashboardViewModel @Inject constructor(
 @Serializable
 private data class TiendaSimple(
     @SerialName("id_tienda") val idTienda: String,
-    @SerialName("nombre")    val nombre: String
+    @SerialName("nombre")    val nombre: String,
+    @SerialName("imagen_referencia") val imagenReferencia: String? = null
 )

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,30 +8,55 @@
     android:background="?android:attr/windowBackground"
     android:fillViewport="true">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="25dp"
         android:layout_marginTop="20dp">
 
+        <TextView
+            android:id="@+id/tvAlertaVencimiento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:drawablePadding="8dp"
+            android:background="@color/donapp_warning"
+            android:textColor="@color/donapp_bg"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvStoreIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            app:cardBackgroundColor="?attr/colorPrimary"
-            app:cardCornerRadius="12dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
             android:layout_marginTop="12dp"
             app:layout_constraintTop_toBottomOf="@id/tvAlertaVencimiento"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            >
+            <TextView
+                android:id="@+id/tvAvatarDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_circle_yellow"
+                android:gravity="center"
+                android:text="T"
+                android:textColor="?android:attr/windowBackground"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_agenda"
-                app:tint="?android:attr/windowBackground" />
+                android:id="@+id/ivAvatarDashboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
@@ -205,18 +229,17 @@
             tools:listitem="@layout/item_lote_card" />
 
         <TextView
-            android:id="@+id/tvAlertaVencimiento"
+            android:id="@+id/tvSinOfertasDashboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:drawablePadding="8dp"
-            android:background="@color/donapp_warning"
-            android:textColor="@color/donapp_bg"
-            android:textStyle="bold"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:text="Aún no tienes ofertas activas.\n¡Anímate a publicar tu primer producto!"
+            android:textAlignment="center"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/tvTituloLista" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
