@@ -17,7 +17,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.ui.RegisterSellerFragment
 import com.grupo3.donapp_access.features.auth.ui.RegisterUserFragment
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 class RoleSelectionFragment : Fragment() {
     private val sharedViewModel: RegisterViewModel by activityViewModels()
     private var selectRole: String? = null
@@ -177,6 +177,7 @@ class RoleSelectionFragment : Fragment() {
         }
 
 
+        VoiceAssistantManager.speak("Selección de cuenta. Arriba, el botón para entrar como Usuario. Abajo, el botón para entrar como Comerciante.")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

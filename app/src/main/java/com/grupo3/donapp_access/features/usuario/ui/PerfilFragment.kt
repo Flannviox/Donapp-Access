@@ -18,7 +18,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint
 class PerfilFragment : Fragment() {
@@ -68,6 +68,7 @@ class PerfilFragment : Fragment() {
         binding.btnNotificaciones.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(NotificacionesHistorialFragment())
         }
+        VoiceAssistantManager.speak("Pantalla de perfil. Aquí puedes revisar tus estadísticas de ahorro, ver tus notificaciones y acceder a los ajustes de accesibilidad.")
     }
 
 

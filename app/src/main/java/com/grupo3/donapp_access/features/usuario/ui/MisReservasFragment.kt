@@ -19,6 +19,7 @@ import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentMisReservasBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint
 class MisReservasFragment : Fragment() {
@@ -29,7 +30,12 @@ class MisReservasFragment : Fragment() {
     // Inyectamos el ViewModel que acabamos de arreglar
     private val viewModel: MisReservasViewModel by viewModels()
     private lateinit var adapter: ReservaAdapter
+    private var haHabladoReservas = false
 
+    override fun onResume() {
+        super.onResume()
+        haHabladoReservas = false
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +75,17 @@ class MisReservasFragment : Fragment() {
                             // Si la lista está vacía, mostramos el texto "Aún no tienes reservas"
                             binding.tvSinReservas.isVisible = reservas.isEmpty()
                             adapter.submitList(reservas)
+                            if (!haHabladoReservas) {
+                                // Asumiendo que tu variable se llama "reservas"
+                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
+
+                                when (cantidadActivas) {
+                                    0 -> VoiceAssistantManager.speak("No tienes reservas activas por recoger.")
+                                    1 -> VoiceAssistantManager.speak("Tienes una reserva activa pendiente de recojo.")
+                                    else -> VoiceAssistantManager.speak("Tienes $cantidadActivas reservas activas pendientes de recojo.")
+                                }
+                                haHabladoReservas = true
+                            }
                         }
                         is UiState.Error -> {
                             Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()

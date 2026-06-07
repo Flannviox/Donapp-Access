@@ -29,6 +29,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -133,6 +134,7 @@ class DashboardFragment : Fragment() {
         binding.btnNuevaOferta.setOnClickListener {
             (requireActivity() as MainActivity).navegarA(PublicarLoteFragment())
         }
+        VoiceAssistantManager.speak("Panel de control de tu tienda. Usa el menú inferior para navegar entre tus reservas, inventario y publicar nuevos lotes.")
     }
 
     private fun setupRecyclerView() {

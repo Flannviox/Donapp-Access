@@ -27,6 +27,7 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 
 //anotacion de hilt para habilitar la inyeccion de dependencias automatica
@@ -83,6 +84,7 @@ class MapFragment : Fragment() {
         binding.fabMiUbicacion.setOnClickListener {
             verificarYPedirPermiso()
         }
+        VoiceAssistantManager.speak("Vista de mapa activada. Te recomendamos usar la vista de lista para mayor comodidad visual.")
     }
 
 

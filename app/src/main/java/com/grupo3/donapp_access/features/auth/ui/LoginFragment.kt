@@ -22,6 +22,7 @@ import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint // Necesario para inyectar el ViewModel con Hilt
 class LoginFragment : Fragment() {
@@ -135,6 +136,7 @@ class LoginFragment : Fragment() {
                 }
             }
         }
+        VoiceAssistantManager.speak("Pantalla de inicio de sesión. Ingresa tu correo y contraseña. El botón de ingreso está en la parte inferior.")
 
     }
 }

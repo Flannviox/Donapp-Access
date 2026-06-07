@@ -13,6 +13,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.HomeUsuarioViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 @AndroidEntryPoint
 class HomeUsuarioFragment : Fragment() {
@@ -42,5 +43,6 @@ class HomeUsuarioFragment : Fragment() {
                 }
             }
         }
+        VoiceAssistantManager.speak("Pantalla principal de ofertas. Arriba tienes los filtros y la búsqueda. Desliza hacia abajo para ver los lotes.")
     }
 }
