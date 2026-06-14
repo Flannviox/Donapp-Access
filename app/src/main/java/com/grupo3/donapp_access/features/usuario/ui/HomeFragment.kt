@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
         HomeOfertaAdapter(requireContext()) { oferta ->
             oferta.tiendaId?.let { id ->
                 (requireActivity() as MainActivity).navegarA(
-                    TiendaDetailFragment.newInstance(id, oferta.tiendaNombre, oferta.idLote)
+                    TiendaDetailFragment.newInstance(id, oferta.tiendaNombre)
                 )
             }
         }
