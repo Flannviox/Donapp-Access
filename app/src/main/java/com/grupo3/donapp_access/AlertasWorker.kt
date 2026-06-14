@@ -3,8 +3,12 @@ package com.grupo3.donapp_access.worker
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -12,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.auth.AuthRepository
 import com.grupo3.donapp_access.features.lotes.LoteRepository
@@ -23,7 +28,11 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -58,11 +67,13 @@ class AlertasWorker @AssistedInject constructor(
                     )
                 }
             } else {
-                val tiendaConOferta = revisarOfertasCercanas()
-                if (tiendaConOferta != null) {
+                val infoOferta = revisarOfertasCercanas()
+                if (infoOferta != null) {
                     mostrarNotificacionSistema(
                         titulo = "¡Remate de precios cerca!",
-                        mensaje = "La tienda '${tiendaConOferta}' tiene ofertas a menos de 5km de ti."
+                        mensaje = "La tienda '${infoOferta.nombreTienda}' tiene ofertas a menos de 5km de ti.",
+                        imageUrl = infoOferta.imageUrl,
+                        tiendaId = infoOferta.tiendaId
                     )
                 }
             }
@@ -100,7 +111,7 @@ class AlertasWorker @AssistedInject constructor(
         }
     }
 
-    private suspend fun revisarOfertasCercanas(): String? {
+    private suspend fun revisarOfertasCercanas(): InfoOfertaNotificacion? {
         return try {
             val ubicacion = locationRepo.obtenerUbicacionActual()
 
@@ -119,13 +130,32 @@ class AlertasWorker @AssistedInject constructor(
                 idsTiendasCercanas.contains(oferta.tiendaId)
             }
 
-            ofertasCerca?.tiendaNombre
+            ofertasCerca?.let {
+                InfoOfertaNotificacion(it.tiendaId ?: "", it.tiendaNombre, it.productoImagen)
+            }
         } catch (e: Exception) {
             null
         }
     }
 
-    private fun mostrarNotificacionSistema(titulo: String, mensaje: String) {
+    private suspend fun getBitmapFromUrl(urlString: String?): Bitmap? {
+        if (urlString.isNullOrEmpty()) return null
+        return withContext(Dispatchers.IO) {
+            try {
+                val url = URL(urlString)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input = connection.inputStream
+                BitmapFactory.decodeStream(input)
+            } catch (e: Exception) {
+                android.util.Log.e("ALERTAS_WORKER", "Error descargando imagen: ${e.message}")
+                null
+            }
+        }
+    }
+
+    private suspend fun mostrarNotificacionSistema(titulo: String, mensaje: String, imageUrl: String? = null, tiendaId: String? = null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
@@ -136,13 +166,54 @@ class AlertasWorker @AssistedInject constructor(
             manager.createNotificationChannel(channel)
         }
 
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            if (tiendaId != null) {
+                putExtra("EXTRA_ACCION_NOTIFICACION", "RESERVAR_OFERTA")
+                putExtra("EXTRA_TIENDA_ID", tiendaId)
+            }
+        }
+
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            System.currentTimeMillis().toInt(),
+            intent,
+            flags
+        )
+
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.mipmap.logo)
             .setContentTitle(titulo)
             .setContentText(mensaje)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(mensaje))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+
+        if (tiendaId != null) {
+            builder.addAction(
+                0,
+                "¡Reservar Producto!",
+                pendingIntent
+            )
+        }
+
+        val bitmapImagen = getBitmapFromUrl(imageUrl)
+        if (bitmapImagen != null) {
+            builder.setLargeIcon(bitmapImagen)
+            builder.setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(bitmapImagen)
+                    .bigLargeIcon(null as Bitmap?)
+            )
+        } else {
+            builder.setStyle(NotificationCompat.BigTextStyle().bigText(mensaje))
+        }
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             NotificationManagerCompat.from(context).notify(System.currentTimeMillis().toInt(), builder.build())
@@ -151,4 +222,6 @@ class AlertasWorker @AssistedInject constructor(
 
     @Serializable
     private data class LoteIdSolo(val id_lote: String)
+
+    private data class InfoOfertaNotificacion(val tiendaId: String, val nombreTienda: String, val imageUrl: String?)
 }

@@ -27,7 +27,6 @@ class ReservaAdapter(
         holder.bind(getItem(position))
     }
 
-    // ¡Vital! Cancelamos el reloj si la tarjeta se oculta al hacer scroll para evitar bugs visuales
     override fun onViewRecycled(holder: ReservaViewHolder) {
         super.onViewRecycled(holder)
         holder.cancelTimer()
@@ -42,29 +41,31 @@ class ReservaAdapter(
 
             binding.btnVerQR.setOnClickListener { onVerQrClick(reserva) }
 
-            // Configurar colores y visibilidad según el estado
             val estado = reserva.estado?.lowercase() ?: "activa"
             binding.tvEstadoTexto.text = estado.uppercase()
 
             when (estado) {
                 "activa" -> {
                     binding.tvEstadoTexto.setTextColor(Color.parseColor("#1A1A1A"))
-                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F5C518")) // Amarillo
+                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F5C518"))
                     binding.btnVerQR.visibility = View.VISIBLE
+                    binding.progressBarReserva.visibility = View.VISIBLE
                     iniciarTemporizador(reserva.fecha_expiracion)
                 }
                 "completada" -> {
                     binding.tvEstadoTexto.setTextColor(Color.WHITE)
-                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50")) // Verde
+                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
                     binding.tvTemporizador.text = "Entregado"
                     binding.btnVerQR.visibility = View.GONE
+                    binding.progressBarReserva.visibility = View.GONE
                     cancelTimer()
                 }
                 else -> { // Expirada
                     binding.tvEstadoTexto.setTextColor(Color.WHITE)
-                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336")) // Rojo
+                    binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                     binding.tvTemporizador.text = "Tiempo Agotado"
                     binding.btnVerQR.visibility = View.GONE
+                    binding.progressBarReserva.visibility = View.GONE
                     cancelTimer()
                 }
             }
@@ -74,29 +75,37 @@ class ReservaAdapter(
             cancelTimer()
             if (fechaExpiracionStr == null) {
                 binding.tvTemporizador.text = "00:00"
+                binding.progressBarReserva.progress = 100
                 return
             }
 
             try {
-                // FIX PROACTIVO: Cortamos los milisegundos y la zona horaria extraña de Supabase
                 val fechaLimpia = fechaExpiracionStr.substringBefore(".").substringBefore("+")
-
                 val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
                 format.timeZone = TimeZone.getTimeZone("UTC")
                 val dateExpiracion = format.parse(fechaLimpia)
 
                 if (dateExpiracion != null) {
                     val tiempoRestante = dateExpiracion.time - System.currentTimeMillis()
+                    val tiempoTotalMs = 3600000L // 1 hora en milisegundos
 
                     if (tiempoRestante > 0) {
+                        binding.progressBarReserva.max = 100
+
                         timer = object : CountDownTimer(tiempoRestante, 1000) {
                             override fun onTick(millisUntilFinished: Long) {
                                 val minutos = (millisUntilFinished / 1000) / 60
                                 val segundos = (millisUntilFinished / 1000) % 60
                                 binding.tvTemporizador.text = String.format(Locale.US, "%02d:%02d", minutos, segundos)
+
+                                val tiempoTranscurrido = tiempoTotalMs - millisUntilFinished
+                                val porcentajeTranscurrido = ((tiempoTranscurrido.toDouble() / tiempoTotalMs) * 100).toInt()
+                                binding.progressBarReserva.progress = porcentajeTranscurrido.coerceIn(0, 100)
                             }
+
                             override fun onFinish() {
                                 binding.tvTemporizador.text = "00:00"
+                                binding.progressBarReserva.progress = 100
                                 binding.tvEstadoTexto.text = "EXPIRADA"
                                 binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                                 binding.btnVerQR.visibility = View.GONE
@@ -104,6 +113,7 @@ class ReservaAdapter(
                         }.start()
                     } else {
                         binding.tvTemporizador.text = "00:00"
+                        binding.progressBarReserva.progress = 100
                         binding.tvEstadoTexto.text = "EXPIRADA"
                         binding.tvEstadoTexto.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                         binding.btnVerQR.visibility = View.GONE
@@ -111,6 +121,7 @@ class ReservaAdapter(
                 }
             } catch (e: Exception) {
                 binding.tvTemporizador.text = "--:--"
+                binding.progressBarReserva.progress = 0
                 android.util.Log.e("TIMER", "Error parseando fecha: ${e.message}")
             }
         }
@@ -125,14 +136,12 @@ class ReservaAdapter(
         override fun areItemsTheSame(oldItem: ReservaDetalle, newItem: ReservaDetalle): Boolean {
             return oldItem.id_reservas == newItem.id_reservas
         }
-
         override fun areContentsTheSame(oldItem: ReservaDetalle, newItem: ReservaDetalle): Boolean {
             return oldItem == newItem
         }
     }
 }
 
-// Este DTO servirá para guardar los datos cruzados (JOIN) de la reserva + lote + tienda
 data class ReservaDetalle(
     val id_reservas: String,
     val cantidad: Int,

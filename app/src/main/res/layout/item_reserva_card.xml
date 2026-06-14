@@ -37,7 +37,7 @@
             app:layout_constraintStart_toEndOf="@+id/ivEstadoReserva"
             app:layout_constraintTop_toTopOf="@+id/ivEstadoReserva"
             app:layout_constraintBottom_toBottomOf="@+id/ivEstadoReserva"
-            tools:text="Yogurt Gloria Fresa" />
+            tools:text="Producto a reservar" />
 
         <TextView
             android:id="@+id/tvEstadoTexto"
@@ -51,7 +51,7 @@
             android:background="@drawable/bg_rounded"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="ACTIVA" />
+            tools:text="ESTADO" />
 
         <TextView
             android:id="@+id/tvTiendaReserva"
@@ -63,7 +63,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivEstadoReserva"
-            tools:text="Tienda: La Tiendita de Don Pepe  |  Cantidad: 2" />
+            tools:text="Tienda" />
 
         <TextView
             android:id="@+id/tvTemporizador"
@@ -75,7 +75,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTiendaReserva"
-            tools:text="59:45" />
+            tools:text="00:00" />
 
         <TextView
             android:id="@+id/tvLabelTiempo"
@@ -98,6 +98,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvTemporizador"
             app:layout_constraintBottom_toBottomOf="@+id/tvLabelTiempo" />
+
+        <ProgressBar
+            android:id="@+id/progressBarReserva"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#F5C518"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabelTiempo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
