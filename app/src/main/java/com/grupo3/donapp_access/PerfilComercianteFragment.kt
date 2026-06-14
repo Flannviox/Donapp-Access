@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.features.comerciante.ui.InventarioFragment
 import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.core.services.GeofenceService
 import com.grupo3.donapp_access.databinding.FragmentPerfilComercianteBinding
 import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
 import com.grupo3.donapp_access.features.comerciante.ui.EditarTiendaFragment
@@ -155,6 +156,13 @@ class PerfilComercianteFragment : Fragment() {
                         .apply()
 
                     androidx.work.WorkManager.getInstance(requireContext()).cancelAllWork()
+
+                    val intentGeoFence = android.content.Intent(
+                        requireContext(),
+                        GeofenceService::class.java
+
+                    )
+                    requireContext().stopService(intentGeoFence)
 
                     (requireActivity() as MainActivity).mostrarSinNav(WelcomeFragment())
 

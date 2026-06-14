@@ -318,7 +318,6 @@ class RegisterSellerFragment : Fragment() {
                         android.R.id.text1,
                         lista.map { it.nombre }
                     ).also { adapter ->
-                        // Mostramos también la dirección en text2
                         lvSugerencias.adapter = object : ArrayAdapter<String>(
                             requireContext(),
                             android.R.layout.simple_list_item_2,

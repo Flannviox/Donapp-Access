@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
-import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager

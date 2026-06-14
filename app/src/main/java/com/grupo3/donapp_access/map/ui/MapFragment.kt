@@ -18,7 +18,7 @@ import com.grupo3.donapp_access.databinding.FragmentMapBinding
 import com.grupo3.donapp_access.model.Tienda
 import com.grupo3.donapp_access.features.map.TiendaConLotes
 import com.grupo3.donapp_access.map.MapViewModel
-import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.CameraOptions
@@ -28,6 +28,12 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.location.Location
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 
 
 //anotacion de hilt para habilitar la inyeccion de dependencias automatica
@@ -87,6 +93,9 @@ class MapFragment : Fragment() {
         VoiceAssistantManager.speak("Vista de mapa activada. Te recomendamos usar la vista de lista para mayor comodidad visual.")
     }
 
+
+    //UBICACION DEL USUARIO
+    private var ubicacionUsuario: Point? = null
 
     //MAPA
     private fun inicializarMapa(){
@@ -180,6 +189,8 @@ class MapFragment : Fragment() {
 
     //MARCADORES
     private fun centrarMapaEnUsuario(lat: Double, lng: Double){
+
+        ubicacionUsuario = Point.fromLngLat(lng,lat)
         mapView?.getMapboxMap()?.setCamera(
             CameraOptions.Builder()
                 .center(Point.fromLngLat(lng, lat))
@@ -189,28 +200,64 @@ class MapFragment : Fragment() {
     }
 
     private fun pintarMarcadores(tiendas: List<TiendaConLotes>){
+        val mapboxMap = mapView?.getMapboxMap() ?: return
         val annotationApi = mapView?.annotations ?: return
-        val pointAnnotationManager = annotationApi.createPointAnnotationManager()
 
-        tiendas.forEach{ tienda ->
-            val punto = Point.fromLngLat(tienda.longitud, tienda.latitud)
 
-            val opciones = PointAnnotationOptions()
-                .withPoint(punto)
-                .withTextField("${tienda.nombre}\n${tienda.lotesActivos} ofertas")
-                .withTextSize(12.0)
-                .withTextColor("FFCA28")
-            pointAnnotationManager.create(opciones)
-        }
+        mapboxMap.getStyle{
+            style ->
+            style.addImage("marker_verde", crearIconoCirculo("#4CAF50"))
+            style.addImage("marker_amarillo", crearIconoCirculo("#FFC107"))
+            style.addImage("marker_rojo", crearIconoCirculo("#F44336"))
 
-        // Tap en marcador → TiendaDetailFragment
-        pointAnnotationManager.addClickListener{annotation->
-            val tienda = tiendas.firstOrNull {tienda ->
-                tienda.longitud == annotation.point.longitude() &&
-                        tienda.latitud == annotation.point.latitude()
+            val pointAnnotationManager = annotationApi.createPointAnnotationManager()
+            val origen = ubicacionUsuario
+
+            tiendas.forEach { tienda ->
+                val punto = Point.fromLngLat(tienda.longitud, tienda.latitud)
+
+                //calculamos la entre el usuario y la tienda en metros
+
+                val iconoId = if (origen != null){
+                    val resultado = FloatArray(1)
+                    Location.distanceBetween(
+                        origen.latitude(), origen.longitude(),
+                        tienda.latitud, tienda.longitud,
+                        resultado
+                    )
+                    val distanciaMetros = resultado[0]
+
+                    when{
+                        distanciaMetros <= 1000 -> "marker_verde"
+                        distanciaMetros <= 3000 -> "marker_amarillo"
+                        else-> "marker_rojo"
+                    }
+                }else{
+                    "marker_amarillo"
+                }
+                val opciones = PointAnnotationOptions()
+                    .withPoint(punto)
+                    .withIconImage(iconoId)
+                    .withIconSize(1.0)
+                    .withTextField("${tienda.nombre}\n${tienda.lotesActivos} ofertas")
+                    .withTextSize(12.0)
+                    .withTextColor("#FFFFFF")
+                    .withTextHaloColor("#000000")
+                    .withTextHaloWidth(1.5)
+                    .withTextOffset(listOf(0.0, 1.8))
+
+                pointAnnotationManager.create(opciones)
+
             }
-            tienda?.let { navegarAdetalle(it) }
-            true
+            // Tap en marcador para ir a TiendaDetailFragment
+            pointAnnotationManager.addClickListener { annotation ->
+                val tienda = tiendas.firstOrNull { tienda ->
+                    tienda.longitud == annotation.point.longitude() &&
+                            tienda.latitud == annotation.point.latitude()
+                }
+                tienda?.let { navegarAdetalle(it) }
+                true
+            }
         }
     }
 
@@ -248,6 +295,31 @@ class MapFragment : Fragment() {
     private fun mostrarError(mensaje: String){
         binding.tvError.visibility = View.VISIBLE
         binding.tvError.text= mensaje
+    }
+
+
+    //CIRCULO DE COLOR COMO BITMAP
+
+    private fun crearIconoCirculo (colorHex: String, diametroDp: Int = 36): Bitmap{
+        val diametroPx = (diametroDp * resources.displayMetrics.density).toInt()
+        val bitmap = Bitmap.createBitmap(diametroPx, diametroPx, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val radio = diametroPx / 2f
+
+        //CIRCULO DE COLOR
+        val paintRelleno = Paint(Paint.ANTI_ALIAS_FLAG)
+        paintRelleno.color = Color.parseColor(colorHex)
+        canvas.drawCircle(radio, radio, radio - 2f, paintRelleno)
+
+        //BORRDE BLANCO PARA QUE RESALTE
+
+        val paintBorde = Paint(Paint.ANTI_ALIAS_FLAG)
+        paintBorde.color = Color.WHITE
+        paintBorde.style = Paint.Style.STROKE
+        paintBorde.strokeWidth = 4f
+        canvas.drawCircle(radio, radio,radio -2f, paintBorde)
+
+        return bitmap
     }
 
 

@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
+import com.grupo3.donapp_access.core.services.GeofenceService
 
 @AndroidEntryPoint
 class PerfilFragment : Fragment() {
@@ -133,6 +134,14 @@ class PerfilFragment : Fragment() {
                         .apply()
 
                     androidx.work.WorkManager.getInstance(requireContext()).cancelAllWork()
+
+                    val intentGeoFence = android.content.Intent(
+                        requireContext(),
+                        GeofenceService::class.java
+
+                    )
+
+                    requireContext().stopService(intentGeoFence)
 
                     (requireActivity() as MainActivity).mostrarSinNav(WelcomeFragment())
 

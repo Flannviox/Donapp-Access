@@ -142,4 +142,7 @@ dependencies {
     // Hilt para WorkManager
     implementation("androidx.hilt:hilt-work:1.2.0")
     kapt("androidx.hilt:hilt-compiler:1.2.0") // O ksp si ya migraste a KSP
+
+
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

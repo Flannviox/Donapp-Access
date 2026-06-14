@@ -165,6 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:backgroundTint="@color/donapp_text_secondary"
                 android:background="@drawable/bg_store_card"
                 android:orientation="vertical"
                 android:padding="12dp">
@@ -195,8 +196,8 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="24dp"
                 android:text="Usar mi ubicación actual"
-                android:textColor="@color/donapp_yellow"
-                app:strokeColor="@color/donapp_yellow" />
+                android:textColor="?attr/colorPrimary"
+                app:strokeColor="?attr/colorPrimary" />
 
             <Button
                 android:id="@+id/btnGuardarCambios"
