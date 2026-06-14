@@ -38,14 +38,12 @@ class ClienteRepository @Inject constructor() {
                 filter {
                     eq("estado", "en_oferta")
                     gte("fecha_vencimiento", hoy)
+                    gt("cantidad", 0) // NUEVO: Oculta los que no tienen stock
                 }
             }.decodeList<LoteConRelaciones>()
 
         return lotes.map { it.toOfertaLote() }
     }
-
-
-
 
     suspend fun buscarOfertas(query: String): List<OfertaLote> {
         val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
@@ -55,8 +53,8 @@ class ClienteRepository @Inject constructor() {
                 filter {
                     isIn("estado", listOf("disponible", "en_oferta"))
                     gte("fecha_vencimiento", hoy)
+                    gt("cantidad", 0) // NUEVO: Oculta los que no tienen stock
 
-                    // Búsqueda simultánea usando el bloque 'or' de Kotlin
                     or {
                         ilike("producto_nombre", "%$query%")
                         ilike("categoria_nombre", "%$query%")

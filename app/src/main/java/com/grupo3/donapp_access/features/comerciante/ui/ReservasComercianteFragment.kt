@@ -12,13 +12,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.grupo3.donapp_access.PortraitCaptureActivity
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentReservasComercianteBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
-//Holaaaa aqui esta el fragment
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 @AndroidEntryPoint
 class ReservasComercianteFragment : Fragment() {
 
@@ -27,8 +28,32 @@ class ReservasComercianteFragment : Fragment() {
 
     private val viewModel: ReservasComercianteViewModel by viewModels()
     private lateinit var adapter: ReservaComercianteAdapter
-
     private var haHabladoReservas = false
+
+    // AQUÍ RESOLVEMOS LA DUDA 3 (El resultado de escanear y actualizar la Base de datos)
+    private val barcodeLauncher = registerForActivityResult(ScanContract()) { result ->
+        if (result.contents != null) {
+            val idReservaEscaneado = result.contents
+
+            // Mostramos el diálogo de confirmación antes de actualizar la base de datos
+            com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                .setTitle("¡QR Escaneado con Éxito!")
+                .setMessage("¿Deseas confirmar la entrega de esta reserva?")
+                .setPositiveButton("Confirmar Entrega") { dialog, _ ->
+                    viewModel.marcarReservaComoEntregada(idReservaEscaneado)
+                    Toast.makeText(requireContext(), "Entrega confirmada exitosamente", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancelar") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setCancelable(false) // Obliga a presionar un botón
+                .show()
+
+        } else {
+            Toast.makeText(requireContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -48,14 +73,25 @@ class ReservasComercianteFragment : Fragment() {
 
         setupRecyclerView()
         observarViewModel()
-
         viewModel.cargarReservasDeMiTienda()
     }
 
     private fun setupRecyclerView() {
         adapter = ReservaComercianteAdapter { reserva ->
-            mostrarDialogoConfirmacion(reserva)
+            val options = ScanOptions().apply {
+                setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                setPrompt("Escanea el QR del cliente para confirmar la entrega")
+                setCameraId(0) // Usa la cámara trasera
+                setBeepEnabled(true) // Sonido al escanear
+                setBarcodeImageEnabled(false)
+
+                // NUEVO: Bloqueamos la rotación y usamos nuestra actividad vertical
+                setOrientationLocked(true)
+                setCaptureActivity(PortraitCaptureActivity::class.java)
+            }
+            barcodeLauncher.launch(options)
         }
+
         binding.rvReservasComerciante.layoutManager = LinearLayoutManager(requireContext())
         binding.rvReservasComerciante.adapter = adapter
     }
@@ -72,11 +108,9 @@ class ReservasComercianteFragment : Fragment() {
                             val reservas = state.data
                             binding.tvSinReservasComerciante.isVisible = reservas.isEmpty()
                             adapter.submitList(reservas)
-                            // --- NUEVO CÓDIGO DEL ASISTENTE DE VOZ ---
-                            if (!haHabladoReservas) {
-                                // Filtramos la lista para contar solo las que están activas
-                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
 
+                            if (!haHabladoReservas) {
+                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
                                 when (cantidadActivas) {
                                     0 -> VoiceAssistantManager.speak("No tienes reservas activas.")
                                     1 -> VoiceAssistantManager.speak("Tienes una reserva activa.")
@@ -92,39 +126,6 @@ class ReservasComercianteFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun mostrarDialogoConfirmacion(reserva: ReservaComercianteDetalle) {
-        // Inflamos nuestro diseño personalizado
-        val dialogView = layoutInflater.inflate(com.grupo3.donapp_access.R.layout.dialog_confirmar_entrega, null)
-
-        val dialog = android.app.AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-
-        // Hacemos el fondo transparente para que se vea el radio de nuestra tarjeta (MaterialCardView)
-        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
-        // Buscamos los elementos dentro de nuestro diseño
-        val tvMensaje = dialogView.findViewById<android.widget.TextView>(com.grupo3.donapp_access.R.id.tvMensajeDialog)
-        val btnCancelar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(com.grupo3.donapp_access.R.id.btnCancelarDialog)
-        val btnEntregar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(com.grupo3.donapp_access.R.id.btnEntregarDialog)
-
-        // Asignamos el texto personalizado
-        tvMensaje.text = "¿Estás seguro de que deseas marcar los ${reserva.cantidad}x '${reserva.nombreProducto}' como entregados a ${reserva.nombreCliente}?"
-        VoiceAssistantManager.speak("Confirmar entrega de ${reserva.cantidad} ${reserva.nombreProducto} al cliente ${reserva.nombreCliente}")
-
-        // Programamos los botones
-        btnCancelar.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        btnEntregar.setOnClickListener {
-            viewModel.marcarReservaComoEntregada(reserva.id_reservas)
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
     override fun onDestroyView() {

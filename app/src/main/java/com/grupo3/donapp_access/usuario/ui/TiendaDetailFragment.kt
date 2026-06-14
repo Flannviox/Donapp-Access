@@ -40,13 +40,13 @@ class TiendaDetailFragment : Fragment() {
     private lateinit var reviewsAdapter: ValoracionesAdapter
     private lateinit var ofertasAdapter: com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
 
-    //AGREGADO
-    companion object{
-        fun newInstance(tiendaId: String, tiendaNombre: String): TiendaDetailFragment{
+    companion object {
+        fun newInstance(tiendaId: String, tiendaNombre: String, autoOpenLoteId: String? = null): TiendaDetailFragment {
             return TiendaDetailFragment().apply {
                 arguments = Bundle().apply {
                     putString("id_tienda", tiendaId)
                     putString("nombre_tienda", tiendaNombre)
+                    putString("auto_open_lote_id", autoOpenLoteId)
                 }
             }
         }
@@ -60,21 +60,14 @@ class TiendaDetailFragment : Fragment() {
         return binding.root
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Recuperamos el id_tienda de los argumentos de navegación
         tiendaId = arguments?.getString("id_tienda")
-        
-        // Si no hay ID, mostramos error y volvemos (para evitar crashes en pruebas)
+
         if (tiendaId == null) {
             Log.e("TiendaDetail", "No se recibió el ID de la tienda")
-            // Descomenta la siguiente línea cuando tengas la navegación configurada
-            // parentFragmentManager.popBackStack() 
         }
-
 
         setupRecyclerViews()
         setupButtons()
@@ -87,43 +80,36 @@ class TiendaDetailFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
                 detailViewModel.reservaState.collect { state ->
                     when (state) {
-                        is com.grupo3.donapp_access.core.common.UiState.Loading -> {
-                            // Opcional: Mostrar un progreso de carga en la pantalla - Aun no se implementa xd
-                        }
+                        is com.grupo3.donapp_access.core.common.UiState.Loading -> {}
                         is com.grupo3.donapp_access.core.common.UiState.Success -> {
                             Toast.makeText(requireContext(), "¡Reserva realizada con éxito! Tienes 1 hora para recogerla.", Toast.LENGTH_LONG).show()
-
-                            // Volvemos a cargar los datos para que el stock se actualice en la pantalla
                             cargarDatos()
-
                             detailViewModel.limpiarEstadoReserva()
                         }
                         is com.grupo3.donapp_access.core.common.UiState.Error -> {
                             Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_SHORT).show()
                             detailViewModel.limpiarEstadoReserva()
                         }
-                        null -> { /* Estado inicial, no hacemos nada */ }
+                        null -> {}
                     }
                 }
             }
         }
     }
+
     private fun setupRecyclerViews() {
-        // Inicializar el adaptador de reseñas
         reviewsAdapter = ValoracionesAdapter(emptyList())
         binding.rvReviews.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = reviewsAdapter
-            isNestedScrollingEnabled = false // Importante para scroll fluido dentro de NestedScrollView
+            isNestedScrollingEnabled = false
         }
 
         ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter(requireContext()) { oferta ->
-            // Al hacer clic, abrimos el diálogo y le pasamos los datos del producto
             mostrarDialogoReserva(oferta)
         }
 
         binding.rvAvailableOffers.apply {
-            // Se usa LayoutManager Horizontal para deslizar de lado, tal como en el Home
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = ofertasAdapter
         }
@@ -137,16 +123,14 @@ class TiendaDetailFragment : Fragment() {
         binding.btnAddReview.setOnClickListener {
             Toast.makeText(context, "Próximamente: Añadir reseña", Toast.LENGTH_SHORT).show()
         }
-        
+
         binding.btnCall.setOnClickListener {
             Toast.makeText(context, "Llamando a la tienda...", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnHowToGet.setOnClickListener {
-            abrirEnGoogleMaps() //AGREGADO
+            abrirEnGoogleMaps()
         }
-
-
     }
 
     private fun abrirEnGoogleMaps(){
@@ -155,13 +139,11 @@ class TiendaDetailFragment : Fragment() {
             return
         }
 
-
         val uri = Uri.parse(
             "geo:${tienda.latitud},${tienda.longitud}?" +
                     "q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})"
         )
 
-        //intent pasará las coordenadas al google maps
         val intent = Intent(Intent.ACTION_VIEW, uri).apply {
             setPackage("com.google.android.apps.maps")
         }
@@ -169,7 +151,6 @@ class TiendaDetailFragment : Fragment() {
         if(intent.resolveActivity(requireActivity().packageManager)!= null){
             startActivity(intent)
         }else{
-            //si no tiene google maps, abrir en el navegador
             val webUri = Uri.parse(
                 "https://www.google.com/maps/search/?api=1" +
                         "&query=${tienda.latitud},${tienda.longitud}"
@@ -183,7 +164,6 @@ class TiendaDetailFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // 1. Obtener detalles básicos de la tienda
                 val tienda = SupabaseClient.client.from("tiendas")
                     .select {
                         filter { eq("id_tienda", id) }
@@ -191,40 +171,56 @@ class TiendaDetailFragment : Fragment() {
 
                 bindTienda(tienda)
 
-                // 2. Obtener lotes en oferta (con información del producto relacionada)
                 val lotes = SupabaseClient.client.from("lote")
                     .select(Columns.raw("*, productos(*)")) {
                         filter {
                             eq("tiendas_id", id)
                             eq("estado", "en_oferta")
+                            gt("cantidad", 0) // NUEVO: Oculta los productos sin stock en el perfil de la tienda
                         }
                     }.decodeList<LoteDTO>()
 
                 binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
 
-                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
-                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
                 val ofertasLote = lotes.map { lote ->
                     com.grupo3.donapp_access.model.OfertaLote(
-                        idLote = lote.idLote ?: "", // Faltaba incluir este campo
+                        idLote = lote.idLote ?: "",
                         tiendaId = id,
                         productoNombre = lote.productos?.nombre ?: "Producto",
-                        productoImagen = lote.productos?.imagen, // Faltaba incluir este campo
+                        productoImagen = lote.productos?.imagen,
                         productoPresentacion = lote.productos?.presentacion,
                         tiendaNombre = tiendaActual?.nombre ?: "",
                         tiendaDireccion = tiendaActual?.direccion ?: "",
-                        cantidad = lote.cantidad, // Ya no necesita ?: porque no es nulo en el DTO
-                        fechaVencimiento = lote.fechaVencimiento, // Ya no necesita ?: porque no es nulo
-                        precioNormal = lote.precioNormal, // Ya no necesita ?: porque no es nulo
+                        cantidad = lote.cantidad,
+                        fechaVencimiento = lote.fechaVencimiento,
+                        precioNormal = lote.precioNormal,
                         precioOferta = lote.precioOferta ?: 0.0,
                         numeroLote = lote.numeroLote,
                         ratingTienda = tiendaActual?.ratingPromedio ?: 0.0
                     )
                 }
+
+                ofertasAdapter.submitList(ofertasLote)
                 // ¡Magia! Pintamos las cartas en la UI
                 ofertasAdapter.submitList(ofertasLote)
 
-                // 3. Obtener valoraciones (con información del usuario que la hizo)
+                // Lógica mejorada para buscar, hacer scroll y abrir el diálogo
+                val autoOpenId = arguments?.getString("auto_open_lote_id")
+                if (autoOpenId != null) {
+                    // Buscamos en qué posición de la lista está el producto exacto
+                    val index = ofertasLote.indexOfFirst { it.idLote == autoOpenId }
+
+                    if (index != -1) {
+                        // 1. Deslizamos la lista automáticamente hasta el producto
+                        binding.rvAvailableOffers.scrollToPosition(index)
+
+                        // 2. Abrimos el cuadro de diálogo
+                        mostrarDialogoReserva(ofertasLote[index])
+                    }
+                    // Lo borramos para que no se repita al girar la pantalla
+                    arguments?.remove("auto_open_lote_id")
+                }
+
                 val valoraciones = SupabaseClient.client.from("valoraciones")
                     .select(Columns.raw("*, usuarios(nombres, apellidos)")) {
                         filter {
@@ -250,7 +246,6 @@ class TiendaDetailFragment : Fragment() {
         binding.tvRatingValue.text = String.format(Locale.getDefault(), "%.1f", tienda.ratingPromedio)
         binding.tvSchedule.text = tienda.horaAtencion ?: "Horario no disponible"
 
-        // Cargar logo con Glide
         tienda.imagenReferencia?.let { url ->
             Glide.with(this)
                 .load(url)
@@ -268,14 +263,12 @@ class TiendaDetailFragment : Fragment() {
             val promedio = valoraciones.map { it.calificacion }.average().toFloat()
             binding.rbAverage.rating = promedio
 
-            // Conteo de estrellas para las barras de progreso
-            val conteo = IntArray(6) // 0-5
+            val conteo = IntArray(6)
             valoraciones.forEach { v ->
                 val nota = v.calificacion.toInt().coerceIn(1, 5)
                 conteo[nota]++
             }
 
-            // Actualizar barras de progreso y textos de porcentaje
             binding.pb5Stars.progress = (conteo[5] * 100) / total
             binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
 
@@ -302,18 +295,14 @@ class TiendaDetailFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-
         ofertasAdapter.releaseTTS()
-
         super.onDestroyView()
         _binding = null
     }
 
     private fun mostrarDialogoReserva(oferta: com.grupo3.donapp_access.model.OfertaLote) {
-        // Inflamos el XML que tiene los botones integrados
         val dialogView = layoutInflater.inflate(R.layout.dialog_reserva, null)
 
-        // Buscamos los elementos del XML
         val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
         val btnMinus = dialogView.findViewById<android.widget.Button>(R.id.btnMinus)
         val btnPlus = dialogView.findViewById<android.widget.Button>(R.id.btnPlus)
@@ -323,7 +312,6 @@ class TiendaDetailFragment : Fragment() {
 
         tvTitle.text = "Reservar ${oferta.productoNombre}"
 
-        // Audio de accesibilidad
         VoiceAssistantManager.speak("Estás por reservar el producto ${oferta.productoNombre}. Presiona los botones de más o menos para ajustar la cantidad, y el botón confirmar para finalizar.")
 
         var cantidadSeleccionada = 1
@@ -345,16 +333,13 @@ class TiendaDetailFragment : Fragment() {
             }
         }
 
-        // Creamos el diálogo sin botones nativos
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
-        // Configuración de accesibilidad y diseño
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog.window?.setDimAmount(0.8f) // Oscurecimiento fuerte para enfoque visual
+        dialog.window?.setDimAmount(0.8f)
 
-        // Lógica de nuestros botones propios
         btnCancelar.setOnClickListener {
             dialog.dismiss()
         }
@@ -371,5 +356,4 @@ class TiendaDetailFragment : Fragment() {
 
         dialog.show()
     }
-
 }

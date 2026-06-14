@@ -26,28 +26,24 @@ import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
-
-
 import android.content.Intent
 import android.os.Build
 import com.grupo3.donapp_access.core.services.GeofenceService
-
-
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
-
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeUsuarioBinding? = null
     private val binding get() = _binding!!
 
-    private val ofertaAdapter by lazy{
-        HomeOfertaAdapter(requireContext()){
-            oferta -> oferta.tiendaId?.let{id ->
-            (requireActivity() as MainActivity).navegarA(
-                TiendaDetailFragment.newInstance(id, oferta.tiendaNombre)
-            )
-        }
+    // SOLUCIÓN: Ahora enviamos el Nombre del Producto (oferta.productoNombre) para que sea exacto
+    private val ofertaAdapter by lazy {
+        HomeOfertaAdapter(requireContext()) { oferta ->
+            oferta.tiendaId?.let { id ->
+                (requireActivity() as MainActivity).navegarA(
+                    TiendaDetailFragment.newInstance(id, oferta.tiendaNombre, oferta.idLote)
+                )
+            }
         }
     }
 
@@ -67,8 +63,6 @@ class HomeFragment : Fragment() {
                 android.util.Log.e("HomeFragment", "El ID de la tienda es nulo para: ${tienda.nombre}")
             }
         }
-
-
     }
 
     override fun onCreateView(
@@ -81,7 +75,6 @@ class HomeFragment : Fragment() {
         cargarDatos()
         cargarNombreUsuario()
         return binding.root
-
     }
 
     private fun setupRecyclerViews() {
@@ -119,10 +112,10 @@ class HomeFragment : Fragment() {
                 if (_binding == null) return@launch
                 android.util.Log.e("Donapp", "Error cargando home: ${e.message}", e)
                 binding.textAlertaOfertas.text = "Error al cargar ofertas"
-
             }
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -130,7 +123,6 @@ class HomeFragment : Fragment() {
             (requireActivity() as MainActivity).navegarA(MapFragment())
         }
         binding.btnVerTodasTiendas.setOnClickListener {
-            // Usamos la función de navegación del  MainActivity
             (requireActivity() as MainActivity).navegarA(TodasTiendasFragment())
         }
 
@@ -138,17 +130,16 @@ class HomeFragment : Fragment() {
             (requireActivity() as MainActivity).navegarA(TodasOfertasFragment())
         }
 
-        // 👇 AQUÍ LLAMAMOS A LA VENTANITA DE PERMISOS PRIMERO 👇
         solicitarPermisosYArrancar()
         VoiceAssistantManager.speak("Pantalla de inicio. Arriba tienes el botón para ir al mapa de ofertas, y deslizando hacia abajo encontrarás ofertas relámpago y bodegas populares.")
     }
+
     private fun solicitarPermisosYArrancar() {
         val permisosNecesarios = mutableListOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
 
-        // Si el celular tiene Android 13 o superior, pedimos permiso para notificaciones
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permisosNecesarios.add(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -168,8 +159,6 @@ class HomeFragment : Fragment() {
                 val userId = SupabaseClient.client.auth.currentUserOrNull()?.id ?: return@launch
 
                 val usuario = SupabaseClient.client
-
-
                     .from("usuarios")
                     .select {
                         filter { eq("id_usuarios", userId) }
@@ -177,7 +166,6 @@ class HomeFragment : Fragment() {
                     .decodeSingle<UsuarioNombreDTO>()
 
                 if (_binding == null) return@launch
-
 
                 binding.tvNombreUsuario.text = usuario.nombres
                 binding.tvAvatarInicial.text = usuario.nombres.first().uppercase()
@@ -188,10 +176,9 @@ class HomeFragment : Fragment() {
                 binding.tvNombreUsuario.text ="Usuario"
             }
         }
+    }
 
-
-
-    }private fun iniciarServicioGeocercas() {
+    private fun iniciarServicioGeocercas() {
         val intentService = Intent(requireContext(), com.grupo3.donapp_access.core.services.GeofenceService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             requireContext().startForegroundService(intentService)
@@ -206,14 +193,9 @@ class HomeFragment : Fragment() {
         val locationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
 
         if (locationGranted) {
-            // Si el usuario acepta, arrancamos tu servicio
             iniciarServicioGeocercas()
         } else {
             android.widget.Toast.makeText(requireContext(), "Activa la ubicación para recibir alertas de comida", android.widget.Toast.LENGTH_LONG).show()
         }
     }
-
-
-
-
 }

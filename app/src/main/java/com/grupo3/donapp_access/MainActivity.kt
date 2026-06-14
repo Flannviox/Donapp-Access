@@ -38,7 +38,6 @@ import kotlinx.serialization.SerialName
 class MainActivity : AppCompatActivity() {
 
     @Inject
-
     lateinit var authRepository: AuthRepository
     private lateinit var bottomNav : BottomNavigationView
     private var rolActual : String = ""
@@ -48,10 +47,8 @@ class MainActivity : AppCompatActivity() {
         when (prefs.getString("tema_actual", "normal")) {
             "high_contrast" -> setTheme(R.style.Theme_DonappAccess_HighContrast)
             "black_white" -> setTheme(R.style.Theme_DonappAccess_BlackWhite)
-
             else -> setTheme(R.style.Theme_DonappAccess)
         }
-
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -66,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             configurarNavbar(rolRestaurado, navegarAlInicio = false)
         } else if (savedInstanceState == null) {
             if (intent?.data?.scheme == "donapp") {
-                    manejarDeepLink()
+                manejarDeepLink()
             } else {
                 verificarSesionActiva()
             }
@@ -77,12 +74,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
         if (rolActual.isNotEmpty() && bottomNav.visibility == View.VISIBLE){
             outState.putString("rol_actual", rolActual)
         }
     }
-
 
     private fun iniciarWorkerDeAlertas() {
         val constraints = Constraints.Builder()
@@ -99,7 +94,6 @@ class MainActivity : AppCompatActivity() {
             workRequest
         )
     }
-
 
     fun obtenerRol(): String = rolActual
 
@@ -216,10 +210,30 @@ class MainActivity : AppCompatActivity() {
                 when(item.itemId){
                     R.id.nav_negocio -> mostrarFragment(DashboardFragment())
                     R.id.nav_reservas_com -> mostrarFragment(ReservasComercianteFragment())
-                    R.id.nav_perfil_com -> mostrarFragment(PerfilComercianteFragment())
+                    R.id.nav_perfil_com -> mostrarFragment(PerfilComercianteFragment()) // Verifica si tu PerfilComercianteFragment importa bien
                 }
                 true
             }
+        }
+
+        // --- MANEJO DEL CLIC DE LA NOTIFICACIÓN ---
+        val accionNotificacion = intent.getStringExtra("EXTRA_ACCION_NOTIFICACION")
+        val idTiendaRecibido = intent.getStringExtra("EXTRA_TIENDA_ID")
+
+        if (accionNotificacion == "RESERVAR_OFERTA" && idTiendaRecibido != null) {
+            // Limpiamos los extras para evitar que se vuelva a abrir al girar la pantalla
+            intent.removeExtra("EXTRA_ACCION_NOTIFICACION")
+            intent.removeExtra("EXTRA_TIENDA_ID")
+
+            // Navegamos hacia el fragmento pasándole el id_tienda
+            val bundle = Bundle().apply {
+                putString("id_tienda", idTiendaRecibido)
+            }
+            val fragmentDestino = com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment().apply {
+                arguments = bundle
+            }
+
+            navegarA(fragmentDestino)
         }
     }
 
@@ -228,10 +242,10 @@ class MainActivity : AppCompatActivity() {
         bottomNav.visibility = View.GONE
         mostrarFragment(fragment)
     }
+
     private fun mostrarFragment(fragment: Fragment) {
         supportFragmentManager.popBackStack(null,
             androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
@@ -287,10 +301,8 @@ class MainActivity : AppCompatActivity() {
         val context = newBase.createConfigurationContext(config)
         super.attachBaseContext(context)
     }
-
-
-
 }
+
 @Serializable
 private data class CheckDiscapacidadDTO(
     @SerialName("tipo_discapacidad") val tipoDiscapacidad: String? = null

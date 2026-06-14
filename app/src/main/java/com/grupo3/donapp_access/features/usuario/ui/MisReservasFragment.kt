@@ -1,6 +1,5 @@
 package com.grupo3.donapp_access.features.usuario.ui
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,12 @@ import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentMisReservasBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import com.google.zxing.BarcodeFormat
 
 @AndroidEntryPoint
 class MisReservasFragment : Fragment() {
@@ -27,15 +31,21 @@ class MisReservasFragment : Fragment() {
     private var _binding: FragmentMisReservasBinding? = null
     private val binding get() = _binding!!
 
-    // Inyectamos el ViewModel que acabamos de arreglar
     private val viewModel: MisReservasViewModel by viewModels()
     private lateinit var adapter: ReservaAdapter
     private var haHabladoReservas = false
+
+    private var qrDialog: android.app.AlertDialog? = null
+    private var reservaAbiertaId: String? = null
+
+    // NUEVO: El trabajo en segundo plano que vigilará la reserva
+    private var jobPolling: Job? = null
 
     override fun onResume() {
         super.onResume()
         haHabladoReservas = false
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,8 +59,6 @@ class MisReservasFragment : Fragment() {
 
         setupRecyclerView()
         observarViewModel()
-
-        // Disparar la carga inicial a Supabase
         viewModel.cargarMisReservas()
     }
 
@@ -72,13 +80,20 @@ class MisReservasFragment : Fragment() {
                         }
                         is UiState.Success -> {
                             val reservas = state.data
-                            // Si la lista está vacía, mostramos el texto "Aún no tienes reservas"
                             binding.tvSinReservas.isVisible = reservas.isEmpty()
                             adapter.submitList(reservas)
-                            if (!haHabladoReservas) {
-                                // Asumiendo que tu variable se llama "reservas"
-                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
 
+                            if (reservaAbiertaId != null && qrDialog?.isShowing == true) {
+                                val reservaActual = reservas.find { it.id_reservas == reservaAbiertaId }
+                                if (reservaActual != null && reservaActual.estado?.lowercase() == "completada") {
+                                    qrDialog?.dismiss()
+                                    Toast.makeText(requireContext(), "¡Reserva entregada con éxito!", Toast.LENGTH_LONG).show()
+                                    VoiceAssistantManager.speak("Tu reserva ha sido entregada con éxito en la tienda.")
+                                }
+                            }
+
+                            if (!haHabladoReservas) {
+                                val cantidadActivas = reservas.count { it.estado.equals("ACTIVA", ignoreCase = true) }
                                 when (cantidadActivas) {
                                     0 -> VoiceAssistantManager.speak("No tienes reservas activas por recoger.")
                                     1 -> VoiceAssistantManager.speak("Tienes una reserva activa pendiente de recojo.")
@@ -97,22 +112,57 @@ class MisReservasFragment : Fragment() {
     }
 
     private fun mostrarCodigoQR(reserva: ReservaDetalle) {
-        // Mostrar un diálogo con el mockup del QR que tienes en res/drawable
-        val imageView = ImageView(requireContext()).apply {
-            setImageResource(R.drawable.qr_image)
-            setPadding(32, 32, 32, 32)
-        }
+        try {
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap = barcodeEncoder.encodeBitmap(reserva.id_reservas, BarcodeFormat.QR_CODE, 600, 600)
 
-        // AHORA USAMOS EL BUILDER MODERNO DE MATERIAL DESIGN
-        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Código de Recojo")
-            .setMessage("Muestra este código en '${reserva.nombreTienda}' para recoger tu ${reserva.nombreProducto}.")
-            .setView(imageView)
-            .setPositiveButton("Cerrar") { dialog, _ -> dialog.dismiss() }
-            .show()
+            val dialogView = layoutInflater.inflate(R.layout.dialog_qr_reserva, null)
+            val ivQr = dialogView.findViewById<ImageView>(R.id.ivCodigoQR)
+            val tvMensaje = dialogView.findViewById<android.widget.TextView>(R.id.tvMensajeQR)
+            val btnCerrar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCerrarQR)
+
+            ivQr.setImageBitmap(bitmap)
+            tvMensaje.text = "Muestra este código en '${reserva.nombreTienda}' para recoger tu ${reserva.nombreProducto}."
+
+            val dialog = android.app.AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .create()
+
+            qrDialog = dialog
+            reservaAbiertaId = reserva.id_reservas
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            btnCerrar.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.setOnDismissListener {
+                qrDialog = null
+                reservaAbiertaId = null
+                jobPolling?.cancel() // NUEVO: Apagamos el vigilante al cerrar el QR
+            }
+
+            dialog.show()
+
+            // NUEVO: El vigilante que pregunta cada 3 segundos si ya se entregó
+            jobPolling = viewLifecycleOwner.lifecycleScope.launch {
+                while (isActive && dialog.isShowing) {
+                    delay(3000) // Espera 3 segundos
+                    viewModel.cargarMisReservas() // Recarga la base de datos de forma invisible
+                }
+            }
+
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error al generar el QR", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onDestroyView() {
+        qrDialog?.dismiss()
+        qrDialog = null
+        reservaAbiertaId = null
+        jobPolling?.cancel()
+
         super.onDestroyView()
         _binding = null
     }

@@ -26,7 +26,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tvEstadoTextoCom"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Yogurt Gloria Fresa (x2)" />
+            tools:text="Producto a reservar" />
 
         <TextView
             android:id="@+id/tvEstadoTextoCom"
@@ -39,7 +39,7 @@
             android:paddingVertical="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="ACTIVA" />
+            tools:text="ESTADO" />
 
         <TextView
             android:id="@+id/tvClienteReserva"
@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvProductoReservaCom"
-            tools:text="Cliente: Jesus Rodrigo Pflücker" />
+            tools:text="Cliente" />
 
         <TextView
             android:id="@+id/tvTemporizadorCom"
@@ -63,7 +63,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvClienteReserva"
-            tools:text="59:45" />
+            tools:text="00:00" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEntregar"
@@ -76,6 +76,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvTemporizadorCom"
             app:layout_constraintBottom_toBottomOf="@+id/tvTemporizadorCom" />
+
+        <ProgressBar
+            android:id="@+id/progressBarReservaCom"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#F5C518"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTemporizadorCom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
