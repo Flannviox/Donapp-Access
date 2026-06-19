@@ -30,7 +30,7 @@ import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.features.lotes.dto.LoteDTO
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
 import com.grupo3.donapp_access.features.usuario.TiendaDetailViewModel
-import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import com.grupo3.donapp_access.model.OfertaLote
 import com.grupo3.donapp_access.usuario.dto.TiendaDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
@@ -119,6 +119,7 @@ class TodasTiendasFragment : Fragment() {
     }
 }
 
+<<<<<<< HEAD
 class TiendaDetailFragment : Fragment() {
 
     private val detailViewModel: TiendaDetailViewModel by viewModels()
@@ -457,3 +458,5 @@ class TiendaDetailFragment : Fragment() {
 
 
 }
+=======
+>>>>>>> c06b43aaa43b1b1fd5d72a0361d344d62bda67ca
