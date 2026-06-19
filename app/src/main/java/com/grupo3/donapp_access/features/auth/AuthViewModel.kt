@@ -30,7 +30,6 @@ class AuthViewModel @Inject constructor(
 
 
     fun login(email: String, pass: String, captchaToken: String){
-        //viewModelScope.Launch: inicia una corrutina que se cancela si el usuario sale de la pantalla
 
         viewModelScope.launch {
             _loginState.value = AuthState.Loading
@@ -40,19 +39,17 @@ class AuthViewModel @Inject constructor(
 
 
                 //obtenemos el ID del usuario que acaba de entrar
-                val currentUser = SupabaseClient.client.auth.currentUserOrNull()
-                val userId = currentUser?.id
+                val userId = repository.obtenerIdUsuarioActual()
 
                 if (userId == null) {
                     _loginState.value = AuthState.Error("No se encontro el ID del usuario")
-                    return@launch//preguntar que hace el return launch
+                    return@launch
                 }
 
 
                 val verificado = repository.correoEstaVerificado()
                 if(!verificado){
-                    //cierra la sesion para que no quede logueado sin verificar
-                    SupabaseClient.client.auth.signOut()
+                    repository.cerrarSesion()
                     _loginState.value = AuthState.Error(
                         "Debes verificar tu correo antes de ingresar .\n" +
                         "Revisa tu bandeja de entrada (Y EL SPAM)"
@@ -154,7 +151,6 @@ class AuthViewModel @Inject constructor(
 
 
 
-                // registra en la tablita de usuarios
                 repository.registrarEnTablaUsuarios(
                     id = userId,
                     nombres = nombres,
@@ -167,7 +163,6 @@ class AuthViewModel @Inject constructor(
                     telefono = telefono
                 )
 
-                //registra en la tabla de tiendas también
                 val tienda = TiendaDTO(
                     usuariosId = userId,
                     nombre = nombreTienda,
@@ -201,10 +196,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _registerState.value = AuthState.Loading
             try {
-                SupabaseClient.client.auth.resendEmail(
-                    type = OtpType.Email.SIGNUP,
-                    email = email
-                )
+                repository.reenviarCorreo(email)
                 _registerState.value = AuthState.VerificacionPendiente(email)
             } catch (e: Exception) {
                 _registerState.value = AuthState.Error("No se pudo reenviar: ${e.message}")

@@ -99,10 +99,7 @@ class RegisterUserFragment : Fragment() {
     inner class WebAppInterface {
         @JavascriptInterface
         fun onCaptchaSuccess(token: String) {
-            //necesario para que el fragmento pueda actualizar el token
-            //cuando el usuario resuelve el captcha, esta función se ejecuta
             requireActivity().runOnUiThread {
-                // Asumiendo que tokenTurnstile es una propiedad de tu Fragment
                 this@RegisterUserFragment.tokenTurnstile = token
                 Toast.makeText(requireContext(), "Captcha resuelto correctamente", Toast.LENGTH_SHORT).show()
             }

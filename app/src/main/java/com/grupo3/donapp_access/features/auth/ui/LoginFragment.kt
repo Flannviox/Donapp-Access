@@ -42,7 +42,6 @@ class LoginFragment : Fragment() {
 
         val btnVolver = view.findViewById<ImageView>(R.id.btnBack)
 
-        // Vinculamos los elementos de tu XML
         val etEmail = view.findViewById<TextInputEditText>(R.id.etEmail)
         val etPassword = view.findViewById<TextInputEditText>(R.id.etPassword)
         val btnLogin = view.findViewById<MaterialButton>(R.id.btnLogin)
@@ -65,15 +64,12 @@ class LoginFragment : Fragment() {
                 .commit()
         }
 
-        // Acción de enviar el formulario a Supabase
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString().trim()
             val pass = etPassword.text.toString().trim()
 
             if (email.isNotEmpty() && pass.isNotEmpty()) {
-                //antes de loguear, levantamos el validador visual
                 val captchaDialog = CaptchaDialogFragment { captchaToken ->
-                    // est bloque se ejecuta solo cuando el token generado
                     authViewModel.login(email, pass, captchaToken)
                 }
                 captchaDialog.show(parentFragmentManager, "captcha_login")
@@ -82,7 +78,6 @@ class LoginFragment : Fragment() {
             }
         }
 
-        // escuchamos las respuestas del ViewModel (Cargando, Éxito, Error)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.loginState.collect { state ->

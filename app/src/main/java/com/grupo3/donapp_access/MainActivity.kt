@@ -1,5 +1,7 @@
 package com.grupo3.donapp_access
 
+import android.app.ComponentCaller
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -72,6 +74,23 @@ class MainActivity : AppCompatActivity() {
         iniciarWorkerDeAlertas()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        manejarIntentNavegacion(intent)
+    }
+
+    private fun manejarIntentNavegacion(intent: Intent){
+        if (intent?.getStringExtra("navegar_a")=="mapa"){
+            intent.removeExtra("navegar_a")
+
+            if(bottomNav.visibility == View.VISIBLE && rolActual.lowercase() =="cliente"){
+                bottomNav.selectedItemId = R.id.nav_inicio
+                navegarA(com.grupo3.donapp_access.map.ui.MapFragment())
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (rolActual.isNotEmpty() && bottomNav.visibility == View.VISIBLE){
@@ -90,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "DonappAlertasWorker",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             workRequest
         )
     }
@@ -216,14 +235,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // --- MANEJO DEL CLIC DE LA NOTIFICACIÓN ---
         val accionNotificacion = intent.getStringExtra("EXTRA_ACCION_NOTIFICACION")
         val idTiendaRecibido = intent.getStringExtra("EXTRA_TIENDA_ID")
 
         if (accionNotificacion == "RESERVAR_OFERTA" && idTiendaRecibido != null) {
-            // Limpiamos los extras para evitar que se vuelva a abrir al girar la pantalla
             intent.removeExtra("EXTRA_ACCION_NOTIFICACION")
             intent.removeExtra("EXTRA_TIENDA_ID")
+
 
             // Navegamos hacia el fragmento pasándole el id_tienda
             val bundle = Bundle().apply {
@@ -234,7 +252,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             navegarA(fragmentDestino)
+
         }
+        manejarIntentNavegacion(intent)
+
     }
 
     fun mostrarSinNav (fragment: Fragment){
