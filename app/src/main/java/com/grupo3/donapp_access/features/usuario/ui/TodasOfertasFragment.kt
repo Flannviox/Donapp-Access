@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.databinding.FragmentTodasOfertasBinding
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
-import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
