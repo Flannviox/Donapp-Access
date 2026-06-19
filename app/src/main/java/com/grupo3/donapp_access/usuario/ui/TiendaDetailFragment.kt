@@ -147,11 +147,26 @@ class TiendaDetailFragment : Fragment() {
     }
 
     private fun abrirEnGoogleMaps() {
-        val tienda = tiendaActual ?: return
-        val uri = Uri.parse("geo:${tienda.latitud},${tienda.longitud}?q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})")
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply { setPackage("com.google.android.apps.maps") }
-        if (intent.resolveActivity(requireActivity().packageManager) != null) startActivity(intent)
-        else startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://googleusercontent.com/maps.google.com/")))
+        val tienda = tiendaActual ?: run {
+            Toast.makeText(context, "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Intentamos abrir directamente con la app de Google Maps
+        val gmmIntentUri = Uri.parse("geo:${tienda.latitud},${tienda.longitud}?q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
+            setPackage("com.google.android.apps.maps")
+        }
+
+        try {
+            // Intenta lanzar la aplicación
+            startActivity(mapIntent)
+        } catch (e: Exception) {
+            // Si falla (no está instalada), abrimos la versión web en el navegador
+            val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=${tienda.latitud},${tienda.longitud}")
+            val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+            startActivity(webIntent)
+        }
     }
 
     private fun cargarDatos() {
@@ -203,45 +218,7 @@ class TiendaDetailFragment : Fragment() {
         }
     }
 
-    private fun bindResenas(valoraciones: List<ValoracionDTO>) {
-        val total = valoraciones.size
-        binding.tvReviewsLabel.text = getString(R.string.reviews_label_format, total)
-        binding.tvTotalReviewsText.text = getString(R.string.reviews_total_format, total)
 
-        if (total > 0) {
-            val promedio = valoraciones.map { it.calificacion }.average().toFloat()
-            binding.rbAverage.rating = promedio
-
-            val conteo = IntArray(6)
-            valoraciones.forEach { v ->
-                val nota = v.calificacion.toInt().coerceIn(1, 5)
-                conteo[nota]++
-            }
-
-            binding.pb5Stars.progress = (conteo[5] * 100) / total
-            binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
-
-            binding.pb4Stars.progress = (conteo[4] * 100) / total
-            binding.tv4StarsPct.text = "${(conteo[4] * 100) / total}%"
-
-            binding.pb3Stars.progress = (conteo[3] * 100) / total
-            binding.tv3StarsPct.text = "${(conteo[3] * 100) / total}%"
-
-            binding.pb2Stars.progress = (conteo[2] * 100) / total
-            binding.tv2StarsPct.text = "${(conteo[2] * 100) / total}%"
-
-            binding.pb1Star.progress = (conteo[1] * 100) / total
-            binding.tv1StarPct.text = "${(conteo[1] * 100) / total}%"
-        } else {
-            binding.rbAverage.rating = 0f
-            limpiarBarrasProgreso()
-        }
-    }
-
-    private fun limpiarBarrasProgreso() {
-        listOf(binding.pb5Stars, binding.pb4Stars, binding.pb3Stars, binding.pb2Stars, binding.pb1Star).forEach { it.progress = 0 }
-        listOf(binding.tv5StarsPct, binding.tv4StarsPct, binding.tv3StarsPct, binding.tv2StarsPct, binding.tv1StarPct).forEach { it.text = "0%" }
-    }
 
 
     private fun mostrarDialogoReserva(oferta: OfertaLote) {
