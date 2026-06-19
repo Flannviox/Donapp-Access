@@ -127,52 +127,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="14dp"
             android:weightSum="1"
             app:layout_constraintTop_toBottomOf="@+id/btnGuardar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:hint="Vendidos"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxBackgroundColor="?attr/colorSurface"
-                app:hintTextColor="?android:attr/textColorSecondary">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCantidadVenta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:inputType="number" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnRegistrarVenta"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.6"
-                android:layout_marginStart="8dp"
-                android:text="Registrar Venta"
-                app:backgroundTint="@color/donapp_success"
-                android:textColor="?android:attr/windowBackground" />
+                android:id="@+id/btnEliminar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Eliminar Lote Definitivamente"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/donapp_error"
+                app:layout_constraintTop_toBottomOf="@+id/llRegistrarVenta"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEliminar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Eliminar Lote Definitivamente"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/donapp_error"
-            app:layout_constraintTop_toBottomOf="@+id/llRegistrarVenta"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

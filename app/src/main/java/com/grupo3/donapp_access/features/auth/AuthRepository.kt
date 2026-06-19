@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import com.grupo3.donapp_access.features.auth.dto.UsuarioDTO
 
-//@Inject constructor(): Le permite a Hilt suministrar esta clase a los viewmodels
 class AuthRepository @Inject constructor(
     private val client: io.github.jan.supabase.SupabaseClient
 ){
@@ -19,14 +18,12 @@ class AuthRepository @Inject constructor(
     private val supabaseAuth = client.auth
 
 
-    //suspend permite que la funcion se ejecute sin bloquear la UI
-    //es una marca que le ponemos a una función como signIn o signUp para decir:
-    //esta tarea va a tardar, así que no bloquees
+
     suspend fun signUp(email: String, pass: String, captchaToken: String): io.github.jan.supabase.auth.user.UserInfo? {
         return supabaseAuth.signUpWith(Email) {
             this.email = email
             this.password = pass
-            this.captchaToken = captchaToken // Aquí está la clave
+            this.captchaToken = captchaToken
         }
     }
 
@@ -65,7 +62,7 @@ class AuthRepository @Inject constructor(
                 correoApoderado = correoApoderado,
                 telefono = telefono
             )
-            SupabaseClient.client.from("usuarios").insert(nuevoUsuario)
+            client.from("usuarios").insert(nuevoUsuario)
 
             android.util.Log.d("SUPABASE_OK", "Inserción exitosa para el usuario: $correo")
         }catch (e: Exception){
@@ -83,7 +80,7 @@ class AuthRepository @Inject constructor(
     }
     suspend fun obtenerRolUsuario(id: String): String {
         try {
-            val usuario = SupabaseClient.client.from("usuarios")
+            val usuario = client.from("usuarios")
                 .select {
                     filter { eq("id_usuarios", id) }
                 }.decodeSingle<UsuarioDTO>()
@@ -112,7 +109,7 @@ class AuthRepository @Inject constructor(
     }
     suspend fun verificarDniYTelefono(dni: String, telefono: String) {
         //verificar si el DNI ya existe
-        val usuariosConDni = SupabaseClient.client.from("usuarios")
+        val usuariosConDni = client.from("usuarios")
             .select { filter { eq("dni", dni) } }
             .decodeList<UsuarioDTO>()
 
@@ -130,6 +127,20 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    fun obtenerIdUsuarioActual(): String? {
+        return client.auth.currentUserOrNull()?.id
+    }
+
+    suspend fun cerrarSesion() {
+        client.auth.signOut()
+    }
+
+    suspend fun reenviarCorreo(email: String) {
+        client.auth.resendEmail(
+            type = io.github.jan.supabase.auth.OtpType.Email.SIGNUP,
+            email = email
+        )
+    }
 
 
 

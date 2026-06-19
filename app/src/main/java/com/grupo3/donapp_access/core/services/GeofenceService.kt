@@ -86,8 +86,18 @@ class GeofenceService : Service() {
     }
 
     private fun dispararNotificacion(tienda: TiendaHome, distancia: Double) {
-        val intent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+        val intent = Intent(this, MainActivity::class.java).apply{
+            action = "ACCION_MAPA_${tienda.idTienda}"
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+            putExtra("navegar_a", "mapa")
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            tienda.idTienda.hashCode(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val textoDistancia = String.format(Locale.US, "%.1f", distancia)
         val mensajeHistorial = "La tienda '${tienda.nombre}' está a $textoDistancia km con productos para salvar."
@@ -127,7 +137,7 @@ class GeofenceService : Service() {
             .setContentText("Buscando comida cerca a tu posición...")
             .setSmallIcon(R.mipmap.ic_launcher)
             .build()
-        startForeground(1, notification)
+        startForeground(9999, notification)
     }
 
     private fun createNotificationChannel() {
@@ -137,6 +147,8 @@ class GeofenceService : Service() {
             manager.createNotificationChannel(channel)
         }
     }
+
+
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
 

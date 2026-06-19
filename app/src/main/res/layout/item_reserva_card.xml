@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ver Código QR"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?android:attr/textColorPrimary"
             app:backgroundTint="#4CAF50"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"

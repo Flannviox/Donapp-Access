@@ -1,6 +1,5 @@
 package com.grupo3.donapp_access.core.network
 
-//aqui estamos importante nuestra bilbioteca BuildConfig para obtener las credenciales
 import com.grupo3.donapp_access.BuildConfig
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
@@ -8,7 +7,6 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.realtime.Realtime
 import io.github.jan.supabase.storage.Storage
 
-//object crea un singleton: solo habra una instancia en toda la app
 object SupabaseClient {
 
     //Iniciamos el cliente con la URL y la Anon Key del proyecto

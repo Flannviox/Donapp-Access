@@ -71,8 +71,7 @@ class DetalleLoteFragment : Fragment() {
                         "disponible" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
                         "agotado" -> {
                             binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
-                            binding.btnRegistrarVenta.isEnabled = false
-                            binding.etCantidadVenta.isEnabled = false
+
                         }
                     }
                 }
@@ -93,35 +92,7 @@ class DetalleLoteFragment : Fragment() {
             }
         }
 
-        binding.btnRegistrarVenta.setOnClickListener {
-            val stockActual = viewModel.loteActual.value?.cantidad ?: 0
-            val cantidadVendida = binding.etCantidadVenta.text.toString().toIntOrNull() ?: 0
 
-            if (cantidadVendida <= 0) {
-                Toast.makeText(context, "Ingresa una cantidad mayor a 0", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (cantidadVendida > stockActual) {
-                Toast.makeText(context, "No puedes vender más del stock actual ($stockActual)", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val nuevoStock = stockActual - cantidadVendida
-
-            val pNormal = binding.etPrecioNormal.text.toString().toDoubleOrNull() ?: 0.0
-            val pOferta = binding.etPrecioOferta.text.toString().toDoubleOrNull()
-
-            if (tiendaId.isNotEmpty()) {
-                viewModel.actualizarDatosLote(loteIdActual, tiendaId, nuevoStock, pNormal, pOferta)
-
-                Toast.makeText(context, "Venta registrada. Nuevo stock: $nuevoStock", Toast.LENGTH_SHORT).show()
-                binding.etCantidadVenta.text?.clear() // Limpiamos la cajita
-
-                if (nuevoStock == 0) {
-                    Toast.makeText(context, "¡El producto se ha agotado!", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
 
         binding.btnEliminar.setOnClickListener {
             viewModel.eliminarLote(loteIdActual)
