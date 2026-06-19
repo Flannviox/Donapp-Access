@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentNotificationsHistorialBinding
-import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 
 class NotificacionesHistorialFragment : Fragment() {
 

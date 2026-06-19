@@ -18,7 +18,7 @@ import com.grupo3.donapp_access.databinding.FragmentMapBinding
 import com.grupo3.donapp_access.model.Tienda
 import com.grupo3.donapp_access.features.map.TiendaConLotes
 import com.grupo3.donapp_access.map.MapViewModel
-import com.grupo3.donapp_access.features.usuario.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 import com.mapbox.geojson.Point
 import com.mapbox.maps.MapView
 import com.mapbox.maps.CameraOptions

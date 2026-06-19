@@ -1,34 +1,46 @@
 package com.grupo3.donapp_access.usuario.ui
 
+import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
+import com.google.zxing.BarcodeFormat
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
+import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
+import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.features.lotes.dto.LoteDTO
 import com.grupo3.donapp_access.features.usuario.TiendaDetailViewModel
+import com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
+import com.grupo3.donapp_access.model.OfertaLote
 import com.grupo3.donapp_access.usuario.dto.TiendaDTO
 import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
-import io.github.jan.supabase.auth.auth
-import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 class TiendaDetailFragment : Fragment() {
 
@@ -38,7 +50,7 @@ class TiendaDetailFragment : Fragment() {
     private var tiendaId: String? = null
     private var tiendaActual: TiendaDTO? = null
     private lateinit var reviewsAdapter: ValoracionesAdapter
-    private lateinit var ofertasAdapter: com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
+    private lateinit var ofertasAdapter: OfertaAdapter
 
     companion object {
         fun newInstance(tiendaId: String, tiendaNombre: String, autoOpenLoteId: String? = null): TiendaDetailFragment {
@@ -67,6 +79,8 @@ class TiendaDetailFragment : Fragment() {
 
         if (tiendaId == null) {
             Log.e("TiendaDetail", "No se recibió el ID de la tienda")
+        } else {
+            generarQRBodega(tiendaId!!)
         }
 
         setupRecyclerViews()
@@ -77,16 +91,16 @@ class TiendaDetailFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 detailViewModel.reservaState.collect { state ->
                     when (state) {
-                        is com.grupo3.donapp_access.core.common.UiState.Loading -> {}
-                        is com.grupo3.donapp_access.core.common.UiState.Success -> {
+                        is UiState.Loading -> {}
+                        is UiState.Success -> {
                             Toast.makeText(requireContext(), "¡Reserva realizada con éxito! Tienes 1 hora para recogerla.", Toast.LENGTH_LONG).show()
                             cargarDatos()
                             detailViewModel.limpiarEstadoReserva()
                         }
-                        is com.grupo3.donapp_access.core.common.UiState.Error -> {
+                        is UiState.Error -> {
                             Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_SHORT).show()
                             detailViewModel.limpiarEstadoReserva()
                         }
@@ -105,7 +119,7 @@ class TiendaDetailFragment : Fragment() {
             isNestedScrollingEnabled = false
         }
 
-        ofertasAdapter = com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter(requireContext()) { oferta ->
+        ofertasAdapter = OfertaAdapter(requireContext()) { oferta ->
             mostrarDialogoReserva(oferta)
         }
 
@@ -171,19 +185,26 @@ class TiendaDetailFragment : Fragment() {
 
                 bindTienda(tienda)
 
+                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                val hoy = sdf.format(Date())
+
                 val lotes = SupabaseClient.client.from("lote")
                     .select(Columns.raw("*, productos(*)")) {
                         filter {
                             eq("tiendas_id", id)
+                            // 1. Exigimos que sea explícitamente una oferta
                             eq("estado", "en_oferta")
-                            gt("cantidad", 0) // NUEVO: Oculta los productos sin stock en el perfil de la tienda
+                            // 2. Exigimos stock mayor a 0
+                            gt("cantidad", 0)
+                            // 3. Exigimos que no haya expirado
+                            gte("fecha_vencimiento", hoy)
                         }
                     }.decodeList<LoteDTO>()
 
                 binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
 
                 val ofertasLote = lotes.map { lote ->
-                    com.grupo3.donapp_access.model.OfertaLote(
+                    OfertaLote(
                         idLote = lote.idLote ?: "",
                         tiendaId = id,
                         productoNombre = lote.productos?.nombre ?: "Producto",
@@ -201,23 +222,14 @@ class TiendaDetailFragment : Fragment() {
                 }
 
                 ofertasAdapter.submitList(ofertasLote)
-                // ¡Magia! Pintamos las cartas en la UI
-                ofertasAdapter.submitList(ofertasLote)
 
-                // Lógica mejorada para buscar, hacer scroll y abrir el diálogo
                 val autoOpenId = arguments?.getString("auto_open_lote_id")
                 if (autoOpenId != null) {
-                    // Buscamos en qué posición de la lista está el producto exacto
                     val index = ofertasLote.indexOfFirst { it.idLote == autoOpenId }
-
                     if (index != -1) {
-                        // 1. Deslizamos la lista automáticamente hasta el producto
                         binding.rvAvailableOffers.scrollToPosition(index)
-
-                        // 2. Abrimos el cuadro de diálogo
                         mostrarDialogoReserva(ofertasLote[index])
                     }
-                    // Lo borramos para que no se repita al girar la pantalla
                     arguments?.remove("auto_open_lote_id")
                 }
 
@@ -300,15 +312,15 @@ class TiendaDetailFragment : Fragment() {
         _binding = null
     }
 
-    private fun mostrarDialogoReserva(oferta: com.grupo3.donapp_access.model.OfertaLote) {
+    private fun mostrarDialogoReserva(oferta: OfertaLote) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_reserva, null)
 
-        val tvTitle = dialogView.findViewById<android.widget.TextView>(R.id.tvDialogTitle)
-        val btnMinus = dialogView.findViewById<android.widget.Button>(R.id.btnMinus)
-        val btnPlus = dialogView.findViewById<android.widget.Button>(R.id.btnPlus)
-        val tvQuantity = dialogView.findViewById<android.widget.TextView>(R.id.tvQuantity)
-        val btnCancelar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelarReserva)
-        val btnConfirmar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnConfirmarReserva)
+        val tvTitle = dialogView.findViewById<TextView>(R.id.tvDialogTitle)
+        val btnMinus = dialogView.findViewById<Button>(R.id.btnMinus)
+        val btnPlus = dialogView.findViewById<Button>(R.id.btnPlus)
+        val tvQuantity = dialogView.findViewById<TextView>(R.id.tvQuantity)
+        val btnCancelar = dialogView.findViewById<MaterialButton>(R.id.btnCancelarReserva)
+        val btnConfirmar = dialogView.findViewById<MaterialButton>(R.id.btnConfirmarReserva)
 
         tvTitle.text = "Reservar ${oferta.productoNombre}"
 
@@ -333,7 +345,7 @@ class TiendaDetailFragment : Fragment() {
             }
         }
 
-        val dialog = android.app.AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
@@ -355,5 +367,16 @@ class TiendaDetailFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun generarQRBodega(idDeTienda: String){
+        try {
+            val urlWeb = "https://Ale152277.github.io/donapp-web/tienda/$idDeTienda"
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap: Bitmap = barcodeEncoder.encodeBitmap(urlWeb, BarcodeFormat.QR_CODE, 400, 400)
+            binding.ivQrTienda.setImageBitmap(bitmap)
+        } catch (e: Exception){
+            Log.e("TiendaDetail", "Error al generar el QR: ${e.message}")
+        }
     }
 }
