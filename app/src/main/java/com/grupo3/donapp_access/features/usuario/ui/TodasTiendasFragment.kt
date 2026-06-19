@@ -119,7 +119,7 @@ class TodasTiendasFragment : Fragment() {
     }
 }
 
-<<<<<<< HEAD
+
 class TiendaDetailFragment : Fragment() {
 
     private val detailViewModel: TiendaDetailViewModel by viewModels()
@@ -458,5 +458,3 @@ class TiendaDetailFragment : Fragment() {
 
 
 }
-=======
->>>>>>> c06b43aaa43b1b1fd5d72a0361d344d62bda67ca
