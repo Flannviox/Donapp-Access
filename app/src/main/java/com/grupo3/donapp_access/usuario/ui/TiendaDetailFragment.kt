@@ -64,25 +64,15 @@ class TiendaDetailFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTiendaDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         tiendaId = arguments?.getString("id_tienda")
-
-        if (tiendaId == null) {
-            Log.e("TiendaDetail", "No se recibió el ID de la tienda")
-        } else {
-            generarQRBodega(tiendaId!!)
-        }
-
+        if (tiendaId != null) generarQRBodega(tiendaId!!)
         setupRecyclerViews()
         setupButtons()
         setupObservers()
@@ -94,9 +84,8 @@ class TiendaDetailFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 detailViewModel.reservaState.collect { state ->
                     when (state) {
-                        is UiState.Loading -> {}
                         is UiState.Success -> {
-                            Toast.makeText(requireContext(), "¡Reserva realizada con éxito! Tienes 1 hora para recogerla.", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "¡Reserva realizada!", Toast.LENGTH_SHORT).show()
                             cargarDatos()
                             detailViewModel.limpiarEstadoReserva()
                         }
@@ -104,7 +93,7 @@ class TiendaDetailFragment : Fragment() {
                             Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_SHORT).show()
                             detailViewModel.limpiarEstadoReserva()
                         }
-                        null -> {}
+                        else -> {}
                     }
                 }
             }
@@ -118,11 +107,7 @@ class TiendaDetailFragment : Fragment() {
             adapter = reviewsAdapter
             isNestedScrollingEnabled = false
         }
-
-        ofertasAdapter = OfertaAdapter(requireContext()) { oferta ->
-            mostrarDialogoReserva(oferta)
-        }
-
+        ofertasAdapter = OfertaAdapter(requireContext()) { oferta -> mostrarDialogoReserva(oferta) }
         binding.rvAvailableOffers.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = ofertasAdapter
@@ -130,127 +115,94 @@ class TiendaDetailFragment : Fragment() {
     }
 
     private fun setupButtons() {
-        binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
-        binding.btnAddReview.setOnClickListener {
-            Toast.makeText(context, "Próximamente: Añadir reseña", Toast.LENGTH_SHORT).show()
-        }
-
+        binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.btnCall.setOnClickListener {
-            Toast.makeText(context, "Llamando a la tienda...", Toast.LENGTH_SHORT).show()
-        }
+            val tienda = tiendaActual
+            val numeroTelefono = tiendaActual?.usuarios?.telefono
+            if(tienda != null && !numeroTelefono.isNullOrEmpty()){
+                try {
+                    // 1. Limpiamos cualquier carácter que no sea dígito
+                    val soloNumeros = numeroTelefono.replace(Regex("[^0-9]"), "")
 
-        binding.btnHowToGet.setOnClickListener {
-            abrirEnGoogleMaps()
+                    // 2. Si el número tiene 9 dígitos (formato Perú), le añadimos el +51
+                    // Si el usuario ya puso el código de país, no lo duplicamos.
+                    val numeroFormateado = if (soloNumeros.length == 9) {
+                        "+51$soloNumeros"
+                    } else {
+                        "+$soloNumeros" // Asume que si no tiene 9, ya viene con código de país
+                    }
+
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$numeroFormateado")
+                    }
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "No se pudo abrir el marcador", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Número no disponible", Toast.LENGTH_SHORT).show()
+            }
         }
+        binding.btnHowToGet.setOnClickListener { abrirEnGoogleMaps() }
     }
 
-    private fun abrirEnGoogleMaps(){
-        val tienda = tiendaActual?: run {
-            Toast.makeText(context, "No se pudo obtener la ubicacion", Toast.LENGTH_SHORT)
+    private fun abrirEnGoogleMaps() {
+        val tienda = tiendaActual ?: run {
+            Toast.makeText(context, "No se pudo obtener la ubicación", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val uri = Uri.parse(
-            "geo:${tienda.latitud},${tienda.longitud}?" +
-                    "q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})"
-        )
-
-        val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+        // Intentamos abrir directamente con la app de Google Maps
+        val gmmIntentUri = Uri.parse("geo:${tienda.latitud},${tienda.longitud}?q=${tienda.latitud},${tienda.longitud}(${tienda.nombre})")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
             setPackage("com.google.android.apps.maps")
         }
 
-        if(intent.resolveActivity(requireActivity().packageManager)!= null){
-            startActivity(intent)
-        }else{
-            val webUri = Uri.parse(
-                "https://www.google.com/maps/search/?api=1" +
-                        "&query=${tienda.latitud},${tienda.longitud}"
-            )
-            startActivity(Intent(Intent.ACTION_VIEW, webUri))
+        try {
+            // Intenta lanzar la aplicación
+            startActivity(mapIntent)
+        } catch (e: Exception) {
+            // Si falla (no está instalada), abrimos la versión web en el navegador
+            val webUri = Uri.parse("https://www.google.com/maps/search/?api=1&query=${tienda.latitud},${tienda.longitud}")
+            val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+            startActivity(webIntent)
         }
     }
 
     private fun cargarDatos() {
         val id = tiendaId ?: return
-
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val tienda = SupabaseClient.client.from("tiendas")
-                    .select {
-                        filter { eq("id_tienda", id) }
-                    }.decodeSingle<TiendaDTO>()
-
+                val tienda = SupabaseClient.client.from("tiendas").select(Columns.list("*, usuarios(telefono)")) { filter { eq("id_tienda", id) } }.decodeSingle<TiendaDTO>()
                 bindTienda(tienda)
 
                 val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                 val hoy = sdf.format(Date())
-
-                val lotes = SupabaseClient.client.from("lote")
-                    .select(Columns.raw("*, productos(*)")) {
-                        filter {
-                            eq("tiendas_id", id)
-                            // 1. Exigimos que sea explícitamente una oferta
-                            eq("estado", "en_oferta")
-                            // 2. Exigimos stock mayor a 0
-                            gt("cantidad", 0)
-                            // 3. Exigimos que no haya expirado
-                            gte("fecha_vencimiento", hoy)
-                        }
-                    }.decodeList<LoteDTO>()
-
-                binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
+                val lotes = SupabaseClient.client.from("lote").select(Columns.list("*, productos(*)")) {
+                    filter { eq("tiendas_id", id); eq("estado", "en_oferta"); gt("cantidad", 0); gte("fecha_vencimiento", hoy) }
+                }.decodeList<LoteDTO>()
 
                 val ofertasLote = lotes.map { lote ->
                     OfertaLote(
                         idLote = lote.idLote ?: "",
                         tiendaId = id,
-                        productoNombre = lote.productos?.nombre ?: "Producto",
+                        productoNombre = lote.productos?.nombre ?: "",
                         productoImagen = lote.productos?.imagen,
-                        productoPresentacion = lote.productos?.presentacion,
+                        productoPresentacion = lote.productos?.presentacion ?: "",
                         tiendaNombre = tiendaActual?.nombre ?: "",
                         tiendaDireccion = tiendaActual?.direccion ?: "",
                         cantidad = lote.cantidad,
                         fechaVencimiento = lote.fechaVencimiento,
                         precioNormal = lote.precioNormal,
                         precioOferta = lote.precioOferta ?: 0.0,
-                        numeroLote = lote.numeroLote,
+                        numeroLote = lote.numeroLote ?: "",
                         ratingTienda = tiendaActual?.ratingPromedio ?: 0.0
                     )
                 }
-
                 ofertasAdapter.submitList(ofertasLote)
-
-                val autoOpenId = arguments?.getString("auto_open_lote_id")
-                if (autoOpenId != null) {
-                    val index = ofertasLote.indexOfFirst { it.idLote == autoOpenId }
-                    if (index != -1) {
-                        binding.rvAvailableOffers.scrollToPosition(index)
-                        mostrarDialogoReserva(ofertasLote[index])
-                    }
-                    arguments?.remove("auto_open_lote_id")
-                }
-
-                val valoraciones = SupabaseClient.client.from("valoraciones")
-                    .select(Columns.raw("*, usuarios(nombres, apellidos)")) {
-                        filter {
-                            eq("tiendas_id", id)
-                            eq("estado", "ACTIVO")
-                        }
-                    }.decodeList<ValoracionDTO>()
-
-                bindResenas(valoraciones)
-                reviewsAdapter.updateList(valoraciones)
-
-            } catch (e: Exception) {
-                Log.e("TiendaDetail", "Error al cargar datos: ${e.message}", e)
-                Toast.makeText(context, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show()
-            }
+            } catch (e: Exception) { Log.e("TiendaDetail", "Error", e) }
         }
     }
-
     private fun bindTienda(tienda: TiendaDTO) {
         tiendaActual = tienda
         binding.tvStoreName.text = tienda.nombre
@@ -266,51 +218,8 @@ class TiendaDetailFragment : Fragment() {
         }
     }
 
-    private fun bindResenas(valoraciones: List<ValoracionDTO>) {
-        val total = valoraciones.size
-        binding.tvReviewsLabel.text = getString(R.string.reviews_label_format, total)
-        binding.tvTotalReviewsText.text = getString(R.string.reviews_total_format, total)
 
-        if (total > 0) {
-            val promedio = valoraciones.map { it.calificacion }.average().toFloat()
-            binding.rbAverage.rating = promedio
 
-            val conteo = IntArray(6)
-            valoraciones.forEach { v ->
-                val nota = v.calificacion.toInt().coerceIn(1, 5)
-                conteo[nota]++
-            }
-
-            binding.pb5Stars.progress = (conteo[5] * 100) / total
-            binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
-
-            binding.pb4Stars.progress = (conteo[4] * 100) / total
-            binding.tv4StarsPct.text = "${(conteo[4] * 100) / total}%"
-
-            binding.pb3Stars.progress = (conteo[3] * 100) / total
-            binding.tv3StarsPct.text = "${(conteo[3] * 100) / total}%"
-
-            binding.pb2Stars.progress = (conteo[2] * 100) / total
-            binding.tv2StarsPct.text = "${(conteo[2] * 100) / total}%"
-
-            binding.pb1Star.progress = (conteo[1] * 100) / total
-            binding.tv1StarPct.text = "${(conteo[1] * 100) / total}%"
-        } else {
-            binding.rbAverage.rating = 0f
-            limpiarBarrasProgreso()
-        }
-    }
-
-    private fun limpiarBarrasProgreso() {
-        listOf(binding.pb5Stars, binding.pb4Stars, binding.pb3Stars, binding.pb2Stars, binding.pb1Star).forEach { it.progress = 0 }
-        listOf(binding.tv5StarsPct, binding.tv4StarsPct, binding.tv3StarsPct, binding.tv2StarsPct, binding.tv1StarPct).forEach { it.text = "0%" }
-    }
-
-    override fun onDestroyView() {
-        ofertasAdapter.releaseTTS()
-        super.onDestroyView()
-        _binding = null
-    }
 
     private fun mostrarDialogoReserva(oferta: OfertaLote) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_reserva, null)
@@ -368,15 +277,15 @@ class TiendaDetailFragment : Fragment() {
 
         dialog.show()
     }
-
-    private fun generarQRBodega(idDeTienda: String){
+    private fun generarQRBodega(idDeTienda: String) {
         try {
-            val urlWeb = "https://Ale152277.github.io/donapp-web/tienda/$idDeTienda"
-            val barcodeEncoder = BarcodeEncoder()
-            val bitmap: Bitmap = barcodeEncoder.encodeBitmap(urlWeb, BarcodeFormat.QR_CODE, 400, 400)
+            val bitmap = BarcodeEncoder().encodeBitmap("https://Ale152277.github.io/donapp-web/tienda/$idDeTienda", BarcodeFormat.QR_CODE, 400, 400)
             binding.ivQrTienda.setImageBitmap(bitmap)
-        } catch (e: Exception){
-            Log.e("TiendaDetail", "Error al generar el QR: ${e.message}")
-        }
+        } catch (e: Exception) { Log.e("TiendaDetail", "Error QR", e) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

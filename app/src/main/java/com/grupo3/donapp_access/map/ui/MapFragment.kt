@@ -61,10 +61,7 @@ class MapFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {//(let) solo trabaja con ese objeto si no es null
-            //sirve para pasar datos entre fragmentos
-
-        }
+        arguments?.let {}
     }
 
     //CICLO DE VIDA
@@ -94,7 +91,6 @@ class MapFragment : Fragment() {
     }
 
 
-    //UBICACION DEL USUARIO
     private var ubicacionUsuario: Point? = null
 
     //MAPA
@@ -216,7 +212,7 @@ class MapFragment : Fragment() {
             tiendas.forEach { tienda ->
                 val punto = Point.fromLngLat(tienda.longitud, tienda.latitud)
 
-                //calculamos la entre el usuario y la tienda en metros
+                //calculamos la distancia entre el usuario y la tienda en metros
 
                 val iconoId = if (origen != null){
                     val resultado = FloatArray(1)

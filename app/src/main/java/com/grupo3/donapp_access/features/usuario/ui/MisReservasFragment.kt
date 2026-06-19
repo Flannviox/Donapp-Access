@@ -38,7 +38,6 @@ class MisReservasFragment : Fragment() {
     private var qrDialog: android.app.AlertDialog? = null
     private var reservaAbiertaId: String? = null
 
-    // NUEVO: El trabajo en segundo plano que vigilará la reserva
     private var jobPolling: Job? = null
 
     override fun onResume() {
@@ -139,16 +138,15 @@ class MisReservasFragment : Fragment() {
             dialog.setOnDismissListener {
                 qrDialog = null
                 reservaAbiertaId = null
-                jobPolling?.cancel() // NUEVO: Apagamos el vigilante al cerrar el QR
+                jobPolling?.cancel()
             }
 
             dialog.show()
 
-            // NUEVO: El vigilante que pregunta cada 3 segundos si ya se entregó
             jobPolling = viewLifecycleOwner.lifecycleScope.launch {
                 while (isActive && dialog.isShowing) {
-                    delay(3000) // Espera 3 segundos
-                    viewModel.cargarMisReservas() // Recarga la base de datos de forma invisible
+                    delay(3000)
+                    viewModel.cargarMisReservas()
                 }
             }
 

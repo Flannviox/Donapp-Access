@@ -29,12 +29,11 @@ class LocationRepository @Inject constructor(
     @SuppressLint("MissingPermission")
     suspend fun obtenerUbicacionActual(): Location {
         return suspendCancellableCoroutine { cont ->
-            // 1. Intentamos obtener la ubicación caché (Es instantáneo)
             fusedClient.lastLocation.addOnSuccessListener { lastLocation ->
                 if (lastLocation != null) {
                     cont.resume(lastLocation)
                 } else {
-                    // 2. Si no hay caché, pedimos una nueva pero sin forzar el GPS satelital puro
+                    //si no hay caché, pedimos una nueva pero sin forzar el GPS satelital puro
                     fusedClient.getCurrentLocation(
                         Priority.PRIORITY_BALANCED_POWER_ACCURACY, null
                     ).addOnSuccessListener { newLocation ->

@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
-import com.grupo3.donapp_access.model.OfertaLote
-import com.grupo3.donapp_access.model.TiendaHome
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +25,6 @@ import io.github.jan.supabase.postgrest.from
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 import android.content.Intent
 import android.os.Build
-import com.grupo3.donapp_access.core.services.GeofenceService
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
 
@@ -101,7 +97,7 @@ class HomeFragment : Fragment() {
 
                 binding.textAlertaOfertas.text = when {
                     vencenHoy > 0 -> "$vencenHoy ofertas vencen hoy!!"
-                    ofertas.isNotEmpty() -> "${ofertas.size} ofertas activas cerca de ti"
+                    ofertas.isNotEmpty() -> "${ofertas.size} ofertas disponibles"
                     else -> "No hay ofertas activas aún"
                 }
 

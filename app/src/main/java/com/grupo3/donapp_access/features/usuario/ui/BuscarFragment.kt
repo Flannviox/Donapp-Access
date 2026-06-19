@@ -24,7 +24,8 @@ import com.grupo3.donapp_access.core.network.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
-
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 
 class BuscarFragment : Fragment() {
     private var _binding: FragmentBuscarBinding? = null
@@ -83,7 +84,22 @@ class BuscarFragment : Fragment() {
     }
     private fun configurarOfertas() {
         ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
-            Toast.makeText(requireContext(), "Seleccionaste: ${oferta.productoNombre}", Toast.LENGTH_SHORT).show()
+            val idTienda = oferta.tiendaId
+
+            if (idTienda != null) {
+                val fragmentDetalle = TiendaDetailFragment.newInstance(
+                    tiendaId = idTienda,
+                    tiendaNombre = oferta.tiendaNombre,
+                    autoOpenLoteId = oferta.idLote
+                )
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragmentDetalle) // Recuerda verificar si este ID es el tuyo
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Toast.makeText(requireContext(), "No se pudo obtener el ID de la tienda", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.recyclerOfertas.apply {
@@ -99,7 +115,6 @@ class BuscarFragment : Fragment() {
                 viewModel.ofertasBusqueda.collect { state ->
                     when (state) {
                         is UiState.Loading -> {
-                            // Puedes mostrar un progress bar de ofertas aquí
                         }
                         is UiState.Success -> {
                             ofertaAdapter.submitList(state.data)
@@ -134,7 +149,10 @@ class BuscarFragment : Fragment() {
     }
 
     private fun mostrarCarga() = with(binding) {
-        progressCategorias.isVisible = true
+
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+
+        progressCategorias.isVisible = !tieneTextoBusqueda
         textEstadoCategorias.isVisible = false
         buttonRecargarCategorias.isVisible = false
         recyclerCategorias.isVisible = false
@@ -143,8 +161,12 @@ class BuscarFragment : Fragment() {
     private fun mostrarCategorias(categorias: List<Categoria>) = with(binding) {
         progressCategorias.isVisible = false
         buttonRecargarCategorias.isVisible = false
-        recyclerCategorias.isVisible = categorias.isNotEmpty()
-        textEstadoCategorias.isVisible = categorias.isEmpty()
+
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+
+        recyclerCategorias.isVisible = !tieneTextoBusqueda && categorias.isNotEmpty()
+        textEstadoCategorias.isVisible = !tieneTextoBusqueda && categorias.isEmpty()
+
         textEstadoCategorias.text = "No encontramos categorias"
         categoriaAdapter.submitList(categorias)
     }
@@ -153,7 +175,9 @@ class BuscarFragment : Fragment() {
         progressCategorias.isVisible = false
         recyclerCategorias.isVisible = false
         textEstadoCategorias.isVisible = true
-        buttonRecargarCategorias.isVisible = true
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+        textEstadoCategorias.isVisible = !tieneTextoBusqueda
+        buttonRecargarCategorias.isVisible = !tieneTextoBusqueda
         textEstadoCategorias.text = message
     }
 

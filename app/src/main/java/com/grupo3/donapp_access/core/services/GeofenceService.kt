@@ -26,7 +26,7 @@ class GeofenceService : Service() {
     private var listaTiendas = listOf<TiendaHome>()
     private val tiendasNotificadas = mutableSetOf<String>()
 
-    private val RADIO_ALERTA_KM = 1.0 // Te avisará a 1 kilómetro de distancia
+    private val RADIO_ALERTA_KM = 1.0
     private val CHANNEL_ID = "donapp_geofence_channel"
 
     override fun onCreate() {
@@ -43,7 +43,6 @@ class GeofenceService : Service() {
             }
         }
 
-        // Configurar rastreo: actualización cada 30 segundos o al moverse 20 metros
         val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 30000)
             .setMinUpdateDistanceMeters(20f)
             .build()
@@ -72,14 +71,12 @@ class GeofenceService : Service() {
 
             val tiendaPoint = Point.fromLngLat(tiendaLng, tiendaLat)
 
-            // Mapbox Turf calcula la distancia exacta
             val distanciaKm = TurfMeasurement.distance(userPoint, tiendaPoint, "kilometers")
 
             if (distanciaKm <= RADIO_ALERTA_KM && !tiendasNotificadas.contains(tiendaId)) {
                 dispararNotificacion(tienda, distanciaKm)
-                tiendasNotificadas.add(tiendaId) // Marcamos como notificada
+                tiendasNotificadas.add(tiendaId)
             } else if (distanciaKm > RADIO_ALERTA_KM + 0.5) {
-                // Si el usuario se aleja mucho, reiniciamos la alerta para esa tienda
                 tiendasNotificadas.remove(tiendaId)
             }
         }
@@ -102,7 +99,6 @@ class GeofenceService : Service() {
         val textoDistancia = String.format(Locale.US, "%.1f", distancia)
         val mensajeHistorial = "La tienda '${tienda.nombre}' está a $textoDistancia km con productos para salvar."
 
-        //  GUARDA LOCALMENTE EL HISTORIAL EN SHAREDPREFERENCES
         try {
             val sharedPreferences = getSharedPreferences("donapp_alertas", MODE_PRIVATE)
             val historialSet = sharedPreferences.getStringSet("historial", mutableSetOf())?.toMutableSet() ?: mutableSetOf()
