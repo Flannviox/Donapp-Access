@@ -162,10 +162,7 @@ class TiendaDetailFragment : Fragment() {
             Log.e("TiendaDetail", "No se recibió el ID de la tienda")
             // Descomenta la siguiente línea cuando tengas la navegación configurada
             // parentFragmentManager.popBackStack()
-        }else{
-            generarQRBodega(tiendaId!!)
         }
-
 
         setupRecyclerViews()
         setupButtons()
@@ -312,10 +309,8 @@ class TiendaDetailFragment : Fragment() {
                         ratingTienda = tiendaActual?.ratingPromedio ?: 0.0
                     )
                 }
-                // ¡Magia! Pintamos las cartas en la UI
                 ofertasAdapter.submitList(ofertasLote)
 
-                // 3. Obtener valoraciones (con información del usuario que la hizo)
                 val valoraciones = SupabaseClient.client.from("valoraciones")
                     .select(Columns.Companion.raw("*, usuarios(nombres, apellidos)")) {
                         filter {
@@ -341,7 +336,6 @@ class TiendaDetailFragment : Fragment() {
         binding.tvRatingValue.text = String.Companion.format(Locale.getDefault(), "%.1f", tienda.ratingPromedio)
         binding.tvSchedule.text = tienda.horaAtencion ?: "Horario no disponible"
 
-        // Cargar logo con Glide
         tienda.imagenReferencia?.let { url ->
             Glide.with(this)
                 .load(url)
@@ -366,7 +360,6 @@ class TiendaDetailFragment : Fragment() {
                 conteo[nota]++
             }
 
-            // Actualizar barras de progreso y textos de porcentaje
             binding.pb5Stars.progress = (conteo[5] * 100) / total
             binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
 
@@ -414,7 +407,6 @@ class TiendaDetailFragment : Fragment() {
 
         tvTitle.text = "Reservar ${oferta.productoNombre}"
 
-        // Audio de accesibilidad
         VoiceAssistantManager.speak("Estás por reservar el producto ${oferta.productoNombre}. Presiona los botones de más o menos para ajustar la cantidad, y el botón confirmar para finalizar.")
 
         var cantidadSeleccionada = 1
@@ -436,7 +428,6 @@ class TiendaDetailFragment : Fragment() {
             }
         }
 
-        // Creamos el diálogo sin botones nativos
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
@@ -463,20 +454,6 @@ class TiendaDetailFragment : Fragment() {
         dialog.show()
     }
 
-    private fun generarQRBodega(idDeTienda: String){
 
-        try {
-            val urlWeb = "https://Ale152277.github.io/donapp-web/tienda/$idDeTienda"
-            val barcodeEncoder = BarcodeEncoder()
-
-            val bitmap: Bitmap = barcodeEncoder.encodeBitmap(urlWeb, BarcodeFormat.QR_CODE, 400, 400)
-
-            binding.ivQrTienda.setImageBitmap(bitmap)
-        }catch (e: Exception){
-            Log.e("TiendaDetail", "Error al generar el QR: ${e.message}")
-
-        }
-
-    }
 
 }

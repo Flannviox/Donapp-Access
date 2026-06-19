@@ -10,32 +10,36 @@
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/textCategoriaInicial"
-        android:layout_width="76dp"
-        android:layout_height="62dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="38sp"
+        android:textSize="34sp"
         tools:text="🥐" />
 
     <TextView
         android:id="@+id/textCategoriaNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:ellipsize="end"
-        android:gravity="start"
+        android:gravity="center"
         android:maxLines="2"
-        android:textColor="?android:attr/textColorPrimary"        android:textSize="18sp"
-        tools:text="Panaderia" />
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="Panadería" />
 
     <TextView
         android:id="@+id/textCategoriaConteo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:textColor="?android:attr/textColorSecondary"        android:textSize="16sp"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="13sp"
         tools:text="12 ofertas" />
 </LinearLayout>

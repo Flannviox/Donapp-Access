@@ -25,11 +25,12 @@ import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
 import java.util.Locale
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import io.github.jan.supabase.auth.auth
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
-
+import android.graphics.Bitmap
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 class TiendaDetailFragment : Fragment() {
 
     private val detailViewModel: TiendaDetailViewModel by viewModels()
@@ -67,6 +68,8 @@ class TiendaDetailFragment : Fragment() {
 
         if (tiendaId == null) {
             Log.e("TiendaDetail", "No se recibió el ID de la tienda")
+        }else{
+            generarQRBodega(tiendaId!!)
         }
 
         setupRecyclerViews()
@@ -125,7 +128,31 @@ class TiendaDetailFragment : Fragment() {
         }
 
         binding.btnCall.setOnClickListener {
-            Toast.makeText(context, "Llamando a la tienda...", Toast.LENGTH_SHORT).show()
+
+            val tienda = tiendaActual
+
+            val numeroTelefono = tienda?.usuarios?.telefono
+
+            if(tienda != null && !numeroTelefono.isNullOrEmpty()){
+                try {
+                    val soloNumeros = numeroTelefono.replace(Regex("[^0-9]"), "")
+
+                    val numeroFormateado = if (soloNumeros.length == 9) {
+                        "+51$soloNumeros"
+                    } else {
+                        "+$soloNumeros"
+                    }
+
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$numeroFormateado")
+                    }
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "No se pudo abrir el marcador", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Número no disponible", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnHowToGet.setOnClickListener {
@@ -165,18 +192,18 @@ class TiendaDetailFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val tienda = SupabaseClient.client.from("tiendas")
-                    .select {
+                    .select(Columns.list("*, usuarios(telefono)")) {
                         filter { eq("id_tienda", id) }
                     }.decodeSingle<TiendaDTO>()
 
                 bindTienda(tienda)
 
                 val lotes = SupabaseClient.client.from("lote")
-                    .select(Columns.raw("*, productos(*)")) {
+                    .select(Columns.list("*, productos(*)")) {
                         filter {
                             eq("tiendas_id", id)
                             eq("estado", "en_oferta")
-                            gt("cantidad", 0) // NUEVO: Oculta los productos sin stock en el perfil de la tienda
+                            gt("cantidad", 0)
                         }
                     }.decodeList<LoteDTO>()
 
@@ -201,28 +228,22 @@ class TiendaDetailFragment : Fragment() {
                 }
 
                 ofertasAdapter.submitList(ofertasLote)
-                // ¡Magia! Pintamos las cartas en la UI
                 ofertasAdapter.submitList(ofertasLote)
 
-                // Lógica mejorada para buscar, hacer scroll y abrir el diálogo
                 val autoOpenId = arguments?.getString("auto_open_lote_id")
                 if (autoOpenId != null) {
-                    // Buscamos en qué posición de la lista está el producto exacto
                     val index = ofertasLote.indexOfFirst { it.idLote == autoOpenId }
 
                     if (index != -1) {
-                        // 1. Deslizamos la lista automáticamente hasta el producto
                         binding.rvAvailableOffers.scrollToPosition(index)
 
-                        // 2. Abrimos el cuadro de diálogo
                         mostrarDialogoReserva(ofertasLote[index])
                     }
-                    // Lo borramos para que no se repita al girar la pantalla
                     arguments?.remove("auto_open_lote_id")
                 }
 
                 val valoraciones = SupabaseClient.client.from("valoraciones")
-                    .select(Columns.raw("*, usuarios(nombres, apellidos)")) {
+                    .select(Columns.list("*, usuarios(nombres, apellidos)")) {
                         filter {
                             eq("tiendas_id", id)
                             eq("estado", "ACTIVO")
@@ -355,5 +376,18 @@ class TiendaDetailFragment : Fragment() {
         }
 
         dialog.show()
+    }
+    private fun generarQRBodega(idDeTienda: String){
+        // !!! AGREGA ESTA LÍNEA DE LOG !!!
+        Log.d("DEBUG_DONAPP", "generarQRBodega recibió el ID: '$idDeTienda'")
+
+        try {
+            val urlWeb = "https://Ale152277.github.io/donapp-web/tienda/$idDeTienda"
+            val barcodeEncoder = BarcodeEncoder()
+            val bitmap: Bitmap = barcodeEncoder.encodeBitmap(urlWeb, BarcodeFormat.QR_CODE, 400, 400)
+            binding.ivQrTienda.setImageBitmap(bitmap)
+        } catch (e: Exception){
+            Log.e("TiendaDetail", "Error al generar el QR: ${e.message}")
+        }
     }
 }

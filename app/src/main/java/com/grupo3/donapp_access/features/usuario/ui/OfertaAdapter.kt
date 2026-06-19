@@ -76,7 +76,6 @@ class OfertaAdapter(
             textDistancia.text = oferta.ratingTienda?.let { "Rating ${"%.1f".format(Locale.US, it)}" } ?: "Oferta activa"
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
 
-            // AGREGADO: Cargar imagen con Glide
             if (!oferta.productoImagen.isNullOrEmpty()) {
                 imageProducto.visibility = View.VISIBLE
                 textOfertaIcon.visibility = View.GONE
@@ -90,7 +89,6 @@ class OfertaAdapter(
                 textOfertaIcon.text = producto.first().uppercaseChar().toString()
             }
 
-            // AGREGADO: Restaurar el clic de la tarjeta
             root.setOnClickListener { onItemClick(oferta) }
             btnAudio.setOnClickListener {
                 val texto = """

@@ -59,7 +59,7 @@ class AccesibilidadFragment : Fragment() {
     private fun cargarPreferencias() {
         val prefs = requireContext().getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
 
-        // 1. Cargar temas
+        // cargar temas
         val temaActual = prefs.getString("tema_actual", "normal")
         binding.switchHighContrast.isChecked = temaActual == "high_contrast"
         binding.switchBlackWhite.isChecked = temaActual == "black_white"
@@ -67,13 +67,13 @@ class AccesibilidadFragment : Fragment() {
         val fontScale = prefs.getFloat("font_scale", 1f)
         binding.sliderFontSize.value = fontScale * 18f
 
-        // 2. Cargar estados de interruptores INDEPENDIENTES
+        //cargar estados de interruptores
         binding.switchTalkback.isChecked = prefs.getBoolean("talkback_activo", false)
         binding.switchSounds.isChecked = prefs.getBoolean("sonidos_activos", false)
         binding.switchVibration.isChecked = prefs.getBoolean("vibracion_activa", false)
 
         actualizarEstadoTalkback(binding.switchTalkback.isChecked)
-        // 3. Cargar estado de nuestro Asistente de Voz
+        //cargar estado de nuestro Asistente de Voz
         val voicePrefs = requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
         binding.switchVoiceAssistant.isChecked = voicePrefs.getBoolean("voice_assistant_enabled", false)
         binding.sliderVoiceVolume.value = voicePrefs.getFloat("voice_volume", 1.0f)
@@ -172,9 +172,9 @@ class AccesibilidadFragment : Fragment() {
                 }
             }
         }
-        // Listeners del Asistente de Voz
+        //listeners del asstente de voz
         binding.switchVoiceAssistant.setOnCheckedChangeListener { _, isChecked ->
-            // Guardamos en sus preferencias exclusivas
+            //guardamos en sus preferencias exclusivas
             requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
                 .edit().putBoolean("voice_assistant_enabled", isChecked).apply()
 
@@ -191,7 +191,7 @@ class AccesibilidadFragment : Fragment() {
                 requireContext().getSharedPreferences("AccesibilidadPrefs", android.content.Context.MODE_PRIVATE)
                     .edit().putFloat("voice_volume", value).apply()
 
-                // Le leemos en voz alta el porcentaje para que pruebe el volumen
+                // se lee en voz alta el porcentaje para que pruebe el volumen
                 val porcentaje = (value * 100).toInt()
                 VoiceAssistantManager.speak("Volumen al $porcentaje por ciento")
             }

@@ -87,7 +87,7 @@ class ReservaAdapter(
 
                 if (dateExpiracion != null) {
                     val tiempoRestante = dateExpiracion.time - System.currentTimeMillis()
-                    val tiempoTotalMs = 3600000L // 1 hora en milisegundos
+                    val tiempoTotalMs = 3600000L
 
                     if (tiempoRestante > 0) {
                         binding.progressBarReserva.max = 100

@@ -5,6 +5,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class UsuarioTelefonoDTO(
+    val telefono: String? = null
+)
+
+@Serializable
 data class TiendaDTO(
     @SerialName("id_tienda")
     val idTienda: String,
@@ -25,7 +30,10 @@ data class TiendaDTO(
     val ratingPromedio: Double = 0.0,
 
     @SerialName("hora_atencion")
-    val horaAtencion: String? = null
+    val horaAtencion: String? = null,
+
+    @SerialName("usuarios")
+    val usuarios: UsuarioTelefonoDTO? = null
 ) {
     companion object {
         fun from(tienda: Tienda): TiendaDTO {
@@ -39,7 +47,8 @@ data class TiendaDTO(
                 longitud = tienda.longitud,
                 imagenReferencia = tienda.imagen,
                 ratingPromedio = tienda.rating,
-                horaAtencion = tienda.horario
+                horaAtencion = tienda.horario,
+                usuarios = null // Le ponemos null por defecto para que no te rompa nada antiguo
             )
         }
     }
