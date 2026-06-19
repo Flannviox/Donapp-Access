@@ -117,9 +117,30 @@ class TiendaDetailFragment : Fragment() {
     private fun setupButtons() {
         binding.btnBack.setOnClickListener { parentFragmentManager.popBackStack() }
         binding.btnCall.setOnClickListener {
-            val numero = tiendaActual?.usuarios?.telefono
-            if (!numero.isNullOrEmpty()) {
-                startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${numero.replace(Regex("[^0-9]"), "")}")))
+            val tienda = tiendaActual
+            val numeroTelefono = tiendaActual?.usuarios?.telefono
+            if(tienda != null && !numeroTelefono.isNullOrEmpty()){
+                try {
+                    // 1. Limpiamos cualquier carácter que no sea dígito
+                    val soloNumeros = numeroTelefono.replace(Regex("[^0-9]"), "")
+
+                    // 2. Si el número tiene 9 dígitos (formato Perú), le añadimos el +51
+                    // Si el usuario ya puso el código de país, no lo duplicamos.
+                    val numeroFormateado = if (soloNumeros.length == 9) {
+                        "+51$soloNumeros"
+                    } else {
+                        "+$soloNumeros" // Asume que si no tiene 9, ya viene con código de país
+                    }
+
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$numeroFormateado")
+                    }
+                    startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "No se pudo abrir el marcador", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(context, "Número no disponible", Toast.LENGTH_SHORT).show()
             }
         }
         binding.btnHowToGet.setOnClickListener { abrirEnGoogleMaps() }
