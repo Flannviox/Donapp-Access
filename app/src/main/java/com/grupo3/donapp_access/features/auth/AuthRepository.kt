@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import com.grupo3.donapp_access.features.auth.dto.UsuarioDTO
 
-//@Inject constructor(): Le permite a Hilt suministrar esta clase a los viewmodels
 class AuthRepository @Inject constructor(
     private val client: io.github.jan.supabase.SupabaseClient
 ){
@@ -19,24 +18,23 @@ class AuthRepository @Inject constructor(
     private val supabaseAuth = client.auth
 
 
-    //suspend permite que la funcion se ejecute sin bloquear la UI
-    //es una marca que le ponemos a una función como signIn o signUp para decir:
-    //esta tarea va a tardar, así que no bloquees
-    suspend fun signUp(email: String, pass: String): io.github.jan.supabase.auth.user.UserInfo?{
 
-        val result = supabaseAuth.signUpWith(Email) {
+    suspend fun signUp(email: String, pass: String, captchaToken: String): io.github.jan.supabase.auth.user.UserInfo? {
+        return supabaseAuth.signUpWith(Email) {
             this.email = email
-            password = pass
+            this.password = pass
+            this.captchaToken = captchaToken
         }
-    // Devolvemos la información del usuario (contiene el id de auth.users)
-        return result
     }
 
-    suspend fun signIn(email: String, pass: String){
-        //Inicias sesion con las credenciales proporcionadas
-        supabaseAuth.signInWith(Email){
+
+    suspend fun signIn(email: String, pass: String, captchaToken: String? = null) {
+        supabaseAuth.signInWith(Email) {
             this.email = email
             password = pass
+            if (!captchaToken.isNullOrEmpty()) {
+                this.captchaToken = captchaToken
+            }
         }
     }
 
@@ -64,9 +62,9 @@ class AuthRepository @Inject constructor(
                 correoApoderado = correoApoderado,
                 telefono = telefono
             )
-            SupabaseClient.client.from("usuarios").insert(nuevoUsuario)
+            client.from("usuarios").insert(nuevoUsuario)
 
-            android.util.Log.d("SUPABASE_OK", "¡Inserción exitosa para el usuario: $correo!")
+            android.util.Log.d("SUPABASE_OK", "Inserción exitosa para el usuario: $correo")
         }catch (e: Exception){
 
             android.util.Log.e(
@@ -82,7 +80,7 @@ class AuthRepository @Inject constructor(
     }
     suspend fun obtenerRolUsuario(id: String): String {
         try {
-            val usuario = SupabaseClient.client.from("usuarios")
+            val usuario = client.from("usuarios")
                 .select {
                     filter { eq("id_usuarios", id) }
                 }.decodeSingle<UsuarioDTO>()
@@ -98,6 +96,51 @@ class AuthRepository @Inject constructor(
         client.from("tiendas").insert(tienda)
     }
 
+    suspend fun correoEstaVerificado(): Boolean{
+        return try {
+            client.auth.retrieveUser(client.auth.currentAccessTokenOrNull()?: return false)
+            val user = client.auth.currentUserOrNull()
+
+            user?.emailConfirmedAt !=null
+        }catch (e: Exception){
+            android.util.Log.e("AUTH_REPO", "Error verificando correo: ${e.message}")
+            false
+        }
+    }
+    suspend fun verificarDniYTelefono(dni: String, telefono: String) {
+        //verificar si el DNI ya existe
+        val usuariosConDni = client.from("usuarios")
+            .select { filter { eq("dni", dni) } }
+            .decodeList<UsuarioDTO>()
+
+        if (usuariosConDni.isNotEmpty()) {
+            throw Exception("El DNI ingresado ya se encuentra registrado en otra cuenta.")
+        }
+
+        //verificar si el Teléfono ya existe
+        val usuariosConTelefono = SupabaseClient.client.from("usuarios")
+            .select { filter { eq("telefono", telefono) } }
+            .decodeList<UsuarioDTO>()
+
+        if (usuariosConTelefono.isNotEmpty()) {
+            throw Exception("El número de teléfono ya se encuentra vinculado a otra cuenta.")
+        }
+    }
+
+    fun obtenerIdUsuarioActual(): String? {
+        return client.auth.currentUserOrNull()?.id
+    }
+
+    suspend fun cerrarSesion() {
+        client.auth.signOut()
+    }
+
+    suspend fun reenviarCorreo(email: String) {
+        client.auth.resendEmail(
+            type = io.github.jan.supabase.auth.OtpType.Email.SIGNUP,
+            email = email
+        )
+    }
 
 
 

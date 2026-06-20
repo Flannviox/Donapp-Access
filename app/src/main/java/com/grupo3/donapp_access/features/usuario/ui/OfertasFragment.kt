@@ -16,13 +16,14 @@ import com.grupo3.donapp_access.databinding.FragmentOfertasBinding
 import com.grupo3.donapp_access.features.usuario.OfertasViewModel
 import com.grupo3.donapp_access.model.OfertaLote
 import kotlinx.coroutines.launch
-
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 
 class OfertasFragment : Fragment() {
     private var _binding: FragmentOfertasBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: OfertasViewModel
-    private val ofertaAdapter = OfertaAdapter()
+    private lateinit var ofertaAdapter: OfertaAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +36,18 @@ class OfertasFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel = ViewModelProvider(this)[OfertasViewModel::class.java]
+
+        ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
+
+            android.widget.Toast.makeText(
+                requireContext(),
+                "Seleccionaste: ${oferta.productoNombre}",
+                android.widget.Toast.LENGTH_SHORT
+            ).show()
+        }
+
         configurarLista()
         observarOfertas()
 
@@ -44,6 +56,7 @@ class OfertasFragment : Fragment() {
         }
 
         viewModel.cargarOfertas()
+        VoiceAssistantManager.speak("Pantalla de ofertas cercanas. Aquí se muestran las promociones a tu alrededor. Tienes un botón para actualizar la lista en la parte superior.")
     }
 
     private fun configurarLista() {

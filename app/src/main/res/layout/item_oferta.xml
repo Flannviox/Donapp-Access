@@ -13,6 +13,14 @@
         android:layout_height="92dp"
         android:background="@drawable/bg_surface_stroke">
 
+        <ImageView
+            android:id="@+id/imageProducto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/textOfertaIcon"
             android:layout_width="match_parent"
@@ -49,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="Pan blanco Bimbo" />
@@ -60,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp"
                     tools:text="Bodega el chamo" />
             </LinearLayout>
@@ -86,7 +94,7 @@
             android:layout_marginTop="3dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/donapp_text_muted"
+            android:textColor="?android:attr/textColorSecondary"
             android:textSize="11sp"
             tools:text="Pan integral | 500g" />
 
@@ -101,7 +109,7 @@
                 android:id="@+id/textPrecioNormal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/donapp_text_muted"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="12sp"
                 tools:text="S/ 5.00" />
 
@@ -128,7 +136,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/donapp_text_muted"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="11sp"
                 tools:text="Stock: 15 unidades" />
 
@@ -149,5 +157,13 @@
             android:textColor="@color/donapp_blue"
             android:textSize="11sp"
             tools:text="0.3 km" />
+
+        <ImageButton
+            android:id="@+id/btnAudio"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:background="@android:color/transparent"
+            android:contentDescription="Escuchar información del producto"/>
     </LinearLayout>
 </LinearLayout>

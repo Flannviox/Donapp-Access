@@ -26,7 +26,6 @@ class WelcomeFragment : Fragment() {
         val btnIniciarSesion = view.findViewById<MaterialButton>(R.id.btnIniciarSesion)
 
         btnCrearCuenta.setOnClickListener {
-            // Saltamos usando la acción del nav_graph.xml
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, RoleSelectionFragment())
                 .addToBackStack(null)
@@ -34,7 +33,6 @@ class WelcomeFragment : Fragment() {
         }
 
         btnIniciarSesion.setOnClickListener {
-            // Saltamos usando la acción del nav_graph.xml
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, LoginFragment())
                 .addToBackStack(null)

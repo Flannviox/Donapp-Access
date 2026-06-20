@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="role_usuario_bg">#F0F0F0</color>
+    <color name="role_usuario_stroke">#000000</color>
+    <color name="role_comerciante_bg">#F0F0F0</color>
+    <color name="role_comerciante_stroke">#000000</color>
+</resources>

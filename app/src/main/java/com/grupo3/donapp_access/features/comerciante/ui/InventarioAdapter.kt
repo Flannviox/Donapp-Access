@@ -8,8 +8,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.ItemLoteCardBinding
 import com.grupo3.donapp_access.model.Lote
+import java.util.Locale
+import kotlin.math.roundToInt
 
 class InventarioAdapter(
     private val onLoteClick: (Lote) -> Unit
@@ -27,26 +31,47 @@ class InventarioAdapter(
 
     inner class LoteViewHolder(private val binding: ItemLoteCardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(lote: Lote) {
-            // Nombre del producto o ID acortado
-            binding.tvNombreProducto.text = if (lote.productos_id.length > 20) {
-                "Producto: ${lote.productos_id.take(8)}..."
+            val nombreProducto = lote.productos_id ?: "Producto sin nombre"
+
+            binding.tvNombreProducto.text = if (nombreProducto.length > 20) {
+                "Producto: ${nombreProducto.take(8)}..."
             } else {
-                lote.productos_id
+                nombreProducto
             }
 
-            binding.tvStockCantidad.text = lote.cantidad.toString()
-            binding.tvExpiracion.text = "Vence: ${lote.fecha_vencimiento}"
+            binding.tvStockCantidad.text = "Stock: ${lote.cantidad} uds."
+            binding.tvExpiracion.text = "Vence: ${lote.fecha_vencimiento ?: "---"}"
 
-            // Lógica de colores y estados dinámicos
-            when (lote.estado.lowercase()) {
+            binding.tvPrecioNormal.text = "S/ %.2f".format(Locale.US, lote.precio_normal)
+
+            binding.viewTachado.post {
+                binding.viewTachado.layoutParams.width = binding.tvPrecioNormal.width
+                binding.viewTachado.requestLayout()
+            }
+
+            val urlImagen = lote.imagenUrl
+
+            Glide.with(itemView.context)
+                .load(urlImagen)
+                .placeholder(R.drawable.ic_bread_product)
+                .error(R.drawable.ic_bread_product)
+                .into(binding.ivProductoImagen)
+
+            val estadoLote = lote.estado?.lowercase() ?: "disponible"
+
+            when (estadoLote) {
                 "en_oferta" -> {
-                    binding.tvDescuento.text = "OFERTA"
                     binding.tvDescuento.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F5C518"))
                     binding.tvDescuento.setTextColor(Color.parseColor("#1A1A1A"))
 
                     lote.precio_oferta?.let { po ->
+                        binding.tvPrecioOferta.text = "S/ %.2f".format(Locale.US, po)
+                        binding.tvPrecioOferta.visibility = View.VISIBLE
+                        binding.tvPrecioNormal.setTextColor(Color.parseColor("#9E9E9E"))
+                        binding.viewTachado.visibility = View.VISIBLE
+
                         if (lote.precio_normal > 0) {
-                            val desc = ((1 - (po / lote.precio_normal)) * 100).toInt()
+                            val desc = ((1 - (po / lote.precio_normal)) * 100).roundToInt()
                             binding.tvDescuento.text = "-$desc%"
                         }
                     }
@@ -57,12 +82,20 @@ class InventarioAdapter(
                     binding.tvDescuento.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
                     binding.tvDescuento.setTextColor(Color.WHITE)
                     binding.tvDescuento.visibility = View.VISIBLE
+
+                    binding.tvPrecioOferta.visibility = View.GONE
+                    binding.viewTachado.visibility = View.GONE
+                    binding.tvPrecioNormal.setTextColor(Color.WHITE)
                 }
                 "agotado" -> {
                     binding.tvDescuento.text = "AGOTADO"
                     binding.tvDescuento.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
                     binding.tvDescuento.setTextColor(Color.WHITE)
                     binding.tvDescuento.visibility = View.VISIBLE
+
+                    binding.tvPrecioOferta.visibility = View.GONE
+                    binding.viewTachado.visibility = View.GONE
+                    binding.tvPrecioNormal.setTextColor(Color.parseColor("#9E9E9E"))
                 }
                 else -> {
                     binding.tvDescuento.visibility = View.GONE

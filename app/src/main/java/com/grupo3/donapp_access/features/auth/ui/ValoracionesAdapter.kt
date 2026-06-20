@@ -13,7 +13,6 @@ class ValoracionesAdapter(private var valoraciones: List<ValoracionDTO>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(valoracion: ValoracionDTO) {
-            // Mostramos el nombre del usuario que dejó la reseña
             val usuario = valoracion.usuarios
             binding.tvUsuarioNombre.text = if (usuario != null) {
                 "${usuario.nombres} ${usuario.apellidos}"
@@ -21,7 +20,6 @@ class ValoracionesAdapter(private var valoraciones: List<ValoracionDTO>) :
                 "Usuario Anónimo"
             }
 
-            // Formateamos la fecha (ejemplo: 2023-10-25)
             binding.tvFecha.text = valoracion.createdAt.split("T").firstOrNull() ?: ""
             binding.rbCalificacion.rating = valoracion.calificacion.toFloat()
             binding.tvComentario.text = valoracion.comentario ?: "Sin comentario"

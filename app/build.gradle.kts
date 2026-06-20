@@ -21,11 +21,11 @@ android {
 
     defaultConfig {
 
-        applicationId = "com.grupo3.donapp_access"
+        applicationId = "com.donapp_access"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "1.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "SUPABASE_URL",
@@ -38,6 +38,8 @@ android {
         manifestPlaceholders["MAPBOX_ACCESS_TOKEN"] =
             localProps["MAPBOX_TOKEN"] ?: ""
 
+        // Solución a la advertencia del idioma no reconocido ("bw") en la Play Console
+        resourceConfigurations += setOf("es", "en")
     }
 
     buildTypes {
@@ -63,6 +65,7 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
     packaging {
         jniLibs {
             useLegacyPackaging = true
@@ -73,6 +76,14 @@ android {
 }
 
 dependencies {
+
+    // Google Play Services para obtener la ubicación exacta
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    // Herramientas matemáticas de Mapbox (Turf y GeoJSON) para calcular distancias
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-turf:6.15.0")
+    implementation("com.mapbox.mapboxsdk:mapbox-sdk-geojson:6.15.0")
+
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -114,7 +125,6 @@ dependencies {
     // Mapbox
     implementation(libs.mapbox.android)
 
-
     // Glide
     implementation(libs.glide)
 
@@ -125,4 +135,18 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // Librerías para Generar y Escanear QR
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.4.1")
+
+    // Hilt para WorkManager
+    implementation("androidx.hilt:hilt-work:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0") // O ksp si ya migraste a KSP
+
+
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

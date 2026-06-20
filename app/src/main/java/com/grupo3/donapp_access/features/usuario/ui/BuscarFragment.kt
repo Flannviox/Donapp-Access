@@ -18,12 +18,22 @@ import com.grupo3.donapp_access.databinding.FragmentBuscarBinding
 import com.grupo3.donapp_access.features.usuario.BuscarViewModel
 import com.grupo3.donapp_access.model.Categoria
 import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.grupo3.donapp_access.usuario.dto.UsuarioNombreDTO
+import com.grupo3.donapp_access.core.network.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.usuario.ui.TiendaDetailFragment
 
 class BuscarFragment : Fragment() {
     private var _binding: FragmentBuscarBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: BuscarViewModel
     private lateinit var categoriaAdapter: CategoriaAdapter
+
+    private lateinit var ofertaAdapter: OfertaAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,17 +47,32 @@ class BuscarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[BuscarViewModel::class.java]
+
         configurarCategorias()
+        configurarOfertas()
+
         observarCategorias()
+        observarOfertas()
+        cargarNombreUsuario()
 
         binding.inputBuscar.doAfterTextChanged { editable ->
-            viewModel.filtrarCategorias(editable?.toString().orEmpty())
+            val texto = editable?.toString().orEmpty()
+            viewModel.filtrarCategorias(texto)
+            viewModel.buscarOfertas(texto)
+
+            // si hay texto, ocultamos categorías
+            binding.recyclerCategorias.isVisible = texto.isEmpty()
+
+            binding.recyclerOfertas.isVisible = texto.isNotEmpty()
         }
+
         binding.buttonRecargarCategorias.setOnClickListener {
             viewModel.cargarCategorias()
+
         }
 
         viewModel.cargarCategorias()
+        VoiceAssistantManager.speak("Pantalla de búsqueda. Arriba tienes una barra para escribir el producto que buscas, y debajo puedes explorar por categorías como Lácteos, Panadería o Abarrotes.")
     }
 
     private fun configurarCategorias() {
@@ -55,6 +80,51 @@ class BuscarFragment : Fragment() {
         binding.recyclerCategorias.apply {
             layoutManager = GridLayoutManager(requireContext(), 3)
             adapter = categoriaAdapter
+        }
+    }
+    private fun configurarOfertas() {
+        ofertaAdapter = OfertaAdapter(requireContext()) { oferta ->
+            val idTienda = oferta.tiendaId
+
+            if (idTienda != null) {
+                val fragmentDetalle = TiendaDetailFragment.newInstance(
+                    tiendaId = idTienda,
+                    tiendaNombre = oferta.tiendaNombre,
+                    autoOpenLoteId = oferta.idLote
+                )
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, fragmentDetalle) // Recuerda verificar si este ID es el tuyo
+                    .addToBackStack(null)
+                    .commit()
+            } else {
+                Toast.makeText(requireContext(), "No se pudo obtener el ID de la tienda", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.recyclerOfertas.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = ofertaAdapter
+        }
+
+    }
+
+    private fun observarOfertas() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.ofertasBusqueda.collect { state ->
+                    when (state) {
+                        is UiState.Loading -> {
+                        }
+                        is UiState.Success -> {
+                            ofertaAdapter.submitList(state.data)
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -79,7 +149,10 @@ class BuscarFragment : Fragment() {
     }
 
     private fun mostrarCarga() = with(binding) {
-        progressCategorias.isVisible = true
+
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+
+        progressCategorias.isVisible = !tieneTextoBusqueda
         textEstadoCategorias.isVisible = false
         buttonRecargarCategorias.isVisible = false
         recyclerCategorias.isVisible = false
@@ -88,8 +161,12 @@ class BuscarFragment : Fragment() {
     private fun mostrarCategorias(categorias: List<Categoria>) = with(binding) {
         progressCategorias.isVisible = false
         buttonRecargarCategorias.isVisible = false
-        recyclerCategorias.isVisible = categorias.isNotEmpty()
-        textEstadoCategorias.isVisible = categorias.isEmpty()
+
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+
+        recyclerCategorias.isVisible = !tieneTextoBusqueda && categorias.isNotEmpty()
+        textEstadoCategorias.isVisible = !tieneTextoBusqueda && categorias.isEmpty()
+
         textEstadoCategorias.text = "No encontramos categorias"
         categoriaAdapter.submitList(categorias)
     }
@@ -98,12 +175,39 @@ class BuscarFragment : Fragment() {
         progressCategorias.isVisible = false
         recyclerCategorias.isVisible = false
         textEstadoCategorias.isVisible = true
-        buttonRecargarCategorias.isVisible = true
+        val tieneTextoBusqueda = inputBuscar.text.isNotEmpty()
+        textEstadoCategorias.isVisible = !tieneTextoBusqueda
+        buttonRecargarCategorias.isVisible = !tieneTextoBusqueda
         textEstadoCategorias.text = message
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun cargarNombreUsuario() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val userId = SupabaseClient.client.auth.currentUserOrNull()?.id ?: return@launch
+
+                val usuario = SupabaseClient.client
+                    .from("usuarios")
+                    .select {
+                        filter { eq("id_usuarios", userId) }
+                    }
+                    .decodeSingle<UsuarioNombreDTO>()
+
+                if (_binding == null) return@launch
+
+                binding.tvNombreUsuario.text = usuario.nombres
+                binding.tvAvatarInicial.text = usuario.nombres.first().uppercase()
+
+            } catch (e: Exception) {
+                android.util.Log.e("BUSCAR_USER", "Error: ${e.message}", e)
+                if (_binding == null) return@launch
+                binding.tvNombreUsuario.text = "Usuario"
+            }
+        }
     }
 }

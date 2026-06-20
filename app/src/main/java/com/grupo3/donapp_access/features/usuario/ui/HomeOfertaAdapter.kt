@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 import android.speech.tts.TextToSpeech
 import android.content.Context
+import com.grupo3.donapp_access.R
 
 
 class HomeOfertaAdapter(
@@ -45,6 +46,17 @@ class HomeOfertaAdapter(
             parent,
             false
         )
+
+        val temaActual = context.getSharedPreferences("donapp_prefs", android.content.Context.MODE_PRIVATE)
+            .getString("tema_actual", "normal")
+
+        val bgDrawable = when(temaActual){
+            "black_white" -> R.drawable.bg_surface_bw
+            "high_contraste" -> R.drawable.bg_surface_contrast
+            else -> R.drawable.bg_surface
+        }
+        binding.root.setBackgroundResource(bgDrawable)
+
         return OfertaViewHolder(binding)
     }
 
@@ -65,6 +77,19 @@ class HomeOfertaAdapter(
             textDescuento.text = descuento(oferta.precioNormal, oferta.precioOferta)
             textDistancia.text = oferta.tiendaDireccion?.takeIf { it.isNotBlank() } ?: "Cerca de ti"
             textExpiracion.text = tiempoRestante(oferta.fechaVencimiento)
+            // AGREGADO: Cargar imagen real con Glide
+            com.bumptech.glide.Glide.with(itemView.context)
+                .load(oferta.productoImagen)
+                .placeholder(com.grupo3.donapp_access.R.drawable.ic_bread_product)
+                .into(imageProducto)
+
+            // AGREGADO: Restaurar el clic para navegar
+            root.setOnClickListener { onClick(oferta) }
+
+            // AQUÍ CONECTAMOS LA CARTA: Al hacer clic, ejecuta la función de navegación
+            root.setOnClickListener {
+                onClick(oferta)
+            }
 
             btnAudio.setOnClickListener {
                 val texto = """
@@ -82,10 +107,7 @@ class HomeOfertaAdapter(
                     null,
                     null
                 )
-
             }
-
-
 
             // Ajustar ancho de la línea de tachado al texto
             viewTachado.post {
@@ -126,7 +148,6 @@ class HomeOfertaAdapter(
 
         private fun Double.toSoles(): String = "S/ %.2f".format(Locale.US, this)
     }
-
     fun releaseTTS(){
         tts?.stop()
         tts?.shutdown()

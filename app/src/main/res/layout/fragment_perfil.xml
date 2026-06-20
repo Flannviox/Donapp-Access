@@ -4,8 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/donapp_bg"
-    android:fillViewport="true">
+    android:background="?android:attr/windowBackground"
+    android:fillViewport="true"
+    android:layout_marginTop="20dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,6 +24,7 @@
             android:paddingTop="48dp"
             android:gravity="center_vertical">
 
+
             <TextView
                 android:id="@+id/tvAvatarPerfil"
                 android:layout_width="64dp"
@@ -29,9 +32,10 @@
                 android:background="@drawable/bg_circle_yellow"
                 android:gravity="center"
                 android:text="U"
-                android:textColor="@color/black"
+                android:textColor="?android:attr/windowBackground"
                 android:textSize="26sp"
                 android:textStyle="bold"/>
+
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -39,28 +43,37 @@
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
+                <ImageView
+                    android:id="@+id/btnEditarPerfil"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="36dp"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_edit"
+                    app:tint="?android:attr/textColorPrimary"/>
                 <TextView
                     android:id="@+id/tvNombrePerfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cargando..."
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
+
+
 
                 <TextView
                     android:id="@+id/tvCorreoPerfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"/>
 
                 <TextView
                     android:id="@+id/tvDniPerfil"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="13sp"/>
             </LinearLayout>
         </LinearLayout>
@@ -71,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/colorSurface"
             android:orientation="horizontal"
             android:padding="16dp">
 
@@ -87,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@color/donapp_primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
@@ -95,21 +108,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ofertas"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="11sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="aprovechadas"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="11sp"/>
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/donapp_input_stroke"/>
+                android:background="?android:attr/textColorSecondary"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -123,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/ 0"
-                    android:textColor="@color/donapp_primary"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"/>
 
@@ -131,52 +144,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ahorro"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="11sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="este mes"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="11sp"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/donapp_input_stroke"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvBodegasFavoritas"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/donapp_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bodegas"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="11sp"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="favoritas"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="11sp"/>
-            </LinearLayout>
         </LinearLayout>
 
         <!-- Mi Cuenta -->
@@ -186,7 +164,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:text="Mi Cuenta"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="15sp"
             android:textStyle="bold"/>
 
@@ -196,43 +174,43 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/colorSurface"
             android:orientation="vertical">
+            <!--
+                        <LinearLayout
+                            android:id="@+id/btnInformacionPersonal"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp">
 
-            <LinearLayout
-                android:id="@+id/btnInformacionPersonal"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableStart="@drawable/ic_profile"
+                                android:drawablePadding="12dp"
+                                android:drawableTint="?android:attr/textColorSecondary"
+                                android:text="Información Personal"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="14sp"/>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_profile"
-                    android:drawablePadding="12dp"
-                    android:drawableTint="@color/donapp_text_secondary"
-                    android:text="Información Personal"
-                    android:textColor="@color/donapp_text_primary"
-                    android:textSize="14sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="›"
+                                android:textColor="?android:attr/textColorSecondary"
+                                android:textSize="20sp"/>
+                        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="›"
-                    android:textColor="@color/donapp_text_secondary"
-                    android:textSize="20sp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="16dp"
-                android:background="@color/donapp_input_stroke"/>
-
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="16dp"
+                            android:background="?android:attr/divider"/>
+            -->
             <LinearLayout
                 android:id="@+id/btnNotificaciones"
                 android:layout_width="match_parent"
@@ -248,9 +226,9 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_filter"
                     android:drawablePadding="12dp"
-                    android:drawableTint="@color/donapp_text_secondary"
+                    android:drawableTint="?android:attr/textColorSecondary"
                     android:text="Notificaciones"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="14sp"/>
 
                 <TextView
@@ -261,7 +239,7 @@
                     android:background="@color/donapp_error"
                     android:gravity="center"
                     android:text="3"
-                    android:textColor="@color/white"
+                    android:textColor="@android:color/white"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:visibility="gone"/>
@@ -270,52 +248,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="20sp"/>
             </LinearLayout>
         </LinearLayout>
 
         <!-- Mi Actividad -->
         <TextView
+            android:id="@+id/miActividad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:text="Mi Actividad"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="15sp"
             android:textStyle="bold"/>
 
         <LinearLayout
-            android:id="@+id/btnMisValoraciones"
+            android:id="@+id/btnValorarApp"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/donapp_surface"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableStart="@drawable/ic_store"
-                android:drawablePadding="12dp"
-                android:drawableTint="@color/donapp_text_secondary"
-                android:text="Mis Valoraciones"
-                android:textColor="@color/donapp_text_primary"
-                android:textSize="14sp"/>
+            android:background="?attr/colorSurface"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="›"
-                android:textColor="@color/donapp_text_secondary"
-                android:textSize="20sp"/>
+                android:text="¡Valorar nuestra App!"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <ImageView
+                android:id="@+id/imgQrValoracion"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/qr_image"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Toca el código para abrir el formulario"
+                android:textSize="11sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <!-- Configuración -->
@@ -325,7 +309,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="24dp"
             android:text="Configuración"
-            android:textColor="@color/donapp_text_primary"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="15sp"
             android:textStyle="bold"/>
 
@@ -335,7 +319,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:background="@color/donapp_surface"
+            android:background="?attr/colorSurface"
             android:orientation="vertical">
 
             <LinearLayout
@@ -353,16 +337,16 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_accessibility"
                     android:drawablePadding="12dp"
-                    android:drawableTint="@color/donapp_text_secondary"
+                    android:drawableTint="?android:attr/textColorSecondary"
                     android:text="Accesibilidad"
-                    android:textColor="@color/donapp_text_primary"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="14sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="›"
-                    android:textColor="@color/donapp_text_secondary"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="20sp"/>
             </LinearLayout>
 
@@ -370,7 +354,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginStart="16dp"
-                android:background="@color/donapp_input_stroke"/>
+                android:background="?android:attr/windowBackground"/>
 
             <LinearLayout
                 android:id="@+id/btnCerrarSesion"
@@ -391,6 +375,8 @@
                     android:textColor="@color/donapp_error"
                     android:textSize="14sp"/>
             </LinearLayout>
+
+
         </LinearLayout>
 
     </LinearLayout>

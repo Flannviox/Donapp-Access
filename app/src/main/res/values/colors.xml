@@ -27,7 +27,7 @@
     <color name="donapp_input_stroke_focused">#FFCA28</color>
 
     <!-- Roles -->
-    <color name="role_usuario_bg">#1A2A1A</color>
+    <color name="role_usuario_bg">#1A1A00</color>
     <color name="role_usuario_stroke">#2E7D32</color>
     <color name="role_comerciante_bg">#1A1F2E</color>
     <color name="role_comerciante_stroke">#1565C0</color>
@@ -45,4 +45,26 @@
     <color name="donapp_text_muted">#8A8A8A</color>
     <color name="donapp_blue">#2196F3</color>
     <color name="donapp_orange">#FF9800</color>
+
+
+    <color name="contrast_bg">#000000</color>
+    <color name="contrast_surface">#121212</color>
+    <color name="contrast_primary">#FFFFFF</color>
+    <color name="contrast_secondary">#FFFF00</color>
+
+    <color name="role_usuario_bg_contrast">#1D1D1D</color>
+    <color name="role_usuario_stroke_contrast">#FFFF00</color>
+    <color name="role_comerciante_bg_contrast">#1D1D1D</color>
+    <color name="role_comerciante_stroke_contrast">#2E7D32</color>
+
+
+    <!--BLANCO Y NEGRO-->
+    <color name="bw_bg">#FFFFFF</color>
+    <color name="bw_surface">#DBDBDB</color>
+    <color name="bw_surface_variant">#E0E0E0</color>
+    <color name="bw_primary">#000000</color>
+    <color name="bw_text_primary">#000000</color>
+    <color name="bw_text_secondary">#444444</color>
+
+
 </resources>

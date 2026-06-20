@@ -11,6 +11,9 @@ data class ProductoDTO(
     @SerialName("categoria_id")
     val categoriaId: String,
 
+    @SerialName("tiendas_id")
+    val tiendas_Id: String? = null,
+
     val nombre: String,
 
     val descripcion: String? = null,

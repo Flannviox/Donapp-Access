@@ -11,11 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.features.comerciante.ui.DetalleLoteFragment
-import com.grupo3.donapp_access.features.comerciante.ui.InventarioAdapter
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentInventarioBinding
 import com.grupo3.donapp_access.features.comerciante.InventarioViewModel
+import com.grupo3.donapp_access.features.lotes.LoteRepository
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -48,7 +47,6 @@ class InventarioFragment : Fragment() {
         setupRecyclerView()
         observarEstado()
 
-        // Configurar el botón flotante para agregar lotes
         binding.fabAgregarLote.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, PublicarLoteFragment())
@@ -56,13 +54,22 @@ class InventarioFragment : Fragment() {
                 .commit()
         }
 
-        // Obtener el ID del usuario actual de Supabase Auth
-        // Si es null (Acceso Rápido), usamos uno genérico para que no salga vacío si hay datos globales
         val userId = supabase.auth.currentUserOrNull()?.id
         if (userId != null) {
-            viewModel.obtenerInventario(userId)
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val tiendaId = LoteRepository().getIdTiendaDelUsuario(userId)
+                    viewModel.obtenerInventario(tiendaId)
+                }catch (e: Exception) {
+                    Toast.makeText(
+                        requireContext(),
+                        "No se encontró tu tienda: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
         } else {
-            // Intentar cargar algo aunque no haya login (Modo Dev)
             viewModel.obtenerInventario("test_seller_id")
             Toast.makeText(requireContext(), "Modo Vista Previa: Usando ID de prueba", Toast.LENGTH_SHORT).show()
         }
@@ -90,11 +97,22 @@ class InventarioFragment : Fragment() {
                     is UiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.rvInventario.visibility = View.GONE
+
+                        binding.layoutInventarioVacio.visibility = View.GONE
                     }
                     is UiState.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        binding.rvInventario.visibility = View.VISIBLE
                         adapter.submitList(state.data)
+
+                        if (state.data.isEmpty()) {
+                            // Si no hay productos: mostramos el mensaje, ocultamos la lista
+                            binding.rvInventario.visibility = View.GONE
+                            binding.layoutInventarioVacio.visibility = View.VISIBLE
+                        } else {
+                            // Si hay productos: mostramos la lista, ocultamos el mensaje
+                            binding.rvInventario.visibility = View.VISIBLE
+                            binding.layoutInventarioVacio.visibility = View.GONE
+                        }
                     }
                     is UiState.Error -> {
                         binding.progressBar.visibility = View.GONE

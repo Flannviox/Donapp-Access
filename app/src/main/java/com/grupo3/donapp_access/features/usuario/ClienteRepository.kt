@@ -14,6 +14,14 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
+import com.grupo3.donapp_access.features.lotes.dto.OfertaViewDTO
+import com.grupo3.donapp_access.model.Reserva
+
+import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.rpc
+
+
+
 @Singleton
 class ClienteRepository @Inject constructor() {
 
@@ -30,17 +38,50 @@ class ClienteRepository @Inject constructor() {
                 filter {
                     eq("estado", "en_oferta")
                     gte("fecha_vencimiento", hoy)
+                    gt("cantidad", 0) // NUEVO: Oculta los que no tienen stock
                 }
             }.decodeList<LoteConRelaciones>()
 
         return lotes.map { it.toOfertaLote() }
     }
 
+    suspend fun buscarOfertas(query: String): List<OfertaLote> {
+        val hoy = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+
+        val lotes = SupabaseClient.client.from("vw_ofertas_busqueda")
+            .select {
+                filter {
+                    isIn("estado", listOf("disponible", "en_oferta"))
+                    gte("fecha_vencimiento", hoy)
+                    gt("cantidad", 0) // NUEVO: Oculta los que no tienen stock
+
+                    or {
+                        ilike("producto_nombre", "%$query%")
+                        ilike("categoria_nombre", "%$query%")
+                    }
+                }
+            }.decodeList<OfertaViewDTO>()
+
+        return lotes.map { it.toOfertaLote() }
+    }
+
+
+
+
     suspend fun obtenerTiendas(): List<TiendaHome> {
         return SupabaseClient.client.from("tiendas")
-            .select(Columns.raw("nombre,direccion,rating_promedio"))
+            // Agrega latitud y longitud a la consulta raw
+            .select(Columns.raw("id_tienda,nombre,direccion,rating_promedio,latitud,longitud"))
             .decodeList<TiendaHomeDTO>()
-            .map { TiendaHome(idTienda = it.idTienda, nombre = it.nombre, direccion = it.direccion, rating = it.rating)
+            .map {
+                TiendaHome(
+                    idTienda = it.idTienda,
+                    nombre = it.nombre,
+                    direccion = it.direccion,
+                    rating = it.rating,
+                    latitud = it.latitud,
+                    longitud = it.longitud
+                )
             }
     }
 
@@ -50,6 +91,56 @@ class ClienteRepository @Inject constructor() {
                 filter { eq("estado", "ACTIVO") }
             }.decodeList<Categoria>()
     }
+    suspend fun obtenerTiendasCercanas(latUsuario: Double, lngUsuario: Double, radioMetros: Int = 10000): List<TiendaHome> {
+        // Empaquetamos las coordenadas para enviarlas a Supabase
+        val parametros = CoordenadasParam(lat = latUsuario, lng = lngUsuario, radio = radioMetros)
+
+        // Llamamos a tu función SQL "tiendas_cercanas" usando .rpc()
+        return SupabaseClient.client.postgrest.rpc("tiendas_cercanas", parametros)
+            .decodeList<TiendaHomeDTO>()
+            .map {
+                TiendaHome(
+                    idTienda = it.idTienda,
+                    nombre = it.nombre,
+                    direccion = it.direccion,
+                    rating = it.rating,
+                    latitud = it.latitud,
+                    longitud = it.longitud
+                )
+            }
+    }
+
+    suspend fun crearReserva(usuarioId: String, loteId: String, cantidad: Int): Result<Unit> {
+        return try {
+            //Consultamos si ya existe una reserva activa para este usuario y lote
+            val reservasPrevias = SupabaseClient.client.from("reservas").select {
+                filter {
+                    eq("usuario_id", usuarioId)
+                    eq("id_lote", loteId)
+                    eq("estado", "activa") // Solo bloqueamos si la reserva actual sigue vigente
+                }
+            }.decodeList<Reserva>()
+
+            // Si la lista no está vacía, significa que ya tiene una reserva corriendo
+            if (reservasPrevias.isNotEmpty()) {
+                return Result.failure(Exception("Ya tienes una reserva activa para este producto. Debes recogerla o esperar a que expire."))
+            }
+
+            // guardamos si es que no hay reservas activas
+            val nuevaReserva = Reserva(
+                usuarioId = usuarioId,
+                idLote = loteId,
+                cantidad = cantidad
+            )
+
+            SupabaseClient.client.from("reservas").insert(nuevaReserva)
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }
 
 // DTOs internos para deserializar los joins
@@ -102,5 +193,19 @@ private data class TiendaHomeDTO(
     @SerialName("id_tienda") val idTienda: String? = null,
     val nombre: String,
     val direccion: String? = null,
-    @SerialName("rating_promedio") val rating: Double? = null
+    @SerialName("rating_promedio") val rating: Double? = null,
+
+    val latitud: Double? = null,
+    val longitud: Double? = null
 )
+
+
+
+
+@Serializable
+data class CoordenadasParam(
+    val lat: Double,
+    val lng: Double,
+    val radio: Int
+)
+

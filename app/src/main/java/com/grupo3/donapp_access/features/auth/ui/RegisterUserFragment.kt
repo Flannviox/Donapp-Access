@@ -1,9 +1,11 @@
 package com.grupo3.donapp_access.features.auth.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -12,11 +14,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.grupo3.donapp_access.R
-import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.databinding.FragmentRegisterUserBinding
 import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.auth.RegisterViewModel
-import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
+import com.grupo3.donapp_access.features.auth.VerificacionCorreoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,8 @@ class RegisterUserFragment : Fragment() {
     private val sharedViewModel: RegisterViewModel by activityViewModels()
 
     private val authViewModel: AuthViewModel by viewModels()
+
+    private var tokenTurnstile: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +59,10 @@ class RegisterUserFragment : Fragment() {
 
         configurarSelectorDiscapacidad()
 
+        configurarWebViewCaptcha()
+
+
+
         binding.btnCrearCuenta.setOnClickListener {
             ejecutarRegistro()
         }
@@ -63,6 +70,41 @@ class RegisterUserFragment : Fragment() {
         observarRegistro()
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun configurarWebViewCaptcha() {
+        val webView = binding.webViewCaptcha
+
+        //configuración exhaustiva para permitir la carga de scripts externos
+        val settings = webView.settings
+        settings.javaScriptEnabled = true
+        settings.domStorageEnabled = true
+        settings.allowContentAccess = true
+        settings.allowFileAccess = true
+        // Permite que scripts cargados desde HTTPS accedan a contenido en tu HTML
+        settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
+
+        webView.addJavascriptInterface(WebAppInterface(), "AndroidInterface")
+
+        try {
+            val htmlContent = requireContext().assets.open("turnstile.html").bufferedReader().use { it.readText() }
+            val baseUrl = "https://uomlyvsrlkvsroowlhqh.supabase.co"
+
+            webView.loadDataWithBaseURL(baseUrl, htmlContent, "text/html", "UTF-8", null)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    inner class WebAppInterface {
+        @JavascriptInterface
+        fun onCaptchaSuccess(token: String) {
+            requireActivity().runOnUiThread {
+                this@RegisterUserFragment.tokenTurnstile = token
+                Toast.makeText(requireContext(), "Captcha resuelto correctamente", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     private fun configurarSelectorDiscapacidad(){
         val opciones = arrayOf("NINGUNA", "MOTRIZ","VISUAL")
@@ -70,10 +112,12 @@ class RegisterUserFragment : Fragment() {
             ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, opciones)
         binding.actvDiscapacidad.setAdapter(adapter)
 
+        // NUEVO: Asigna el valor por defecto sin activar el filtro de búsqueda
+        binding.actvDiscapacidad.setText(opciones[0], false)
+
         binding.actvDiscapacidad.setOnClickListener {
             binding.actvDiscapacidad.showDropDown()
         }
-
     }
 
 
@@ -91,6 +135,7 @@ class RegisterUserFragment : Fragment() {
             authViewModel.crearCuentaCompleta(
                 email = correo,
                 pass = pass,
+                captchaToken = tokenTurnstile,
                 nombres = nombres,
                 apellidos = apellidos,
                 dni = dni,
@@ -104,41 +149,44 @@ class RegisterUserFragment : Fragment() {
 
     private fun validarCampos(nom: String, ape: String, mail: String, pw: String, dni: String, tel: String): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
-        return when {
 
-            nom.isEmpty() -> {
-                mostrarToast("Por favor, ingresa tu nombre")
-                false
-            }
-            ape.isEmpty() -> {
-                mostrarToast("Por favor, ingresa tu apellido")
-                false
-            }
-            dni.length != 8 -> {
-                mostrarToast("El DNI debe tener exactamente 8 dígitos")
-                false
-            }
-            tel.length != 9 -> {
-                mostrarToast("El teléfono debe tener 9 dígitos")
-                false
-            }
-            mail.isEmpty() || !mail.matches(emailPattern.toRegex()) -> {
-                mostrarToast("Ingresa un correo electrónico válido")
-                false
-            }
-            pw.length < 6 -> {
-                mostrarToast("La contraseña debe tener al menos 6 caracteres")
-                false
-            }
-            !binding.cbTerminos.isChecked -> {
-                mostrarToast("Debes aceptar los términos y condiciones")
-                false
-            }
-            else -> true
+        // Evaluamos estrictamente en orden de aparición en el formulario
+        if (nom.isEmpty()) {
+            mostrarToast("Por favor, ingresa tu nombre")
+            binding.etNombres.requestFocus() // Opcional: lleva el cursor al campo con error
+            return false
+        }
+        if (ape.isEmpty()) {
+            mostrarToast("Por favor, ingresa tu apellido")
+            binding.etApellidos.requestFocus()
+            return false
+        }
+        if (dni.length != 8) {
+            mostrarToast("El DNI debe tener exactamente 8 dígitos")
+            binding.etDni.requestFocus()
+            return false
+        }
+        if (tel.length != 9) {
+            mostrarToast("El teléfono debe tener 9 dígitos")
+            binding.etTelefono.requestFocus()
+            return false
+        }
+        if (mail.isEmpty() || !mail.matches(emailPattern.toRegex())) {
+            mostrarToast("Ingresa un correo electrónico válido")
+            binding.etCorreo.requestFocus()
+            return false
+        }
+        if (pw.length < 6) {
+            mostrarToast("La contraseña debe tener al menos 6 caracteres")
+            binding.etPassword.requestFocus()
+            return false
+        }
+        if (!binding.cbTerminos.isChecked) {
+            mostrarToast("Debes aceptar los términos y condiciones")
+            return false
         }
 
-
-
+        return true
     }
 
 
@@ -149,52 +197,44 @@ class RegisterUserFragment : Fragment() {
 
 
     private fun observarRegistro() {
-
         viewLifecycleOwner.lifecycleScope.launch {
-
             authViewModel.registerState.collect { state ->
-
                 when(state) {
-
                     is AuthViewModel.AuthState.Loading -> {
-
                         binding.btnCrearCuenta.isEnabled = false
+                        binding.btnCrearCuenta.text = "Registrando..." // NUEVO TEXTO
                     }
 
                     is AuthViewModel.AuthState.Success -> {
-
                         binding.btnCrearCuenta.isEnabled = true
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Cuenta creada correctamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-                        val destino: Fragment = when(state.rol.lowercase()) {
-
-                            "cliente" -> HomeFragment()
-
-                            "comerciante" -> DashboardFragment()
-
-                            else -> WelcomeFragment()
-                        }
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
                         parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentContainer, destino)
+                            .replace(
+                                R.id.fragmentContainer,
+                                VerificacionCorreoFragment.newInstance(
+                                    binding.etCorreo.text.toString().trim()
+                                )
+                            )
                             .commit()
                     }
 
-                    is AuthViewModel.AuthState.Error -> {
-
+                    is AuthViewModel.AuthState.VerificacionPendiente ->{
                         binding.btnCrearCuenta.isEnabled = true
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
+                    }
+
+                    is AuthViewModel.AuthState.Error -> {
+                        binding.btnCrearCuenta.isEnabled = true
+                        binding.btnCrearCuenta.text = "Crear Cuenta" // RESTAURA EL TEXTO
 
                         Toast.makeText(
                             requireContext(),
                             state.message,
                             Toast.LENGTH_LONG
                         ).show()
+                        configurarWebViewCaptcha()
+                        tokenTurnstile = ""
                     }
-
                     else -> Unit
                 }
             }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body style="margin:0; padding:0; display:flex; justify-content:center; align-items:center; height:100vh; background:transparent;">
+
+<div id="cf-turnstile-widget"></div>
+
+<script>
+    function onVerify(token) {
+        // ESTO CONECTA CON TU CLASE WebAppInterface EN KOTLIN
+        AndroidInterface.onCaptchaSuccess(token);
+    }
+
+    window.onload = function() {
+        turnstile.render('#cf-turnstile-widget', {
+            sitekey: '0x4AAAAAADUakTYpLPM9cxyl',
+            callback: onVerify,
+            theme: 'auto'
+        });
+    };
+</script>
+</body>
+</html>
+

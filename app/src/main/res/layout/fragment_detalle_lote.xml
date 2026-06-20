@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A"
+    android:background="?android:attr/windowBackground"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gestión del Lote"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +32,7 @@
             android:background="@drawable/bg_discount_tag_green"
             android:paddingHorizontal="12dp"
             android:paddingVertical="6dp"
-            android:textColor="#4CAF50"
+            android:textColor="@color/donapp_success"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,19 +45,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Cantidad disponible:"
-            android:textColor="#9E9E9E"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvEstadoActual" />
 
         <EditText
             android:id="@+id/etCantidad"
+            android:hint="0"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="#2A2A2A"
+            android:background="?attr/colorSurface"
             android:inputType="number"
             android:paddingHorizontal="16dp"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/tvLabelCantidad" />
 
         <TextView
@@ -66,19 +68,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Precio Normal (S/):"
-            android:textColor="#9E9E9E"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etCantidad" />
 
         <EditText
             android:id="@+id/etPrecioNormal"
             android:layout_width="match_parent"
+            android:hint="0"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="#2A2A2A"
+            android:background="?attr/colorSurface"
             android:inputType="numberDecimal"
             android:paddingHorizontal="16dp"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/tvLabelPrecioNormal" />
 
         <TextView
@@ -87,19 +91,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Precio de Oferta (S/):"
-            android:textColor="#9E9E9E"
+            android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etPrecioNormal" />
 
         <EditText
             android:id="@+id/etPrecioOferta"
+            android:hint="0"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="#2A2A2A"
+            android:background="?attr/colorSurface"
             android:inputType="numberDecimal"
             android:paddingHorizontal="16dp"
-            android:textColor="#FFFFFF"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textColorHint="?android:attr/textColorSecondary"
             app:layout_constraintTop_toBottomOf="@id/tvLabelPrecioOferta" />
 
         <Button
@@ -109,38 +115,40 @@
             android:minHeight="60dp"
             android:paddingVertical="12dp"
             android:layout_marginTop="32dp"
-            android:backgroundTint="#F5C518"
+            android:backgroundTint="?attr/colorPrimary"
             android:text="Guardar Cambios"
-            android:textColor="#1A1A1A"
+            android:textColor="?android:attr/windowBackground"
             android:textStyle="bold"
             app:cornerRadius="12dp"
             app:layout_constraintTop_toBottomOf="@id/etPrecioOferta" />
 
-        <Button
-            android:id="@+id/btnAgotado"
+        <LinearLayout
+            android:id="@+id/llRegistrarVenta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="60dp"
-            android:paddingVertical="12dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#FF9800"
-            android:text="Marcar como Agotado (Stock 0)"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/btnGuardar" />
+            android:orientation="horizontal"
+            android:layout_marginTop="14dp"
+            android:weightSum="1"
+            app:layout_constraintTop_toBottomOf="@+id/btnGuardar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btnEliminar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="60dp"
-            android:paddingVertical="12dp"
-            android:layout_marginTop="12dp"
-            android:backgroundTint="#F44336"
-            android:text="Eliminar Lote Definitivamente"
-            android:textColor="#FFFFFF"
-            app:cornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/btnAgotado" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEliminar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Eliminar Lote Definitivamente"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/donapp_error"
+                app:layout_constraintTop_toBottomOf="@+id/llRegistrarVenta"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

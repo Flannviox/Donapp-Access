@@ -19,8 +19,9 @@ data class LoteDTO(
 
     val cantidad: Int,
 
+
     @SerialName("fecha_vencimiento")
-    val fechaVencimiento: String,
+    val fechaVencimiento: String = "",
 
     @SerialName("precio_normal")
     val precioNormal: Double,
@@ -31,5 +32,8 @@ data class LoteDTO(
     @SerialName("fecha_limite_oferta")
     val fechaLimiteOferta: String? = null,
 
-    val estado: String = "disponible"
+    val estado: String = "disponible",
+
+    @SerialName("productos")
+    val productos: ProductoDTO? = null
 )

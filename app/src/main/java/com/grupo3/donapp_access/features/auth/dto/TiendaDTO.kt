@@ -14,3 +14,4 @@ data class TiendaDTO(
     val referencia: String? = null,
     @SerialName("imagen_referencia") val imagenReferencia: String? = null
 )
+

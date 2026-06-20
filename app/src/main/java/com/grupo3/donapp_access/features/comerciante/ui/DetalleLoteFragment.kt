@@ -43,7 +43,6 @@ class DetalleLoteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         loteIdActual = arguments?.getString("lote_id") ?: ""
-        // Si no hay usuario logueado, usamos el ID de prueba para que los botones funcionen en el modo Demo
         tiendaId = supabase.auth.currentUserOrNull()?.id ?: "test_seller_id"
 
         if (loteIdActual.isEmpty()) {
@@ -52,13 +51,8 @@ class DetalleLoteFragment : Fragment() {
             return
         }
 
-        // 1. Pedir a Supabase los datos reales
         viewModel.cargarLoteSeleccionado(loteIdActual)
-
-        // 2. Observar los datos y llenar la pantalla
         observarLoteEnTiempoReal()
-
-        // 3. Configurar los clicks de los botones
         configurarBotones()
     }
 
@@ -71,15 +65,14 @@ class DetalleLoteFragment : Fragment() {
                     binding.etPrecioNormal.setText(it.precio_normal.toString())
                     binding.etPrecioOferta.setText(it.precio_oferta?.toString() ?: "")
 
-                    // Ajuste visual del estado
                     binding.tvEstadoActual.text = it.estado.uppercase()
                     when(it.estado) {
-                        "en_oferta" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(
-                            Color.parseColor("#F5C518"))
-                        "disponible" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(
-                            Color.parseColor("#4CAF50"))
-                        "agotado" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(
-                            Color.parseColor("#F44336"))
+                        "en_oferta" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F5C518"))
+                        "disponible" -> binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#4CAF50"))
+                        "agotado" -> {
+                            binding.tvEstadoActual.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F44336"))
+
+                        }
                     }
                 }
             }
@@ -99,13 +92,7 @@ class DetalleLoteFragment : Fragment() {
             }
         }
 
-        binding.btnAgotado.setOnClickListener {
-            if (tiendaId.isNotEmpty()) {
-                viewModel.marcarComoAgotado(loteIdActual, tiendaId)
-                Toast.makeText(context, "Producto marcado como agotado", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
-            }
-        }
+
 
         binding.btnEliminar.setOnClickListener {
             viewModel.eliminarLote(loteIdActual)

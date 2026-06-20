@@ -51,10 +51,14 @@ class CategoriaAdapter(
             return when (nombre.lowercase()) {
                 "panaderia", "panadería" -> "🥐"
                 "lacteos", "lácteos" -> "🥛"
-                "frutas" -> "🍉"
+                "frutas y verduras" -> "\uD83C\uDF4E"
                 "abarrotes" -> "🧺"
                 "granja" -> "🏚"
                 "bebidas" -> "🍹"
+                "carnes y embutidos" -> "\uD83E\uDD69"
+                "snacks y golosinas" -> "\uD83C\uDF7F"
+                "otros" -> "\uD83D\uDCE6"
+
                 else -> nombre.first().uppercaseChar().toString()
             }
         }
