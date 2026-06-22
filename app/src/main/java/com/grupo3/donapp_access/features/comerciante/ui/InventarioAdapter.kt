@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.ItemLoteCardBinding
-import com.grupo3.donapp_access.model.Lote
+import com.grupo3.donapp_access.data.model.Lote
 import java.util.Locale
 import kotlin.math.roundToInt
 

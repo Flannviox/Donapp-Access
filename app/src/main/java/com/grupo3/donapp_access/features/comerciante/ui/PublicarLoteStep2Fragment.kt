@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.grupo3.donapp_access.databinding.FragmentPublicarLoteStep2Binding
-import com.grupo3.donapp_access.features.lotes.PublicarViewModel
+import com.grupo3.donapp_access.features.comerciante.lotes.PublicarViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat

@@ -10,7 +10,7 @@ import com.google.android.gms.location.*
 import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
-import com.grupo3.donapp_access.model.TiendaHome
+import com.grupo3.donapp_access.data.model.TiendaHome
 import com.mapbox.geojson.Point
 import com.mapbox.turf.TurfMeasurement
 import kotlinx.coroutines.*
