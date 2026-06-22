@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.grupo3.donapp_access.databinding.ItemValoracionBinding
-import com.grupo3.donapp_access.usuario.dto.ValoracionDTO
+import com.grupo3.donapp_access.features.cliente.dto.ValoracionDTO
 
 class ValoracionesAdapter(private var valoraciones: List<ValoracionDTO>) :
     RecyclerView.Adapter<ValoracionesAdapter.ValoracionViewHolder>() {

@@ -14,7 +14,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentInventarioBinding
 import com.grupo3.donapp_access.features.comerciante.InventarioViewModel
-import com.grupo3.donapp_access.features.lotes.LoteRepository
+import com.grupo3.donapp_access.features.comerciante.lotes.LoteRepository
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth

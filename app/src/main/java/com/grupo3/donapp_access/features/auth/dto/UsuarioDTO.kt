@@ -1,6 +1,6 @@
 package com.grupo3.donapp_access.features.auth.dto
 
-import com.grupo3.donapp_access.model.Usuario
+import com.grupo3.donapp_access.data.model.Usuario
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

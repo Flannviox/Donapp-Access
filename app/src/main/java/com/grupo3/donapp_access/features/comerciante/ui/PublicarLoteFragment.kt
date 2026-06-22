@@ -19,9 +19,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentPublicarLoteBinding
-import com.grupo3.donapp_access.features.lotes.PublicarViewModel
-import com.grupo3.donapp_access.features.lotes.dto.CategoriaDTO
-import com.grupo3.donapp_access.features.lotes.dto.ProductoDTO
+import com.grupo3.donapp_access.features.comerciante.lotes.PublicarViewModel
+import com.grupo3.donapp_access.features.comerciante.lotes.dto.CategoriaDTO
+import com.grupo3.donapp_access.features.comerciante.lotes.dto.ProductoDTO
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
