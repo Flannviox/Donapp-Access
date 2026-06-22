@@ -32,7 +32,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeUsuarioBinding? = null
     private val binding get() = _binding!!
 
-    // SOLUCIÓN: Ahora enviamos el Nombre del Producto (oferta.productoNombre) para que sea exacto
     private val ofertaAdapter by lazy {
         HomeOfertaAdapter(requireContext()) { oferta ->
             oferta.tiendaId?.let { id ->

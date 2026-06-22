@@ -291,8 +291,6 @@ class TiendaDetailFragment : Fragment() {
 
                 binding.tvActiveOffersCount.text = getString(R.string.offers_count_format, lotes.size)
 
-                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
-                // AGREGADO: Transformar LoteDTO a OfertaLote y enviarlo al adaptador
                 val ofertasLote = lotes.map { lote ->
                     OfertaLote(
                         idLote = lote.idLote ?: "", // Faltaba incluir este campo
@@ -320,7 +318,6 @@ class TiendaDetailFragment : Fragment() {
                         }
                     }.decodeList<ValoracionDTO>()
 
-                bindResenas(valoraciones)
                 reviewsAdapter.updateList(valoraciones)
 
             } catch (e: Exception) {
@@ -345,46 +342,8 @@ class TiendaDetailFragment : Fragment() {
         }
     }
 
-    private fun bindResenas(valoraciones: List<ValoracionDTO>) {
-        val total = valoraciones.size
-        binding.tvReviewsLabel.text = getString(R.string.reviews_label_format, total)
-        binding.tvTotalReviewsText.text = getString(R.string.reviews_total_format, total)
 
-        if (total > 0) {
-            val promedio = valoraciones.map { it.calificacion }.average().toFloat()
-            binding.rbAverage.rating = promedio
 
-            // Conteo de estrellas para las barras de progreso
-            val conteo = IntArray(6) // 0-5
-            valoraciones.forEach { v ->
-                val nota = v.calificacion.toInt().coerceIn(1, 5)
-                conteo[nota]++
-            }
-
-            binding.pb5Stars.progress = (conteo[5] * 100) / total
-            binding.tv5StarsPct.text = "${(conteo[5] * 100) / total}%"
-
-            binding.pb4Stars.progress = (conteo[4] * 100) / total
-            binding.tv4StarsPct.text = "${(conteo[4] * 100) / total}%"
-
-            binding.pb3Stars.progress = (conteo[3] * 100) / total
-            binding.tv3StarsPct.text = "${(conteo[3] * 100) / total}%"
-
-            binding.pb2Stars.progress = (conteo[2] * 100) / total
-            binding.tv2StarsPct.text = "${(conteo[2] * 100) / total}%"
-
-            binding.pb1Star.progress = (conteo[1] * 100) / total
-            binding.tv1StarPct.text = "${(conteo[1] * 100) / total}%"
-        } else {
-            binding.rbAverage.rating = 0f
-            limpiarBarrasProgreso()
-        }
-    }
-
-    private fun limpiarBarrasProgreso() {
-        listOf(binding.pb5Stars, binding.pb4Stars, binding.pb3Stars, binding.pb2Stars, binding.pb1Star).forEach { it.progress = 0 }
-        listOf(binding.tv5StarsPct, binding.tv4StarsPct, binding.tv3StarsPct, binding.tv2StarsPct, binding.tv1StarPct).forEach { it.text = "0%" }
-    }
 
     override fun onDestroyView() {
 

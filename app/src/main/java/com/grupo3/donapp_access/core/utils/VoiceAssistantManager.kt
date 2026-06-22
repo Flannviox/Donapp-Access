@@ -13,10 +13,8 @@ object VoiceAssistantManager : TextToSpeech.OnInitListener {
     private var isInitialized = false
     private var prefs: SharedPreferences? = null
 
-    // Inicializamos el motor y las preferencias
     fun init(context: Context) {
         if (tts == null) {
-            // Usamos applicationContext para evitar fugas de memoria
             tts = TextToSpeech(context.applicationContext, this)
             prefs = context.applicationContext.getSharedPreferences("AccesibilidadPrefs", Context.MODE_PRIVATE)
         }
@@ -24,7 +22,6 @@ object VoiceAssistantManager : TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            // Configuramos el idioma a Español
             val locale = Locale("es", "ES")
             val result = tts?.setLanguage(locale)
 
