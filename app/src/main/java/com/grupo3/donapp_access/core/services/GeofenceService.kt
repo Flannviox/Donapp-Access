@@ -7,8 +7,8 @@ import android.os.IBinder
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
-import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.features.usuario.ClienteRepository
 import com.grupo3.donapp_access.data.model.TiendaHome
 import com.mapbox.geojson.Point

@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentOfertasBinding
-import com.grupo3.donapp_access.features.usuario.OfertasViewModel
+import com.grupo3.donapp_access.features.cliente.OfertasViewModel
 import com.grupo3.donapp_access.data.model.OfertaLote
 import kotlinx.coroutines.launch
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager

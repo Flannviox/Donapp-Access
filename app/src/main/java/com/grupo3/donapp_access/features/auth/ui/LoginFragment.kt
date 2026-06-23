@@ -15,8 +15,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
-import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.features.auth.AuthViewModel
 import com.grupo3.donapp_access.features.usuario.ui.HomeFragment

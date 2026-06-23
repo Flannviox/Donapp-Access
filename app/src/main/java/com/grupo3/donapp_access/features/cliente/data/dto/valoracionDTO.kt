@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.cliente.dto
+package com.grupo3.donapp_access.features.cliente.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

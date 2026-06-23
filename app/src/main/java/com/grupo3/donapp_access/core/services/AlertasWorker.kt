@@ -16,8 +16,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.features.auth.AuthRepository
 import com.grupo3.donapp_access.features.comerciante.lotes.LoteRepository
 import com.grupo3.donapp_access.features.usuario.ClienteRepository

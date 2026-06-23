@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.map
+package com.grupo3.donapp_access.features.mapa
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

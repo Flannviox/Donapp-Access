@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -19,7 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
-import com.grupo3.donapp_access.MainActivity
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.core.network.SupabaseClient
@@ -28,12 +28,11 @@ import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
 import com.grupo3.donapp_access.databinding.FragmentTodasTiendasBinding
 import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.features.comerciante.lotes.dto.LoteDTO
-import com.grupo3.donapp_access.features.usuario.ClienteRepository
-import com.grupo3.donapp_access.features.usuario.TiendaDetailViewModel
-import com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.features.cliente.ClienteRepository
+import com.grupo3.donapp_access.features.cliente.TiendaDetailViewModel
 import com.grupo3.donapp_access.data.model.OfertaLote
-import com.grupo3.donapp_access.features.cliente.dto.TiendaDTO
-import com.grupo3.donapp_access.features.cliente.dto.ValoracionDTO
+import com.grupo3.donapp_access.features.cliente.data.dto.TiendaDTO
+import com.grupo3.donapp_access.features.cliente.data.dto.ValoracionDTO
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
@@ -41,9 +40,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-import android.graphics.Bitmap
-import com.google.zxing.BarcodeFormat
-import com.journeyapps.barcodescanner.BarcodeEncoder
+
 class TodasTiendasFragment : Fragment() {
 
     private var _binding: FragmentTodasTiendasBinding? = null

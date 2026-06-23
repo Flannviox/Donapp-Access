@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario
+package com.grupo3.donapp_access.features.cliente
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

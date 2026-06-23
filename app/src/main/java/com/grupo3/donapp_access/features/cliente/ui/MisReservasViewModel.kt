@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

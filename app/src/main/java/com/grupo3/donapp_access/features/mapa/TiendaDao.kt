@@ -1,8 +1,6 @@
 package com.grupo3.donapp_access.features.mapa
 
 import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.data.model.Tienda
-import com.grupo3.donapp_access.features.map.TiendaConLotes
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.rpc
 import kotlinx.serialization.Serializable

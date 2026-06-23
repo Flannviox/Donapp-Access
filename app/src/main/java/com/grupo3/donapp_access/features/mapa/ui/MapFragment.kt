@@ -15,8 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentMapBinding
-import com.grupo3.donapp_access.data.model.Tienda
-import com.grupo3.donapp_access.features.map.TiendaConLotes
+import com.grupo3.donapp_access.features.mapa.TiendaConLotes
 import com.grupo3.donapp_access.features.mapa.MapViewModel
 import com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment
 import com.mapbox.geojson.Point

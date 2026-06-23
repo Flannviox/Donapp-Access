@@ -1,12 +1,10 @@
 package com.grupo3.donapp_access.features.auth
 
 import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.features.auth.dto.TiendaDTO
+import com.grupo3.donapp_access.features.auth.dto.TiendaRegistroDTO
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import javax.inject.Inject
 import com.grupo3.donapp_access.features.auth.dto.UsuarioDTO
 
@@ -92,7 +90,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun registrarTienda(tienda: TiendaDTO) {
+    suspend fun registrarTienda(tienda: TiendaRegistroDTO) {
         client.from("tiendas").insert(tienda)
     }
 

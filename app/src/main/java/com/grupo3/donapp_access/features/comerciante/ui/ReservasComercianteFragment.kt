@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grupo3.donapp_access.PortraitCaptureActivity
+import com.grupo3.donapp_access.app.PortraitCaptureActivity
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentReservasComercianteBinding
 import dagger.hilt.android.AndroidEntryPoint

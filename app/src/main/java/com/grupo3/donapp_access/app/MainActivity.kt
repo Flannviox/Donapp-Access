@@ -1,29 +1,11 @@
 package com.grupo3.donapp_access.app
-import com.grupo3.donapp_access.R
 
-import android.app.ComponentCaller
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
-import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.features.auth.AuthRepository
-import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
-import com.grupo3.donapp_access.features.mapa.ui.MapFragment
-import com.grupo3.donapp_access.features.cliente.ui.BuscarFragment     // Antes .usuario.ui
-import com.grupo3.donapp_access.features.cliente.ui.HomeFragment       // Antes .usuario.ui
-import com.grupo3.donapp_access.features.cliente.ui.OfertasFragment     // Antes .usuario.ui
-import com.grupo3.donapp_access.features.cliente.ui.PerfilFragment      // Antes .usuario.ui
-import com.grupo3.donapp_access.features.cliente.ui.MisReservasFragment
-import com.mapbox.common.MapboxOptions
-import dagger.hilt.android.AndroidEntryPoint
-import io.github.jan.supabase.auth.auth
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -31,12 +13,35 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.grupo3.donapp_access.features.comerciante.ui.ReservasComercianteFragment
-import com.grupo3.donapp_access.core.services.AlertasWorker
-import java.util.concurrent.TimeUnit
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mapbox.common.MapboxOptions
+import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
-import kotlinx.serialization.Serializable
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+// --- Imports locales de tu proyecto Donapp ---
+import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.BuildConfig
+import com.grupo3.donapp_access.core.network.SupabaseClient
+import com.grupo3.donapp_access.core.services.AlertasWorker
+import com.grupo3.donapp_access.features.auth.AuthRepository
+import com.grupo3.donapp_access.features.auth.ui.LoginFragment
+import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
+import com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment
+import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
+import com.grupo3.donapp_access.features.comerciante.ui.PerfilComercianteFragment
+import com.grupo3.donapp_access.features.comerciante.ui.ReservasComercianteFragment
+import com.grupo3.donapp_access.features.mapa.ui.MapFragment
+import com.grupo3.donapp_access.features.usuario.ui.BuscarFragment
+import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
+import com.grupo3.donapp_access.features.usuario.ui.MisReservasFragment
+import com.grupo3.donapp_access.features.usuario.ui.OfertasFragment
+import com.grupo3.donapp_access.features.usuario.ui.PerfilFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -83,12 +88,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun manejarIntentNavegacion(intent: Intent){
-        if (intent?.getStringExtra("navegar_a")=="mapa"){
+        if (intent.getStringExtra("navegar_a") == "mapa"){
             intent.removeExtra("navegar_a")
 
-            if(bottomNav.visibility == View.VISIBLE && rolActual.lowercase() =="cliente"){
+            if(bottomNav.visibility == View.VISIBLE && rolActual.lowercase() == "cliente"){
                 bottomNav.selectedItemId = R.id.nav_inicio
-                navegarA(com.grupo3.donapp_access.features.mapa.ui.MapFragment())
+                navegarA(MapFragment())
             }
         }
     }
@@ -120,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun verificarSesionActiva() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, androidx.fragment.app.Fragment())
+            .replace(R.id.fragmentContainer, Fragment())
             .commit()
 
         lifecycleScope.launch {
@@ -145,9 +150,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     kotlinx.coroutines.delay(1500)
-                    mostrarSinNav(
-                        com.grupo3.donapp_access.features.auth.ui.LoginFragment()
-                    )
+                    mostrarSinNav(LoginFragment())
                     android.widget.Toast.makeText(
                         this@MainActivity,
                         "✅ Correo verificado. Ya puedes iniciar sesión.",
@@ -155,9 +158,7 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 } catch (e: Exception) {
                     android.util.Log.e("DEEPLINK", "Error: ${e.message}")
-                    mostrarSinNav(
-                        com.grupo3.donapp_access.features.auth.ui.WelcomeFragment()
-                    )
+                    mostrarSinNav(WelcomeFragment())
                 }
             }
         }
@@ -201,14 +202,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if(rol.lowercase()=="cliente"){
+        if(rol.lowercase() == "cliente"){
             bottomNav.menu.clear()
             bottomNav.inflateMenu(R.menu.bottom_nav_usuario)
             if (navegarAlInicio) {
                 mostrarFragment(HomeFragment())
                 bottomNav.selectedItemId = R.id.nav_inicio
             }
-            bottomNav.setOnItemSelectedListener { item->
+            bottomNav.setOnItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.nav_inicio -> mostrarFragment(HomeFragment())
                     R.id.nav_buscar -> mostrarFragment(BuscarFragment())
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-        }else{
+        } else {
             bottomNav.menu.clear()
             bottomNav.inflateMenu(R.menu.bottom_nav_comerciante)
             if (navegarAlInicio) {
@@ -227,11 +228,11 @@ class MainActivity : AppCompatActivity() {
                 bottomNav.selectedItemId = R.id.nav_negocio
             }
 
-            bottomNav.setOnItemSelectedListener { item->
+            bottomNav.setOnItemSelectedListener { item ->
                 when(item.itemId){
                     R.id.nav_negocio -> mostrarFragment(DashboardFragment())
                     R.id.nav_reservas_com -> mostrarFragment(ReservasComercianteFragment())
-                    R.id.nav_perfil_com -> mostrarFragment(PerfilComercianteFragment()) // Verifica si tu PerfilComercianteFragment importa bien
+                    R.id.nav_perfil_com -> mostrarFragment(PerfilComercianteFragment())
                 }
                 true
             }
@@ -244,24 +245,20 @@ class MainActivity : AppCompatActivity() {
             intent.removeExtra("EXTRA_ACCION_NOTIFICACION")
             intent.removeExtra("EXTRA_TIENDA_ID")
 
-
-            // Navegamos hacia el fragmento pasándole el id_tienda
             val bundle = Bundle().apply {
                 putString("id_tienda", idTiendaRecibido)
             }
-            val fragmentDestino = com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment().apply {
+            val fragmentDestino = TiendaDetailFragment().apply {
                 arguments = bundle
             }
 
             navegarA(fragmentDestino)
-
         }
         manejarIntentNavegacion(intent)
-
     }
 
-    fun mostrarSinNav (fragment: Fragment){
-        rolActual= ""
+    fun mostrarSinNav(fragment: Fragment){
+        rolActual = ""
         bottomNav.visibility = View.GONE
         mostrarFragment(fragment)
     }

@@ -28,11 +28,9 @@ import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 import com.grupo3.donapp_access.databinding.FragmentTiendaDetailBinding
 import com.grupo3.donapp_access.features.auth.ui.ValoracionesAdapter
 import com.grupo3.donapp_access.features.comerciante.lotes.dto.LoteDTO
-import com.grupo3.donapp_access.features.usuario.TiendaDetailViewModel
-import com.grupo3.donapp_access.features.usuario.ui.OfertaAdapter
+import com.grupo3.donapp_access.features.cliente.TiendaDetailViewModel
 import com.grupo3.donapp_access.data.model.OfertaLote
-import com.grupo3.donapp_access.features.cliente.dto.TiendaDTO
-import com.grupo3.donapp_access.features.cliente.dto.ValoracionDTO
+import com.grupo3.donapp_access.features.cliente.data.dto.TiendaDTO
 import com.journeyapps.barcodescanner.BarcodeEncoder
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
@@ -41,6 +39,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 class TiendaDetailFragment : Fragment() {
 

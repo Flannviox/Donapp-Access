@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.grupo3.donapp_access.MainActivity
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentAccesibilidadBinding
 import io.github.jan.supabase.auth.auth

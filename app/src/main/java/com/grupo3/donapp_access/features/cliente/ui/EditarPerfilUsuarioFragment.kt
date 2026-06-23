@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

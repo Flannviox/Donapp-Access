@@ -20,7 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.grupo3.donapp_access.MainActivity
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.databinding.FragmentDashboardBinding
 import com.grupo3.donapp_access.features.comerciante.DashboardViewModel

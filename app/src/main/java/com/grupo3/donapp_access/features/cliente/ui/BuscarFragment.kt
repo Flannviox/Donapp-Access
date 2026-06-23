@@ -15,16 +15,18 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.grupo3.donapp_access.core.common.UiState
 import com.grupo3.donapp_access.databinding.FragmentBuscarBinding
-import com.grupo3.donapp_access.features.usuario.BuscarViewModel
+import com.grupo3.donapp_access.features.cliente.BuscarViewModel
 import com.grupo3.donapp_access.data.model.Categoria
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grupo3.donapp_access.features.cliente.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager
 import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.features.cliente.data.dto.UsuarioNombreDTO
+import com.grupo3.donapp_access.features.cliente.ui.CategoriaAdapter
+import com.grupo3.donapp_access.features.cliente.ui.OfertaAdapter
 import com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment
 
 class BuscarFragment : Fragment() {

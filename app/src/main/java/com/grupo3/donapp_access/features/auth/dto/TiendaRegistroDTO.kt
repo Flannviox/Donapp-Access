@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TiendaDTO(
+data class TiendaRegistroDTO(
     @SerialName("usuarios_id") val usuariosId: String,
     val nombre: String,
     val direccion: String,

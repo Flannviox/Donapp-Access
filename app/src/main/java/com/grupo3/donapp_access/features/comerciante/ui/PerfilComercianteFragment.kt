@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.grupo3.donapp_access.features.comerciante.ui.InventarioFragment
+import com.grupo3.donapp_access.app.MainActivity
+import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.core.services.GeofenceService
 import com.grupo3.donapp_access.databinding.FragmentPerfilComercianteBinding
 import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
-import com.grupo3.donapp_access.features.comerciante.ui.EditarTiendaFragment
-import com.grupo3.donapp_access.features.usuario.ui.AccesibilidadFragment
+import com.grupo3.donapp_access.features.cliente.ui.AccesibilidadFragment
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from

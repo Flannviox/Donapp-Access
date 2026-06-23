@@ -1,20 +1,14 @@
 package com.grupo3.donapp_access.features.auth
 
-import androidx.browser.trusted.Token
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Message
-import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.core.network.SupabaseClient.client
-import com.grupo3.donapp_access.features.auth.dto.TiendaDTO
+import com.grupo3.donapp_access.features.auth.dto.TiendaRegistroDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.jan.supabase.auth.OtpType
-import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import io.github.jan.supabase.auth.providers.builtin.OTP
+
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     //recibimos el repositorio auth mediante inyeccion de dependencias
@@ -163,7 +157,7 @@ class AuthViewModel @Inject constructor(
                     telefono = telefono
                 )
 
-                val tienda = TiendaDTO(
+                val tienda = TiendaRegistroDTO(
                     usuariosId = userId,
                     nombre = nombreTienda,
                     direccion = direccion,

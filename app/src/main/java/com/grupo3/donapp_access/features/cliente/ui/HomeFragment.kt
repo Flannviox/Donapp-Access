@@ -1,4 +1,4 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,19 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.grupo3.donapp_access.features.usuario.ClienteRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import androidx.lifecycle.lifecycleScope
-import com.grupo3.donapp_access.MainActivity
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.databinding.FragmentHomeUsuarioBinding
 import com.grupo3.donapp_access.features.mapa.ui.MapFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.grupo3.donapp_access.core.network.SupabaseClient
-import com.grupo3.donapp_access.features.cliente.dto.UsuarioNombreDTO
 import com.grupo3.donapp_access.features.cliente.ui.TiendaDetailFragment
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
@@ -27,6 +25,8 @@ import android.content.Intent
 import android.os.Build
 import android.Manifest
 import androidx.activity.result.contract.ActivityResultContracts
+import com.grupo3.donapp_access.features.cliente.ClienteRepository
+import com.grupo3.donapp_access.features.cliente.data.dto.UsuarioNombreDTO
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeUsuarioBinding? = null

@@ -1,15 +1,12 @@
-package com.grupo3.donapp_access.features.usuario.ui
+package com.grupo3.donapp_access.features.cliente.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.grupo3.donapp_access.EditarPerfilUsuarioFragment
-import com.grupo3.donapp_access.MainActivity
-import com.grupo3.donapp_access.R
+import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.core.network.SupabaseClient
 import com.grupo3.donapp_access.databinding.FragmentPerfilBinding
 import com.grupo3.donapp_access.features.auth.ui.WelcomeFragment
