@@ -19,7 +19,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.features.auth.AuthViewModel
-import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
+import com.grupo3.donapp_access.features.cliente.ui.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import com.grupo3.donapp_access.core.utils.VoiceAssistantManager

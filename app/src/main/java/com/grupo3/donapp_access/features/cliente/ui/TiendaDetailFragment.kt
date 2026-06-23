@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
+import com.grupo3.donapp_access.features.cliente.data.dto.ValoracionDTO
 
 class TiendaDetailFragment : Fragment() {
 
@@ -100,7 +100,7 @@ class TiendaDetailFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        reviewsAdapter = ValoracionesAdapter(emptyList())
+        reviewsAdapter = ValoracionesAdapter(emptyList<ValoracionDTO>())
         binding.rvReviews.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = reviewsAdapter

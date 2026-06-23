@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <application
-        android:name=".DonappApplication"
+        android:name=".app.DonappApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,24 +23,21 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.DonappAccess"
-        android:usesCleartextTraffic="true"
-        >
+        android:usesCleartextTraffic="true">
 
         <meta-data
             android:name="com.mapbox.token"
             android:value="${MAPBOX_ACCESS_TOKEN}" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".app.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
-            <!-- Launcher: este abre la app desde el ícono -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!-- Deep link: este abre la app desde el correo de verificación -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -56,7 +53,6 @@
             android:foregroundServiceType="location"
             android:exported="false" />
 
-        <!-- Proveedor agregado para solucionar el error de Lint con WorkManager -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -69,7 +65,7 @@
         </provider>
 
         <activity
-            android:name=".PortraitCaptureActivity"
+            android:name=".app.PortraitCaptureActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme" />

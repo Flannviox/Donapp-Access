@@ -37,11 +37,11 @@ import com.grupo3.donapp_access.features.comerciante.ui.DashboardFragment
 import com.grupo3.donapp_access.features.comerciante.ui.PerfilComercianteFragment
 import com.grupo3.donapp_access.features.comerciante.ui.ReservasComercianteFragment
 import com.grupo3.donapp_access.features.mapa.ui.MapFragment
-import com.grupo3.donapp_access.features.usuario.ui.BuscarFragment
-import com.grupo3.donapp_access.features.usuario.ui.HomeFragment
-import com.grupo3.donapp_access.features.usuario.ui.MisReservasFragment
-import com.grupo3.donapp_access.features.usuario.ui.OfertasFragment
-import com.grupo3.donapp_access.features.usuario.ui.PerfilFragment
+import com.grupo3.donapp_access.features.cliente.ui.BuscarFragment
+import com.grupo3.donapp_access.features.cliente.ui.HomeFragment
+import com.grupo3.donapp_access.features.cliente.ui.MisReservasFragment
+import com.grupo3.donapp_access.features.cliente.ui.OfertasFragment
+import com.grupo3.donapp_access.features.cliente.ui.PerfilFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

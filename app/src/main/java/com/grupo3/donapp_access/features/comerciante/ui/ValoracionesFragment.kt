@@ -41,7 +41,7 @@ class ValoracionesFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = ValoracionesAdapter(emptyList())
+        adapter = ValoracionesAdapter(emptyList<ValoracionDTO>())
         binding.rvValoraciones.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ValoracionesFragment.adapter

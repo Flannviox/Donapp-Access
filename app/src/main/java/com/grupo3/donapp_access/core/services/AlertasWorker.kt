@@ -20,7 +20,7 @@ import com.grupo3.donapp_access.R
 import com.grupo3.donapp_access.app.MainActivity
 import com.grupo3.donapp_access.features.auth.AuthRepository
 import com.grupo3.donapp_access.features.comerciante.lotes.LoteRepository
-import com.grupo3.donapp_access.features.usuario.ClienteRepository
+import com.grupo3.donapp_access.features.cliente.ClienteRepository
 import com.grupo3.donapp_access.features.mapa.LocationRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
