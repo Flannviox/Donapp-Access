@@ -109,9 +109,6 @@ class InventarioViewModel @Inject constructor(
         )
     }
 
-    /**
-     * Obtiene los datos en tiempo real de un solo lote para llenar el formulario de edición.
-     */
     fun cargarLoteSeleccionado(idLote: String) {
         viewModelScope.launch {
             try {
@@ -133,13 +130,7 @@ class InventarioViewModel @Inject constructor(
     }
 
 
-    // =========================================================================
-    // FUNCIONES DE ESCRITURA (UPDATE / DELETE)
-    // =========================================================================
 
-    /**
-     * Guarda los cambios del comerciante (cantidad y precios) y recalcula el estado.
-     */
     fun actualizarDatosLote(idLote: String, tiendaId: String, cantidad: Int, precioNormal: Double, precioOferta: Double?) {
         viewModelScope.launch {
             try {
@@ -155,10 +146,8 @@ class InventarioViewModel @Inject constructor(
                 ) {
                     filter { eq("id_lote", idLote) }
                 }
-                // Recargamos la lista para que el cambio se vea en el inventario
                 obtenerInventario(tiendaId)
 
-                // NUEVO: Recargamos el lote para que la pantalla de detalles se actualice en vivo
                 cargarLoteSeleccionado(idLote)
 
             } catch (e: Exception) {
@@ -167,9 +156,7 @@ class InventarioViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Botón de acción rápida: Baja el stock a 0 y cambia el estado a 'agotado'.
-     */
+
     fun marcarComoAgotado(idLote: String, tiendaId: String) {
         viewModelScope.launch {
             try {
@@ -189,9 +176,7 @@ class InventarioViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Elimina el registro del lote definitivamente de la base de datos.
-     */
+
     fun eliminarLote(idLote: String) {
         viewModelScope.launch {
             try {
