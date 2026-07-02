@@ -42,7 +42,7 @@ class ClienteRepository @Inject constructor() {
                 }
             }.decodeList<LoteConRelaciones>()
 
-        return lotes.map { it.toOfertaLote() }
+        return lotes.map { it.toOfertaLote() } //que es lotes.map?
     }
 
     suspend fun buscarOfertas(query: String): List<OfertaLote> {
@@ -91,7 +91,7 @@ class ClienteRepository @Inject constructor() {
                 filter { eq("estado", "ACTIVO") }
             }.decodeList<Categoria>()
     }
-    suspend fun obtenerTiendasCercanas(latUsuario: Double, lngUsuario: Double, radioMetros: Int = 10000): List<TiendaHome> {
+    suspend fun obtenerTiendasCercanas(latUsuario: Double, lngUsuario: Double, radioMetros: Int = 5000): List<TiendaHome> {
         // Empaquetamos las coordenadas para enviarlas a Supabase
         val parametros = CoordenadasParam(lat = latUsuario, lng = lngUsuario, radio = radioMetros)
 
